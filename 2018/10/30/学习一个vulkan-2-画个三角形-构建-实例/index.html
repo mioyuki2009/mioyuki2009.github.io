@@ -9,16 +9,16 @@
 <meta name="keywords" content="vulkan">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习一个vulkan(2)-画个三角形(构建)-实例">
-<meta property="og:url" content="http://yoursite.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/index.html">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/index.html">
 <meta property="og:site_name" content="waterpool">
 <meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-10-30T09:16:36.458Z">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="og:updated_time" content="2018-10-31T07:43:48.979Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习一个vulkan(2)-画个三角形(构建)-实例">
 <meta name="twitter:description" content="继续上一次的">
-<meta name="twitter:image" content="http://yoursite.com/images/cat.jpg">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
     
 
     
@@ -172,7 +172,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                3
+                4
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -251,11 +251,13 @@
 <p>结构的最后两个成员用来确定要启用的全局验证层，之后在讨论个问题，这里先简单的留空就行：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">createInfo.enabledLayerCount = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
 <p>现在已经完成了构建这个实例需要的东西，现在可以进行vkCreateInstance的调用了：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkResult result = vkCreateInstance(&amp;createInfo, <span class="literal">nullptr</span>, &amp;instance);</span><br></pre></td></tr></table></figure></p>
 <p>简单看来，构建Vulkan对象的三个参数一般如下：<br>1、指向有构建信息的指针（createInfo）<br>2、自定义分配器的回调指针，一般就设为nullptr<br>3、指向存储新对象句柄的变量的指针（instance）<br>如果一切顺利，那么实例的句柄就会存储在VkInstance类成员中。基本上所有Vulkan函数都返回VkResult类型的值，即VK_SUCCESS或错误代码。<br>要检查实例是否已成功创建，我们不需要存储结果，只需检查返回的值：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (vkCreateInstance(&amp;createInfo, <span class="literal">nullptr</span>, &amp;instance) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create instance!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>现在可以运行该程序来确认是否无误了。<br><b>检查扩展的支持</b><br>如果查看vkCreateInstance的<a href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/vkCreateInstance.html" target="_blank" rel="noopener">文档</a>，<br>可以看到其中一个可能的错误代码是VK_ERROR_EXTENSION_NOT_PRESENT<br>如果出现这个错误的话，可以的手动指定需要的扩展，这对于窗口系统界面等基本扩展很有意义<br>如果我们想检查支持的扩展该怎么办呢？<br>要在创建实例之前查看支持的扩展列表，可以使用vkEnumerateInstanceExtensionProperties函数。<br>它需要一个指向扩展数量的变量的指针和一个VkExtensionProperties数组作为参数来存储扩展的详细信息，它的第一个参数是可选的，允许我们通过设定特定的验证层来过滤某些扩展，这里直接不管。<br>要分配一个数组来保存各个扩展的细节，我们首先需要知道扩展的数目。可以通过将后一个参数留空来得到扩展的数量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint32_t</span> extensionCount = <span class="number">0</span>;</span><br><span class="line">vkEnumerateInstanceExtensionProperties(<span class="literal">nullptr</span>, &amp;extensionCount, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
+<p>现在可以运行该程序来确认是否无误了。</p>
+<p><b>检查扩展的支持</b><br>如果查看vkCreateInstance的<a href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/vkCreateInstance.html" target="_blank" rel="noopener">文档</a>，<br>可以看到其中一个可能的错误代码是VK_ERROR_EXTENSION_NOT_PRESENT<br>如果出现这个错误的话，可以的手动指定需要的扩展，这对于窗口系统界面等基本扩展很有意义<br>如果我们想检查支持的扩展该怎么办呢？<br>要在创建实例之前查看支持的扩展列表，可以使用vkEnumerateInstanceExtensionProperties函数。<br>它需要一个指向扩展数量的变量的指针和一个VkExtensionProperties数组作为参数来存储扩展的详细信息，它的第一个参数是可选的，允许我们通过设定特定的验证层来过滤某些扩展，这里直接不管。<br>要分配一个数组来保存各个扩展的细节，我们首先需要知道扩展的数目。可以通过将后一个参数留空来得到扩展的数量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint32_t</span> extensionCount = <span class="number">0</span>;</span><br><span class="line">vkEnumerateInstanceExtensionProperties(<span class="literal">nullptr</span>, &amp;extensionCount, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
 <p>现在分配一个数组来保存扩展细节（需要#include <vector>）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkExtensionProperties&gt; extensions(extensionCount);</span><br></pre></td></tr></table></figure></vector></p>
 <p>最终得到了相应扩展的细节：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkEnumerateInstanceExtensionProperties(<span class="literal">nullptr</span>, &amp;extensionCount, extensions.data());</span><br></pre></td></tr></table></figure></p>
 <p>每个VkExtensionProperties结构都包含了对应扩展的名称和版本。可以用简单的for打印查看（\t是缩进）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"available extensions:"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; extension : extensions) &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\t"</span> &lt;&lt; extension.extensionName &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果想查看有关Vulkan支持的一些详细信息，可以将这个代码添加到createInstance函数中。<br>作为挑战，也可以尝试创建一个函数，检查glfwGetRequiredInstanceExtensions返回的所有扩展是否都包含在支持的扩展列表中。<br><b>清理</b><br>VkInstance应该在程序退出之前销毁掉，可以使用vkDestroyInstance函数在clean中销毁：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vkDestroyInstance(instance, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    glfwDestroyWindow(window);</span><br><span class="line"></span><br><span class="line">    glfwTerminate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果想查看有关Vulkan支持的一些详细信息，可以将这个代码添加到createInstance函数中。<br>作为挑战，也可以尝试创建一个函数，检查glfwGetRequiredInstanceExtensions返回的所有扩展是否都包含在支持的扩展列表中。</p>
+<p><b>清理</b><br>VkInstance应该在程序退出之前销毁掉，可以使用vkDestroyInstance函数在clean中销毁：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vkDestroyInstance(instance, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    glfwDestroyWindow(window);</span><br><span class="line"></span><br><span class="line">    glfwTerminate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>vkDestroyInstance函数的参数很简单，Vulkan中的分配和释放函数有一个可选的allocator回调，这里直接也设为nullptr不管。<br>以后创建的所有其他Vulkan资源需要在实例销毁之前进行清理。<br>在进行更复杂的步骤之前，需要通过检查验证层来评估调试的选项。</p>
 
         
@@ -267,7 +269,7 @@
 
 </div>
 
-    <a data-url="http://yoursite.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" data-id="cjnviqutk00060kfjllzz4mpn" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" data-id="cjnwtrfz800024sfjatzqyldr" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -342,6 +344,15 @@
         
 <nav id="article-nav">
     
+        <a href="/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(3)-画个三角形(构建)-验证层
+                
+            </div>
+        </a>
+    
     
         <a href="/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Older</strong>
@@ -368,6 +379,25 @@
         <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(3)-画个三角形(构建)-验证层" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" class="title">学习一个vulkan(3)-画个三角形(构建)-验证层</a></p>
+                            <p class="item-date"><time datetime="2018-10-31T07:04:41.000Z" itemprop="datePublished">2018-10-31</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -435,7 +465,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -444,7 +474,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -453,7 +483,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">2</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -505,5 +535,5 @@
 <script src="/js/main.js"></script>
 
     </div>
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nico.model.json"},"display":{"position":"right","width":150,"height":150},"mobile":{"show":true},"log":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nito.model.json"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
 </html>
