@@ -3,7 +3,7 @@ title: How to Write a Lisp Interpreter in Python(翻译)
 date: 2018-09-26 19:32:41
 tags: lisp
 categories: translate
-thumbnail: images/apple.jpg
+thumbnail: /images/apple.jpg
 ---
 <p>翻译一个How to Write a (Lisp) Interpreter (in Python)原文地址-&gt;<a href="http://www.norvig.com/lispy.html" target="_blank" rel="external">How to Write a (Lisp) Interpreter (in Python)</a><br><a id="more"></a></p>
 <!-- more -->
