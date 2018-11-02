@@ -1,5 +1,10 @@
 ---
 title: 学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列
 date: 2018-11-02 09:19:22
-tags:
+tags: vulkan
+categories: learn
+thumbnail: /images/cat.jpg
 ---
+继续上一次的
+<!-- more -->
+<b></b>
