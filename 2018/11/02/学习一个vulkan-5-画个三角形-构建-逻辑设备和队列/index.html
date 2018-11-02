@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>学习一个vulkan(1)-画个三角形(构建)-基础代码 | waterpool</title>
+    <title>学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列 | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="学习一个vlkan，基本就是照着教程敲了。参考这个。">
+    <meta name="description" content="继续上一次的">
 <meta name="keywords" content="vulkan">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习一个vulkan(1)-画个三角形(构建)-基础代码">
-<meta property="og:url" content="http://gloriaswaterpool.com/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/index.html">
+<meta property="og:title" content="学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/index.html">
 <meta property="og:site_name" content="waterpool">
-<meta property="og:description" content="学习一个vlkan，基本就是照着教程敲了。参考这个。">
+<meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-10-31T07:44:08.352Z">
+<meta property="og:updated_time" content="2018-11-02T01:20:40.522Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习一个vulkan(1)-画个三角形(构建)-基础代码">
-<meta name="twitter:description" content="学习一个vlkan，基本就是照着教程敲了。参考这个。">
+<meta name="twitter:title" content="学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列">
+<meta name="twitter:description" content="继续上一次的">
 <meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
     
 
@@ -200,7 +200,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-学习一个vulkan-1-画个三角形-构建-基础代码" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-学习一个vulkan-5-画个三角形-构建-逻辑设备和队列" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -208,7 +208,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            学习一个vulkan(1)-画个三角形(构建)-基础代码
+            学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列
         </h1>
     
 
@@ -217,8 +217,8 @@
                         
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/">
-            <time datetime="2018-10-29T08:17:34.000Z" itemprop="datePublished">2018-10-29</time>
+        <a href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/">
+            <time datetime="2018-11-02T01:19:22.000Z" itemprop="datePublished">2018-11-02</time>
         </a>
     </div>
 
@@ -243,20 +243,7 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>学习一个vlkan，基本就是照着教程敲了。<br>参考<a href="https://vulkan-tutorial.com/Introduction" target="_blank" rel="noopener">这个</a>。<br><a id="more"></a><br><b>大致结构</b><br>第一步的目标就是画一个简单三角形。首先确保已经正确安装了Vulkan和GLFW。<br>首先构造一个大概的框架，大概这样：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vulkan/vulkan.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdexcept&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloTriangleApplication</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        initVulkan();</span><br><span class="line">        mainLoop();</span><br><span class="line">        cleanup();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">mainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    HelloTriangleApplication app;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        app.run();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">const</span> <span class="built_in">std</span>::exception&amp; e) &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> EXIT_FAILURE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>用到头文件的相关功能大概就是：<br>Vulkan：这个就是学习的东西，当然是要用到的<br>stdexcept和iostream用来打印相关信息和错误<br>functional：用到了其中的lambda表达式<br>cstdlib：用到了其中的EXIT_SUCCESS和EXIT_FAILURE宏<br>这里将Vulkan的对象封装到这个类里，然后设置一个函数来初始化他们，就是initVulkan了<br>这些都完成之后就可以进入主循环来渲染帧了<br>可以在mainLoop中一直循环直到窗口关闭<br>当窗口关闭之后，还需要在cleanup里清除相关用过的资源<br>一旦在运行过程中产生任何异常都会抛出std::runtime_error的异常，之后传回main函数打印到控制台上<br>为了捕获相对详尽的异常，这里需要使用std::exception<br>后面有个例子就是用这个发现了有个需要的扩展不支持的错误<br>每一次实现什么新功能后基本都会在initVulkan初始化新的对象，以及在cleanup里进行释放</p>
-<p><b>资源管理</b><br>就像每次使用一个内存块都需要malloc和free一样，每一个Vulkan对象在用完之后也需要被销毁<br>现代C++中，可以通过<memory>中的各种方法来进行自动内存管理，但是在本教程中会明确的说明中的各种方法来进行自动内存管理，但是在本教程中会明确的说明Vulkan对象的创建和销毁对象的创建和销毁<br>毕竟Vulkan的宗旨就是明确自己的每一个操作来避免错误，因此最好能明确对象的生命周期来更好的了解相关API<br>在本教程之外，可以通过重载std :: shared_ptr来实现自动的内存管理，使用<a href="https://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization" target="_blank" rel="noopener">RAII</a>是实现大型Vulkan推荐的方式，但是对于学习来说，最好还是要知道背后发生的详细信息<br>Vulkan对象可以使用vkCreateXXX这种函数直接创建，也可以通过其他具有vkAllocateXXX功能的对象进行分配，确保对象不再在任何地方使用后，您需要使用对应的vkDestroyXXX和vkFreeXXX销毁它。<br>这些函数的参数通常因不同类型的对象而异，但是它们共享一个参数：pAllocator。这是一个可选参数，允许为自定义内存分配器指定回调。<br>我们将在教程中忽略此参数，并始终将nullptr作为参数传递。</memory></p>
-<p><b>整合GLFW</b><br>在不使用窗口，只是单单进行屏幕外渲染时，Vulkan是非常好的，但能显示当然是更好了，所以使用下文替换掉#include &lt;vulkan/vulkan.h&gt;：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GLFW_INCLUDE_VULKAN</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;GLFW/glfw3.h&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<p>这样GLFW将包含自己的定义并自动加载Vulkan标头。<br>添加一个initWindow函数，并在run函数其他调用函数之前执行他。<br>我们将使用该函数初始化GLFW并创建一个窗口。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    initWindow();</span><br><span class="line">    initVulkan();</span><br><span class="line">    mainLoop();</span><br><span class="line">    cleanup();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">initWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>initWindow中的第一个调用应该是glfwInit()，这个函数是用来初始化GLFW库的，因为GLFW最初是为创建OpenGL上下文而设计的，所以我们需要告诉它不要在后续调用中创建OpenGL上下文：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);</span><br></pre></td></tr></table></figure></p>
-<p>因为处理调整大小的窗口需要特别小心，之后才会使用到，现在需要设置一下来禁用它：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);</span><br></pre></td></tr></table></figure></p>
-<p>现在的就是创建真正的窗口了。添加GLFWwindow *window;存储为私有类的对象，并初始化窗口：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window = glfwCreateWindow(<span class="number">800</span>, <span class="number">600</span>, <span class="string">"Vulkan"</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
-<p>前三个参数指定窗口的宽度，高度和标题。第四个参数选择指定监视器来打开窗口，最后一个参数与OpenGL相关，设为nullptr就行。<br>使用常量而不是使用简单的数字来定义宽度和高度会比较好，因为之后会多次使用这些值。<br>在HelloTriangleApplication的类定义的上面添加以下行：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> WIDTH = <span class="number">800</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> HEIGHT = <span class="number">600</span>;</span><br></pre></td></tr></table></figure></p>
-<p>并用下文来替换之前窗口创建的方法：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window = glfwCreateWindow(WIDTH, HEIGHT, <span class="string">"Vulkan"</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
-<p>现在initWindow函数应该长这样子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    glfwInit();</span><br><span class="line"></span><br><span class="line">    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);</span><br><span class="line">    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);</span><br><span class="line"></span><br><span class="line">    window = glfwCreateWindow(WIDTH, HEIGHT, <span class="string">"Vulkan"</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>为了使应用程序一直运行直到发生错误或窗口关闭，我们需要向mainLoop函数添加一个事件循环，如下所示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!glfwWindowShouldClose(window)) &#123;</span><br><span class="line">        glfwPollEvents();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这段代码很简单的。<br>它一直循环并检查事件，例如按下关闭的时候，直到用户关闭窗口才会停止循环。<br>这也是我们稍后用来渲染单个帧的循环。<br>窗口关闭后，我们需要通过销毁资源并终止GLFW来清理资源。<br>我们的第一个清理代码如下所示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    glfwDestroyWindow(window);</span><br><span class="line"></span><br><span class="line">    glfwTerminate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>现在运行该程序时，可以看到一个标题为Vulkan的窗口，在关闭窗口之前都会一直存在。<br>现在已经构造好了Vulkan应用程序的大致框架，下一步就是创建第一个Vulkan对象了</p>
+            <p>继续上一次的<br><a id="more"></a><br><b></b></p>
 
         
         </div>
@@ -267,7 +254,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/" data-id="cjnzc2gow00026kfjg8xa34bu" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" data-id="cjnzc2gp5000d6kfj7w4sqfwu" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -342,19 +329,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    学习一个vulkan(2)-画个三角形(构建)-实例
-                
-            </div>
-        </a>
     
-    
-        <a href="/2018/09/26/How-to-Write-a-Lisp-Interpreter-in-Python-翻译/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Older</strong>
-            <div class="article-nav-title">How to Write a Lisp Interpreter in Python(翻译)</div>
+            <div class="article-nav-title">学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇</div>
         </a>
     
 </nav>
