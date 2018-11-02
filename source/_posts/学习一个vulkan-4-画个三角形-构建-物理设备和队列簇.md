@@ -1,5 +1,5 @@
 ---
-title: 学习一个vulkan(1)-画个三角形(构建)-物理设备和队列簇
+title: 学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇
 date: 2018-11-01 09:49:28
 tags: vulkan
 categories: learn
