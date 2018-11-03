@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     
-    <title>学习一个vulkan(2)-画个三角形(构建)-实例 | waterpool</title>
+    <title>学习一个vulkan(6)-画个三角形(显示)-Window surface | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="继续上一次的">
 <meta name="keywords" content="vulkan">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习一个vulkan(2)-画个三角形(构建)-实例">
-<meta property="og:url" content="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/index.html">
+<meta property="og:title" content="学习一个vulkan(6)-画个三角形(显示)-Window surface">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/index.html">
 <meta property="og:site_name" content="waterpool">
 <meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-10-31T07:43:48.979Z">
+<meta property="og:updated_time" content="2018-11-03T07:07:49.622Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习一个vulkan(2)-画个三角形(构建)-实例">
+<meta name="twitter:title" content="学习一个vulkan(6)-画个三角形(显示)-Window surface">
 <meta name="twitter:description" content="继续上一次的">
 <meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
     
@@ -200,7 +200,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-学习一个vulkan-2-画个三角形-构建-实例" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-学习一个vulkan-6-画个三角形-显示-Window-surface" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -208,7 +208,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            学习一个vulkan(2)-画个三角形(构建)-实例
+            学习一个vulkan(6)-画个三角形(显示)-Window surface
         </h1>
     
 
@@ -217,8 +217,8 @@
                         
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/">
-            <time datetime="2018-10-30T07:08:16.000Z" itemprop="datePublished">2018-10-30</time>
+        <a href="/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/">
+            <time datetime="2018-11-03T01:35:05.000Z" itemprop="datePublished">2018-11-03</time>
         </a>
     </div>
 
@@ -243,22 +243,30 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>继续上一次的<br><a id="more"></a><br><b>创建一个实例</b><br>最开始需要做的事是通过创建实例（initialize）来初始化Vulkan库。<br>这个实例是应用程序与Vulkan库之间联系，创建它的时候需要向驱动程序指定一些有关应用程序的详细信息。<br>首先在initVulkan里添加一个createInstance函数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>同时还要添加一个类成员来保存实例的句柄：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">VkInstance instance;</span><br></pre></td></tr></table></figure></p>
-<p>为了创建这个实例，必须用一些应用程序的信息来填充相关结构，这个过程当然也可以不做，但是明确的提供了特定的信息时候，我们也能对这个特定的程序进行优化，就像某些有特殊功能的图形引擎一样。<br>这个用来填充的结构叫做VkApplicationInfo：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VkApplicationInfo appInfo = &#123;&#125;;</span><br><span class="line">appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;</span><br><span class="line">appInfo.pApplicationName = <span class="string">"Hello Triangle"</span>;</span><br><span class="line">appInfo.applicationVersion = VK_MAKE_VERSION(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">appInfo.pEngineName = <span class="string">"No Engine"</span>;</span><br><span class="line">appInfo.engineVersion = VK_MAKE_VERSION(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">appInfo.apiVersion = VK_API_VERSION_1_0;</span><br></pre></td></tr></table></figure></p>
-<p>Vulkan中的许多结构都需要在sType成员中明确的说明其类型，上面这个也是其中一个，同时他也有一个pNext成员用来指向扩展的信息，这个在以后会说明<br>这里用默认的就行，会自动设置为nullptr<br>Vulkan中的很多信息都是通过结构而不是函数参数传递的，我们必须填充结构来为创建实例提供足够的信息。<br>之后的这个结构是必须要的，它告诉Vulkan驱动程序我们想要使用哪些全局扩展和验证层。全局在这里意味着它们适用于整个程序<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkInstanceCreateInfo createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;</span><br><span class="line">createInfo.pApplicationInfo = &amp;appInfo;</span><br></pre></td></tr></table></figure></p>
-<p>这两个参数很简单，一看就知道了。下面的两个会用来明确的指向需要的全局扩展。<br>Vulkan是一个与平台无关的API，这意味着需要一个扩展接口与窗口系统联系。GLFW有一个方便的内置函数可以直接返回需要的扩展，可以把这个扩展传递给结构：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint32_t</span> glfwExtensionCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>** glfwExtensions;</span><br><span class="line">glfwExtensions = glfwGetRequiredInstanceExtensions(&amp;glfwExtensionCount);</span><br><span class="line">createInfo.enabledExtensionCount = glfwExtensionCount;</span><br><span class="line">createInfo.ppEnabledExtensionNames = glfwExtensions;</span><br></pre></td></tr></table></figure></p>
-<p>结构的最后两个成员用来确定要启用的全局验证层，之后在讨论个问题，这里先简单的留空就行：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">createInfo.enabledLayerCount = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
-<p>现在已经完成了构建这个实例需要的东西，现在可以进行vkCreateInstance的调用了：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkResult result = vkCreateInstance(&amp;createInfo, <span class="literal">nullptr</span>, &amp;instance);</span><br></pre></td></tr></table></figure></p>
-<p>简单看来，构建Vulkan对象的三个参数一般如下：<br>1、指向有构建信息的指针（createInfo）<br>2、自定义分配器的回调指针，一般就设为nullptr<br>3、指向存储新对象句柄的变量的指针（instance）<br>如果一切顺利，那么实例的句柄就会存储在VkInstance类成员中。基本上所有Vulkan函数都返回VkResult类型的值，即VK_SUCCESS或错误代码。<br>要检查实例是否已成功创建，我们不需要存储结果，只需检查返回的值：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (vkCreateInstance(&amp;createInfo, <span class="literal">nullptr</span>, &amp;instance) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create instance!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>现在可以运行该程序来确认是否无误了。</p>
-<p><b>检查扩展的支持</b><br>如果查看vkCreateInstance的<a href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/vkCreateInstance.html" target="_blank" rel="noopener">文档</a>，<br>可以看到其中一个可能的错误代码是VK_ERROR_EXTENSION_NOT_PRESENT<br>如果出现这个错误的话，可以的手动指定需要的扩展，这对于窗口系统界面等基本扩展很有意义<br>如果我们想检查支持的扩展该怎么办呢？<br>要在创建实例之前查看支持的扩展列表，可以使用vkEnumerateInstanceExtensionProperties函数。<br>它需要一个指向扩展数量的变量的指针和一个VkExtensionProperties数组作为参数来存储扩展的详细信息，它的第一个参数是可选的，允许我们通过设定特定的验证层来过滤某些扩展，这里直接不管。<br>要分配一个数组来保存各个扩展的细节，我们首先需要知道扩展的数目。可以通过将后一个参数留空来得到扩展的数量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uint32_t</span> extensionCount = <span class="number">0</span>;</span><br><span class="line">vkEnumerateInstanceExtensionProperties(<span class="literal">nullptr</span>, &amp;extensionCount, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
-<p>现在分配一个数组来保存扩展细节（需要#include <vector>）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkExtensionProperties&gt; extensions(extensionCount);</span><br></pre></td></tr></table></figure></vector></p>
-<p>最终得到了相应扩展的细节：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkEnumerateInstanceExtensionProperties(<span class="literal">nullptr</span>, &amp;extensionCount, extensions.data());</span><br></pre></td></tr></table></figure></p>
-<p>每个VkExtensionProperties结构都包含了对应扩展的名称和版本。可以用简单的for打印查看（\t是缩进）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"available extensions:"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; extension : extensions) &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\t"</span> &lt;&lt; extension.extensionName &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果想查看有关Vulkan支持的一些详细信息，可以将这个代码添加到createInstance函数中。<br>作为挑战，也可以尝试创建一个函数，检查glfwGetRequiredInstanceExtensions返回的所有扩展是否都包含在支持的扩展列表中。</p>
-<p><b>清理</b><br>VkInstance应该在程序退出之前销毁掉，可以使用vkDestroyInstance函数在clean中销毁：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vkDestroyInstance(instance, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    glfwDestroyWindow(window);</span><br><span class="line"></span><br><span class="line">    glfwTerminate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>vkDestroyInstance函数的参数很简单，Vulkan中的分配和释放函数有一个可选的allocator回调，这里直接也设为nullptr不管。<br>以后创建的所有其他Vulkan资源需要在实例销毁之前进行清理。<br>在进行更复杂的步骤之前，需要通过检查验证层来评估调试的选项。</p>
+            <p>继续上一次的<br><a id="more"></a><br>由于Vulkan是一个与平台特性无关联的API集合，不能直接与窗口系统进行交互。为了在Vulkan和窗口系统之间建立连接来显示结果，这里需要WSI（窗口系统集成）扩展。<br>在本章中将讨论其中的第一个，即VK_KHR_surface。它使用VkSurfaceKHR对象，这个对象是一个表示呈现渲染图像surface的抽象类型。<br>本程序中的surface将由使用GLFW打开的窗口来支持。</p>
+<p>VK_KHR_surface扩展是一个实例级扩展，我们实际上在之前已经启用了它，因为它包含在glfwGetRequiredInstanceExtensions返回的列表中了，该列表还包括我们将在接下来的几章中使用的一些其他WSI扩展。</p>
+<p>窗口surface需要在实例创建后创建，因为它实际上可以影响物理设备的选择。现在才说这个是因为这个主题太大了，之前说可能引起混乱。<br>值得注意的是，如果不需要屏幕渲染的话，窗口surface在vulkan中是完全可选的。Vulkan允许这样做，不需要同OpenGL一样必须要创建窗体。</p>
+<p><b>创建窗体surface</b><br>在callback成员下面添加一个新的成员变量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkSurfaceKHR surface;</span><br></pre></td></tr></table></figure></p>
+<p>虽然VkSurfaceKHR对象及其用法与平台无关，但创建过程需要依赖具体的窗体系统的细节。例如在Windows中就需要需要HWND和HMODULE句柄。因此针对特定平台会提供相应的扩展，在Windows上为VK_KHR_win32_surface，它自动包含在glfwGetRequiredInstanceExtensions列表中。</p>
+<p>我将演示如何使用这个特定于平台的扩展在Windows上的创建方法，但是并不会在这个程序中使用。使用像GLFW这样的库然后继续使用特定于平台的代码是没有意义的。GLFW实际上有glfwCreateWindowSurface来处理平台之间的差异，不过在使用他之前，还是要知道背后的原理。</p>
+<p>因为窗口surface 是Vulkan对象，所以它也需要一个填充好的VkWin32SurfaceCreateInfoKHR结构来构建。<br>它有两个重要参数：hwnd和hinstance，分别是窗口和进程的句柄：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkWin32SurfaceCreateInfoKHR createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;</span><br><span class="line">createInfo.hwnd = glfwGetWin32Window(window);</span><br><span class="line">createInfo.hinstance = GetModuleHandle(<span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure></p>
+<p>glfwGetWin32Window函数用于从GLFW窗口对象获取原始HWND,GetModuleHandle返回当前进程的HINSTANCE句柄。</p>
+<p>之后就可以使用VkWin32SurfaceCreateInfoKHR来创建，同样需要显示加载。<br>调用很简单，参数分别是实例，surface的创建细节，自定义分配器和要存储的surface句柄的变量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> CreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR) vkGetInstanceProcAddr(instance, <span class="string">"vkCreateWin32SurfaceKHR"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!CreateWin32SurfaceKHR || CreateWin32SurfaceKHR(instance, &amp;createInfo, <span class="literal">nullptr</span>, &amp;surface) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create window surface!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个过程在Linux等其他平台也是类似的，使用X11界面窗体系统，可以通过vkCreateXcbSurfaceKHR函数建立连接。</p>
+<p>glfwCreateWindowSurface函数正好可以实现这种操作，并在每个平台下执行不同的实现，我们现在将它集成到我们的程序中，在initVulkan中添加createSurface函数，在setupDebugCallback后面调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">    setupDebugCallback();</span><br><span class="line">    createSurface();</span><br><span class="line">    pickPhysicalDevice();</span><br><span class="line">    createLogicalDevice();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createSurface</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>GLFW的调用采用简单的参数而不是结构，这使得函数的使用非常简单：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createSurface</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (glfwCreateWindowSurface(instance, window, <span class="literal">nullptr</span>, &amp;surface) != VK_SUCCESS) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create window surface!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>参数分别是VkInstance，GLFW窗口指针，自定义分配器和指向VkSurfaceKHR类型的指针变量。它只是通过相关平台传递调用VkResult。<br>GLFW不提供清理surface的相关功能，可以通过原始API轻松完成：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        vkDestroySurfaceKHR(instance, surface, <span class="literal">nullptr</span>);</span><br><span class="line">        vkDestroyInstance(instance, <span class="literal">nullptr</span>);</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>确保在销毁实例之前销毁surface </p>
+<p><b>查询显示（presentation）支持</b><br>虽然Vulkan支持窗口系统集成的功能，但这不代表系统中的设备都支持。因此，我们需要扩展isDeviceSuitable以确保设备可以将图像呈现给我们创建的surface。<br>由于显示是专用队列（queue-specific）的功能，问题就变成了找到一个支持在surface上进行显示功能的队列簇。</p>
+<p>支持绘图命令的队列簇和支持显示的队列簇可能不是一个，考虑到可能存在的不同的表示队列，所以需要对QueueFamilyIndices结构进行修改：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">QueueFamilyIndices</span> &#123;</span></span><br><span class="line">    <span class="built_in">std</span>::optional&lt;<span class="keyword">uint32_t</span>&gt; graphicsFamily;</span><br><span class="line">    <span class="built_in">std</span>::optional&lt;<span class="keyword">uint32_t</span>&gt; presentFamily;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> graphicsFamily.has_value() &amp;&amp; presentFamily.has_value();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>接下来，需要修改find​​QueueFamilies函数来查找具有在窗口surface进行显示功能的队列簇。<br>相关的查找函数是vkGetPhysicalDeviceSurfaceSupportKHR，参数分别是物理设备，队列簇索引和surface。将这个函数添加到VK_QUEUE_GRAPHICS_BIT所在的循环体中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkBool32 presentSupport = <span class="literal">false</span>;</span><br><span class="line">vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &amp;presentSupport);</span><br></pre></td></tr></table></figure></p>
+<p>之后需检查返回的布尔值并存储显示功能队列簇的索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (queueFamily.queueCount &gt; 0 &amp;&amp; presentSupport) &#123;</span><br><span class="line">    indices.presentFamily = i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>值得注意的，支持绘图命令的队列簇和支持显示的队列簇可能是相同的队列簇，在程序中这两种情况会有统一的处理方式（当成不同的队列簇）。<br>不过，可以添加逻辑来优先选择同时支持这两个功能的物理设备以提高性能。</p>
+<p><b>创建显示队列</b><br>现在要做的就是修改逻辑设备的创建过程，创建显示队列并获取VkQueue句柄，添加句柄成员变量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkQueue presentQueue;</span><br></pre></td></tr></table></figure></p>
+<p>接下来，我们需要多个VkDeviceQueueCreateInfo结构来创建不同功能的队列。一个优雅的方式是set集合来保存需要的所有队列簇，这样就可以保证唯一性了:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;set&gt;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">QueueFamilyIndices indices = findQueueFamilies(physicalDevice);</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkDeviceQueueCreateInfo&gt; queueCreateInfos;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">set</span>&lt;<span class="keyword">uint32_t</span>&gt; uniqueQueueFamilies = &#123;indices.graphicsFamily.value(), indices.presentFamily.value()&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">float</span> queuePriority = <span class="number">1.0f</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">uint32_t</span> queueFamily : uniqueQueueFamilies) &#123;</span><br><span class="line">    VkDeviceQueueCreateInfo queueCreateInfo = &#123;&#125;;</span><br><span class="line">    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;</span><br><span class="line">    queueCreateInfo.queueFamilyIndex = queueFamily;</span><br><span class="line">    queueCreateInfo.queueCount = <span class="number">1</span>;</span><br><span class="line">    queueCreateInfo.pQueuePriorities = &amp;queuePriority;</span><br><span class="line">    queueCreateInfos.push_back(queueCreateInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同时还需要修改VkDeviceCreateInfo指向的队列集合：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createInfo.queueCreateInfoCount = <span class="keyword">static_cast</span>&lt;<span class="keyword">uint32_t</span>&gt;(queueCreateInfos.size());</span><br><span class="line">createInfo.pQueueCreateInfos = queueCreateInfos.data();</span><br></pre></td></tr></table></figure></p>
+<p>如果队列簇相同，那么我们只需要传递一次索引。<br>最后，添加一个函数来检索队列句柄：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vkGetDeviceQueue(device, indices.presentFamily.value(), <span class="number">0</span>, &amp;presentQueue);</span><br></pre></td></tr></table></figure></p>
+<p>如果队列簇相同，则两个句柄很可能具有相同的值。<br>在下一章中，我们将讨论交换链以及如何使用他来在surface上呈现图像。</p>
 
         
         </div>
@@ -269,7 +277,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" data-id="cjo13vt510000egfjyx0vurw4" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/" data-id="cjo13vt5d0008egfj70g3xwq4" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -344,19 +352,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Más nuevo</strong>
-            <div class="article-nav-title">
-                
-                    学习一个vulkan(3)-画个三角形(构建)-验证层
-                
-            </div>
-        </a>
     
-    
-        <a href="/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Más viejo</strong>
-            <div class="article-nav-title">学习一个vulkan(1)-画个三角形(构建)-基础代码</div>
+            <div class="article-nav-title">学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列</div>
         </a>
     
 </nav>
