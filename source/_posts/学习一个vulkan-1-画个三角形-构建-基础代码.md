@@ -70,7 +70,7 @@ cstdlib：用到了其中的EXIT_SUCCESS和EXIT_FAILURE宏
 
 <b>资源管理</b>
 就像每次使用一个内存块都需要malloc和free一样，每一个Vulkan对象在用完之后也需要被销毁
-现代C++中，可以通过<memory>中的各种方法来进行自动内存管理，但是在本教程中会明确的说明中的各种方法来进行自动内存管理，但是在本教程中会明确的说明Vulkan对象的创建和销毁对象的创建和销毁
+现代C++中，可以通过<memory>中的各种方法来进行自动内存管理，但是在本教程中会明确的说明中的各种方法来进行自动内存管理
 毕竟Vulkan的宗旨就是明确自己的每一个操作来避免错误，因此最好能明确对象的生命周期来更好的了解相关API
 在本教程之外，可以通过重载std :: shared_ptr来实现自动的内存管理，使用[RAII](https://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization)是实现大型Vulkan推荐的方式，但是对于学习来说，最好还是要知道背后发生的详细信息
 Vulkan对象可以使用vkCreateXXX这种函数直接创建，也可以通过其他具有vkAllocateXXX功能的对象进行分配，确保对象不再在任何地方使用后，您需要使用对应的vkDestroyXXX和vkFreeXXX销毁它。
