@@ -88,14 +88,14 @@
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Cari" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
     <div class="ins-search-mask"></div>
     <div class="ins-search-container">
         <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <input type="text" class="ins-search-input" placeholder="Tulis Sesuatu.." />
             <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
         </div>
         <div class="ins-section-wrapper">
@@ -107,11 +107,11 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
+            POSTS: 'Pos',
+            PAGES: 'Halaman',
+            CATEGORIES: 'Kategori',
+            TAGS: 'Tag',
+            UNTITLED: 'Tanpa Judul',
         },
         ROOT_URL: '/',
         CONTENT_URL: '/content.json',
@@ -141,7 +141,7 @@
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Cari" />
     </div>
 
                 </td>
@@ -161,16 +161,16 @@
             <h2 id="name">mioyuki2009</h2>
             <h3 id="title">salt fish</h3>
             <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
-            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">IKUTI</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                9
-                <span>posts</span>
+                10
+                <span>pos</span>
             </div>
             <div class="article-info-block">
                 3
-                <span>tags</span>
+                <span>tag</span>
             </div>
         </div>
         
@@ -194,6 +194,137 @@
 
             
             <section id="main">
+    <article id="post-学习一个vulkan-8-画个三角形-显示-图像视图" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">学习一个vulkan(8)-画个三角形(显示)-图像视图</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">
+            <time datetime="2018-11-06T01:11:35.000Z" itemprop="datePublished">2018-11-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><p>继续上一次的<br></p></p>
+            <p class="article-more-link">
+                <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/#more">Read More</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" data-id="cjo52xybi000p9ofj7ql1866a" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-学习一个vulkan-7-画个三角形-显示-交换链" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -249,7 +380,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" data-id="cjo42k3n0000l5sfj0yaxesqe" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" data-id="cjo52xybe000l9ofj17xdxpnh" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -380,7 +511,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个erlang-afile/" data-id="cjo42k3me00005sfj3s0ajyeb" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个erlang-afile/" data-id="cjo52xya800009ofjiedua0wu" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -511,7 +642,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/" data-id="cjo42k3my000i5sfjktmch1j0" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/" data-id="cjo52xybc000i9ofjbnl9gizx" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -642,7 +773,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" data-id="cjo42k3mv000e5sfjqm1ntvyd" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" data-id="cjo52xyb8000e9ofj1uw2arok" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -773,7 +904,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/" data-id="cjo42k3mr00095sfj1409l5fw" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/" data-id="cjo52xyb7000c9ofjcus30o49" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -904,7 +1035,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" data-id="cjo42k3mt000d5sfjpnp878ao" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/10/31/学习一个vulkan-3-画个三角形-构建-验证层/" data-id="cjo52xyb5000a9ofji4tpbv2d" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1035,7 +1166,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" data-id="cjo42k3mo00065sfjss1qpilf" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/10/30/学习一个vulkan-2-画个三角形-构建-实例/" data-id="cjo52xyb200079ofjd06a7c13" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1166,7 +1297,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/" data-id="cjo42k3mq00085sfjqy4ccysu" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/10/29/学习一个vulkan-1-画个三角形-构建-基础代码/" data-id="cjo52xyaz00059ofj1x9ig048" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1297,7 +1428,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/09/26/How-to-Write-a-Lisp-Interpreter-in-Python-翻译/" data-id="cjo42k3mj00025sfjdst4697c" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/09/26/How-to-Write-a-Lisp-Interpreter-in-Python-翻译/" data-id="cjo52xykm000z9ofjtuqxfmnx" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1379,9 +1510,28 @@
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">recent</h3>
+        <h3 class="widget-title">Terbaru</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(8)-画个三角形(显示)-图像视图" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" class="title">学习一个vulkan(8)-画个三角形(显示)-图像视图</a></p>
+                            <p class="item-date"><time datetime="2018-11-06T01:11:35.000Z" itemprop="datePublished">2018-11-06</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1459,25 +1609,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
-                            <p class="item-title"><a href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/" class="title">学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇</a></p>
-                            <p class="item-date"><time datetime="2018-11-01T01:49:28.000Z" itemprop="datePublished">2018-11-01</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1485,34 +1616,34 @@
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">categories</h3>
+        <h3 class="widget-title">Kategori</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">Arsip</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tags</h3>
+        <h3 class="widget-title">tag</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">7</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">8</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">awan tag</h3>
         <div class="widget tagcloud">
             <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
         </div>
