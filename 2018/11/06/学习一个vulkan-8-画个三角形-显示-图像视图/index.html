@@ -14,7 +14,7 @@
 <meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-11-06T01:43:44.598Z">
+<meta property="og:updated_time" content="2018-11-07T02:37:08.879Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习一个vulkan(8)-画个三角形(显示)-图像视图">
 <meta name="twitter:description" content="继续上一次的">
@@ -95,14 +95,14 @@
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Cari" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
     <div class="ins-search-mask"></div>
     <div class="ins-search-container">
         <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Tulis Sesuatu.." />
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
             <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
         </div>
         <div class="ins-section-wrapper">
@@ -114,11 +114,11 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Pos',
-            PAGES: 'Halaman',
-            CATEGORIES: 'Kategori',
-            TAGS: 'Tag',
-            UNTITLED: 'Tanpa Judul',
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
         CONTENT_URL: '/content.json',
@@ -148,7 +148,7 @@
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Cari" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
     </div>
 
                 </td>
@@ -168,16 +168,16 @@
             <h2 id="name">mioyuki2009</h2>
             <h3 id="title">salt fish</h3>
             <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
-            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">IKUTI</a>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                10
-                <span>pos</span>
+                11
+                <span>posts</span>
             </div>
             <div class="article-info-block">
                 3
-                <span>tag</span>
+                <span>tags</span>
             </div>
         </div>
         
@@ -243,7 +243,7 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>继续上一次的<br><a id="more"></a><br><b>图像视图</b>、<br>要在渲染管道中使用任何VkImage，包括交换链中的，我们必须创建一个VkImageView对象。<br>图像视图实际上是图像的视图。它描述了如何访问图像以及要访问的图像的哪一部分，例如决定是否被作为2D纹理而不使用任何Mip贴图（MipMapping）来处理。</p>
+            <p>继续上一次的<br><a id="more"></a><br><b>图像视图</b><br>要在渲染管道中使用任何VkImage，包括交换链中的，我们必须创建一个VkImageView对象。<br>图像视图实际上是图像的视图。它描述了如何访问图像以及要访问的图像的哪一部分，例如决定是否被作为2D纹理而不使用任何Mip贴图（MipMapping）来处理。</p>
 <p>在本章中，我们将编写一个createImageViews函数，为交换链中的每个图像创建一个基本图像视图，以便我们以后可以将它们用作着色目标。</p>
 <p>首先添加一个类成员来存储图像视图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkImageView&gt; swapChainImageViews;</span><br></pre></td></tr></table></figure></p>
 <p>创建createImageViews函数并在创建交换链后立即调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">    setupDebugCallback();</span><br><span class="line">    createSurface();</span><br><span class="line">    pickPhysicalDevice();</span><br><span class="line">    createLogicalDevice();</span><br><span class="line">    createSwapChain();</span><br><span class="line">    createImageViews();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createImageViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -267,7 +267,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" data-id="cjo52xybi000p9ofj7ql1866a" class="article-share-link"><i class="fas fa-share"></i>Bagikan</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" data-id="cjo6k2tin000chctrplbdd0fu" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -342,9 +342,18 @@
         
 <nav id="article-nav">
     
+        <a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(9)-画个三角形(图形管道)-简介
+                
+            </div>
+        </a>
+    
     
         <a href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Lebih lama</strong>
+            <strong class="article-nav-caption">Older</strong>
             <div class="article-nav-title">学习一个vulkan(7)-画个三角形(显示)-交换链</div>
         </a>
     
@@ -365,9 +374,28 @@
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Terbaru</h3>
+        <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(9)-画个三角形(图形管道)-简介" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/" class="title">学习一个vulkan(9)-画个三角形(图形管道)-简介</a></p>
+                            <p class="item-date"><time datetime="2018-11-07T01:23:19.000Z" itemprop="datePublished">2018-11-07</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -445,25 +473,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
-                            <p class="item-title"><a href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/" class="title">学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列</a></p>
-                            <p class="item-date"><time datetime="2018-11-02T01:19:22.000Z" itemprop="datePublished">2018-11-02</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -471,34 +480,34 @@
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Kategori</h3>
+        <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Arsip</h3>
+        <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tag</h3>
+        <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">8</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">9</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">awan tag</h3>
+        <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
         </div>
