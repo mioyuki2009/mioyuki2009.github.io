@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     
-    <title>学习一个vulkan(8)-画个三角形(显示)-图像视图 | waterpool</title>
+    <title>学习一个vulkan(12)-画个三角形(图形管道)-渲染过程 | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="继续上一次的">
 <meta name="keywords" content="vulkan">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习一个vulkan(8)-画个三角形(显示)-图像视图">
-<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/index.html">
+<meta property="og:title" content="学习一个vulkan(12)-画个三角形(图形管道)-渲染过程">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/10/学习一个vulkan-12-画个三角形-图形管道-渲染过程/index.html">
 <meta property="og:site_name" content="waterpool">
 <meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-11-08T01:45:07.194Z">
+<meta property="og:updated_time" content="2018-11-10T02:26:08.713Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习一个vulkan(8)-画个三角形(显示)-图像视图">
+<meta name="twitter:title" content="学习一个vulkan(12)-画个三角形(图形管道)-渲染过程">
 <meta name="twitter:description" content="继续上一次的">
 <meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
     
@@ -200,7 +200,7 @@
 </aside>
 
             
-            <section id="main"><article id="post-学习一个vulkan-8-画个三角形-显示-图像视图" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-学习一个vulkan-12-画个三角形-图形管道-渲染过程" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -208,7 +208,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            学习一个vulkan(8)-画个三角形(显示)-图像视图
+            学习一个vulkan(12)-画个三角形(图形管道)-渲染过程
         </h1>
     
 
@@ -217,8 +217,8 @@
                         
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">
-            <time datetime="2018-11-06T01:11:35.000Z" itemprop="datePublished">2018-11-06</time>
+        <a href="/2018/11/10/学习一个vulkan-12-画个三角形-图形管道-渲染过程/">
+            <time datetime="2018-11-10T01:30:19.000Z" itemprop="datePublished">2018-11-10</time>
         </a>
     </div>
 
@@ -243,20 +243,48 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>继续上一次的<br><a id="more"></a><br><b>图像视图</b><br>要在渲染管道中使用任何VkImage，包括交换链中的，我们必须创建一个VkImageView对象。<br>图像视图实际上是图像的视图。它描述了如何访问图像以及要访问的图像的哪一部分，例如决定是否被作为2D纹理而不使用任何Mip贴图（MipMapping）来处理。</p>
-<p>在本章中，我们将编写一个createImageViews函数，为交换链中的每个图像创建一个基本图像视图，以便我们以后可以将它们用作着色目标。</p>
-<p>首先添加一个类成员来存储图像视图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkImageView&gt; swapChainImageViews;</span><br></pre></td></tr></table></figure></p>
-<p>创建createImageViews函数并在创建交换链后立即调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">    setupDebugCallback();</span><br><span class="line">    createSurface();</span><br><span class="line">    pickPhysicalDevice();</span><br><span class="line">    createLogicalDevice();</span><br><span class="line">    createSwapChain();</span><br><span class="line">    createImageViews();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createImageViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们需要做的第一件事是调整列表大小以适应我们将要创建的所有图像视图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createImageViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    swapChainImageViews.resize(swapChainImages.size());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接下来，设置循环来遍历所有交换链图像：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImages.size(); i++) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>创建图像视图的参数在VkImageViewCreateInfo结构中指定。<br>前几个参数很简单：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkImageViewCreateInfo createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;</span><br><span class="line">createInfo.image = swapChainImages[i];</span><br></pre></td></tr></table></figure></p>
-<p>viewType和format参数指定应以何种方式解析图像数据。viewType参数允许您将图像设置为一维纹理，二维纹理，三维纹理或者立方体贴图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;</span><br><span class="line">createInfo.format = swapChainImageFormat;</span><br></pre></td></tr></table></figure></p>
-<p>components参数设置对应的颜色通道。例如，您可以将所有通道映射到红色通道以获得单色纹理，还可以将常量值0和1映射到通道。在本例中，我们将使用默认映射。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br></pre></td></tr></table></figure></p>
-<p>subresourceRange参数将描述图像用于何种用途以及访问图像的哪个部分。我们的图像将用于着色目的，没有任何mipmapping级别或多图层：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;</span><br><span class="line">createInfo.subresourceRange.baseMipLevel = <span class="number">0</span>;</span><br><span class="line">createInfo.subresourceRange.levelCount = <span class="number">1</span>;</span><br><span class="line">createInfo.subresourceRange.baseArrayLayer = <span class="number">0</span>;</span><br><span class="line">createInfo.subresourceRange.layerCount = <span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
-<p>如果您正在处理立体3D应用程序，那么将创建一个包含多个图层的交换链。然后，您可以通过访问不同的图层为每个图像创建多个图像视图，以表示左眼和右眼的视图。</p>
-<p>现在，创建图像视图就只需要调用vkCreateImageView了：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (vkCreateImageView(device, &amp;createInfo, <span class="literal">nullptr</span>, &amp;swapChainImageViews[i]) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create image views!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>与图像不同，图像视图是由我们显式创建的，因此我们需要添加一个类似的循环以在程序结束时再次销毁它们：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> imageView : swapChainImageViews) &#123;</span><br><span class="line">        vkDestroyImageView(device, imageView, <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>图像视图已经足够作为将图像用作纹理功能的开端了，但它现在还不能用于渲染目标。还需要一个称为帧缓冲的间接步骤。但首先我们必须设置图形管道。</p>
+            <p>继续上一次的<br><a id="more"></a><br><b>构建</b><br>在我们完成管道创建之前，我们需要告诉Vulkan渲染时将使用的帧缓冲附件。我们需要指定将有多少颜色和深度缓冲区，每个缓冲区要使用多少个样本以及在整个渲染操作中如何处理它们的内容。所有的这些信息都包含在一个渲染过程（render pass）对象中，我们将为此创建一个createRenderPass函数。在initVulkan中的createGraphicsPipeline的前面调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">    setupDebugCallback();</span><br><span class="line">    createSurface();</span><br><span class="line">    pickPhysicalDevice();</span><br><span class="line">    createLogicalDevice();</span><br><span class="line">    createSwapChain();</span><br><span class="line">    createImageViews();</span><br><span class="line">    createRenderPass();</span><br><span class="line">    createGraphicsPipeline();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createRenderPass</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><b>附件描述</b><br>在我们的例子中只有一个颜色缓冲附件，由交换链中的一个图像表示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createRenderPass</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkAttachmentDescription colorAttachment = &#123;&#125;;</span><br><span class="line">    colorAttachment.format = swapChainImageFormat;</span><br><span class="line">    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>颜色附件的format参数应该与交换链图像的格式相匹配，而且我们还没有做任何多重采样方面的事情，所以我们这里使用1个样本。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;</span><br><span class="line">colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;</span><br></pre></td></tr></table></figure></p>
+<p>loadOp和storeOp设置在渲染之前和渲染之后如何处理附件中的数据。<br>对loadOp有如下几个选择：</p>
+<ul>
+<li>VK_ATTACHMENT_LOAD_OP_LOAD：保留附件的现有内容</li>
+<li>VK_ATTACHMENT_LOAD_OP_CLEAR：在开始时以一个常量清理附件内容</li>
+<li>VK_ATTACHMENT_LOAD_OP_DONT_CARE：现有内容未定义，忽略它们</li>
+</ul>
+<p>在我们的例子中，我们将使用clear操作在绘制新帧之前将帧缓冲区清除为黑色。<br>storeOp只有两种选择：</p>
+<ul>
+<li>VK_ATTACHMENT_STORE_OP_STORE：渲染内容将存储在内存中，方便之后读取</li>
+<li>VK_ATTACHMENT_STORE_OP_DONT_CARE：渲染操作后，帧缓冲区的内容变为undefined</li>
+</ul>
+<p>我们希望在屏幕上看到渲染后的三角形，所以我们在这里进行store操作。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;</span><br><span class="line">colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;</span><br></pre></td></tr></table></figure></p>
+<p>loadOp和storeOp适用于颜色和深度数据，stencilLoadOp/stencilStoreOp适用于模板数据。我们的应用程序不会对模板缓冲区执行任何操作，因此相应的加载和存储结果都无关紧要。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;</span><br><span class="line">colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;</span><br></pre></td></tr></table></figure></p>
+<p>Vulkan中的纹理和帧缓冲区由具有特定像素格式的VkImage对象表示，但是内存中像素的布局会根据您对图像执行的操作而改变。</p>
+<p>一些常用的布局:</p>
+<ul>
+<li>VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL：图像用作颜色附件</li>
+<li>VK_IMAGE_LAYOUT_PRESENT_SRC_KHR：图像在交换链中呈现</li>
+<li>VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL：图像作为目标，用于内存复制操作</li>
+</ul>
+<p>我们将在纹理章节中更深入地讨论这个主题，现在最重要的是为需要转变的图像指定合适的布局进行操作。</p>
+<p>initialLayout指定了渲染通道开始之前图像将具有的布局，finalLayout指定在渲染过程完成时自动转换到的布局。对initialLayout使用VK_IMAGE_LAYOUT_UNDEFINED意味着我们不关心图像之前的布局。这个特殊的值是说图像的内容不能保证会被保留，但这并不重要，因为我们都要清除它的。我们希望在图像渲染完毕后使用交换链呈现，所以finalLayout设置为VK_IMAGE_LAYOUT_PRESENT_SRC_KHR。</p>
+<p><b>子通道和附件参考</b><br>单个渲染过程可以包含多个子过程。子通道是一系列的渲染操作，其取决于先前传递中的帧缓冲器的内容，比如说后处理效果的序列通常每一步都依赖之前的操作。如果将这些渲染操作分组到一个渲染通道中，那么Vulkan能够重新排序操作并节省内存带宽，从而获得更好的性能。然而，对于我们的三角形，我们将使用单个子通道就够了。</p>
+<p>每个子通道都引用了我们前面的结构中描述的一个或多个附件。这些引用本身就是VkAttachmentReference结构，如下所示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkAttachmentReference colorAttachmentRef = &#123;&#125;;</span><br><span class="line">colorAttachmentRef.attachment = <span class="number">0</span>;</span><br><span class="line">colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;</span><br></pre></td></tr></table></figure></p>
+<p>attachment参数通过附件描述数组中的索引来指定引用哪个附件。我们的数组由单个的VkAttachmentDescription组成，因此其索引为0。layout参数指定在使用此引用的子通道期间我们希望附件具有哪种布局，在启动子通道时，Vulkan会自动将附件转换为此布局。我们打算将附件用作颜色缓冲区，这里VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL布局将为我们提供最好的性能。</p>
+<p>子通道需要使用VkSubpassDescription结构来描述：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkSubpassDescription subpass = &#123;&#125;;</span><br><span class="line">subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;</span><br></pre></td></tr></table></figure></p>
+<p>Vulkan也可能在未来支持计算子通道，因此我们必须明确将其指定为图形子通道。接下来，我们指定对颜色附件的引用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">subpass.colorAttachmentCount = <span class="number">1</span>;</span><br><span class="line">subpass.pColorAttachments = &amp;colorAttachmentRef;</span><br></pre></td></tr></table></figure></p>
+<p>附件在数组中的索引直接从片段着色器引用，也就是layout(location = 0) out vec4 outColor这个指令了。</p>
+<p>子通道还可以引用以下其他类型的附件：</p>
+<ul>
+<li>pInputAttachments：从着色器读取附件</li>
+<li>pResolveAttachments：用于多重采样颜色附件的附件</li>
+<li>pDepthStencilAttachment：用于深度和模板数据的附件</li>
+<li>pPreserveAttachments：此子通道未使用但必须保留数据的附件</li>
+</ul>
+<p><b>渲染过程</b><br>现在已经描述了附件和引用它的基本子通道，我们可以创建渲染通道了。创建一个新的类成员变量，将VkRenderPass对象保存在pipelineLayout变量的正上方：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkRenderPass renderPass;</span><br><span class="line">VkPipelineLayout pipelineLayout;</span><br></pre></td></tr></table></figure></p>
+<p>然后可以通过使用附件和子通道数组填充VkRenderPassCreateInfo结构来创建渲染过程对象，VkAttachmentReference对象也是通过使用这个数组的索引来引用附件的。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">VkRenderPassCreateInfo renderPassInfo = &#123;&#125;;</span><br><span class="line">renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;</span><br><span class="line">renderPassInfo.attachmentCount = <span class="number">1</span>;</span><br><span class="line">renderPassInfo.pAttachments = &amp;colorAttachment;</span><br><span class="line">renderPassInfo.subpassCount = <span class="number">1</span>;</span><br><span class="line">renderPassInfo.pSubpasses = &amp;subpass;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (vkCreateRenderPass(device, &amp;renderPassInfo, <span class="literal">nullptr</span>, &amp;renderPass) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create render pass!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>就像管道布局一样，渲染过程将在整个程序中被引用，因此它也在最后清理：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vkDestroyPipelineLayout(device, pipelineLayout, <span class="literal">nullptr</span>);</span><br><span class="line">    vkDestroyRenderPass(device, renderPass, <span class="literal">nullptr</span>);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在已经做了很多工作了，在下一章里，他们将会一起构成最终的图形管道对象。</p>
 
         
         </div>
@@ -267,7 +295,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" data-id="cjoarwpjx000l78trwmqzzufv" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/10/学习一个vulkan-12-画个三角形-图形管道-渲染过程/" data-id="cjoarwpik000678trs53xwr3o" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -342,19 +370,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    学习一个vulkan(9)-画个三角形(图形管道)-简介
-                
-            </div>
-        </a>
     
-    
-        <a href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/11/09/学习一个vulkan-11-画个三角形-图形管道-固定功能/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">Older</strong>
-            <div class="article-nav-title">学习一个vulkan(7)-画个三角形(显示)-交换链</div>
+            <div class="article-nav-title">学习一个vulkan(11)-画个三角形(图形管道)-固定功能</div>
         </a>
     
 </nav>
