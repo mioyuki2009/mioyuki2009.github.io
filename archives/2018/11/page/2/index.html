@@ -3,22 +3,15 @@
 <head>
     <meta charset="utf-8">
     
-    <title>学习一个vulkan(8)-画个三角形(显示)-图像视图 | waterpool</title>
+    <title>Archivo: 2018/11 | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="继续上一次的">
-<meta name="keywords" content="vulkan">
-<meta property="og:type" content="article">
-<meta property="og:title" content="学习一个vulkan(8)-画个三角形(显示)-图像视图">
-<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="waterpool">
+<meta property="og:url" content="http://gloriaswaterpool.com/archives/2018/11/page/2/index.html">
 <meta property="og:site_name" content="waterpool">
-<meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-11-08T01:45:07.194Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习一个vulkan(8)-画个三角形(显示)-图像视图">
-<meta name="twitter:description" content="继续上一次的">
-<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta name="twitter:title" content="waterpool">
     
 
     
@@ -200,173 +193,54 @@
 </aside>
 
             
-            <section id="main"><article id="post-学习一个vulkan-8-画个三角形-显示-图像视图" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
+            <section id="main"><div class="timeline timeline-wrap">
+    
+            <div class="timeline-row timeline-row-major">
+                <span class="node"><i class="fas fa-calendar-alt"></i></span>
+                <h1 class="title">2018</h1>
+            </div>
         
-        
-            <header class="article-header">
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
                 
     
-        <h1 class="article-title" itemprop="name">
-            学习一个vulkan(8)-画个三角形(显示)-图像视图
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/">学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇</a>
         </h1>
     
 
-                
-                    <div class="article-meta">
-                        
+                <div class="article-meta">
+                    
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">
-            <time datetime="2018-11-06T01:11:35.000Z" itemprop="datePublished">2018-11-06</time>
+        <a href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/">
+            <time datetime="2018-11-01T01:49:28.000Z" itemprop="datePublished">2018-11-01</time>
         </a>
     </div>
 
 
-                        
+                    
     <div class="article-category">
     	<i class="fas fa-folder"></i>
         <a class="article-category-link" href="/categories/learn/">learn</a>
     </div>
 
-                        
+                    
     <div class="article-tag">
         <i class="fas fa-tag"></i>
         <a class="tag-link" href="/tags/vulkan/">vulkan</a>
     </div>
 
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>继续上一次的<br><a id="more"></a><br><b>图像视图</b><br>要在渲染管道中使用任何VkImage，包括交换链中的，我们必须创建一个VkImageView对象。<br>图像视图实际上是图像的视图。它描述了如何访问图像以及要访问的图像的哪一部分，例如决定是否被作为2D纹理而不使用任何Mip贴图（MipMapping）来处理。</p>
-<p>在本章中，我们将编写一个createImageViews函数，为交换链中的每个图像创建一个基本图像视图，以便我们以后可以将它们用作着色目标。</p>
-<p>首先添加一个类成员来存储图像视图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;VkImageView&gt; swapChainImageViews;</span><br></pre></td></tr></table></figure></p>
-<p>创建createImageViews函数并在创建交换链后立即调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    createInstance();</span><br><span class="line">    setupDebugCallback();</span><br><span class="line">    createSurface();</span><br><span class="line">    pickPhysicalDevice();</span><br><span class="line">    createLogicalDevice();</span><br><span class="line">    createSwapChain();</span><br><span class="line">    createImageViews();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createImageViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们需要做的第一件事是调整列表大小以适应我们将要创建的所有图像视图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createImageViews</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    swapChainImageViews.resize(swapChainImages.size());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接下来，设置循环来遍历所有交换链图像：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImages.size(); i++) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>创建图像视图的参数在VkImageViewCreateInfo结构中指定。<br>前几个参数很简单：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkImageViewCreateInfo createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;</span><br><span class="line">createInfo.image = swapChainImages[i];</span><br></pre></td></tr></table></figure></p>
-<p>viewType和format参数指定应以何种方式解析图像数据。viewType参数允许您将图像设置为一维纹理，二维纹理，三维纹理或者立方体贴图：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;</span><br><span class="line">createInfo.format = swapChainImageFormat;</span><br></pre></td></tr></table></figure></p>
-<p>components参数设置对应的颜色通道。例如，您可以将所有通道映射到红色通道以获得单色纹理，还可以将常量值0和1映射到通道。在本例中，我们将使用默认映射。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br><span class="line">createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;</span><br></pre></td></tr></table></figure></p>
-<p>subresourceRange参数将描述图像用于何种用途以及访问图像的哪个部分。我们的图像将用于着色目的，没有任何mipmapping级别或多图层：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;</span><br><span class="line">createInfo.subresourceRange.baseMipLevel = <span class="number">0</span>;</span><br><span class="line">createInfo.subresourceRange.levelCount = <span class="number">1</span>;</span><br><span class="line">createInfo.subresourceRange.baseArrayLayer = <span class="number">0</span>;</span><br><span class="line">createInfo.subresourceRange.layerCount = <span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
-<p>如果您正在处理立体3D应用程序，那么将创建一个包含多个图层的交换链。然后，您可以通过访问不同的图层为每个图像创建多个图像视图，以表示左眼和右眼的视图。</p>
-<p>现在，创建图像视图就只需要调用vkCreateImageView了：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (vkCreateImageView(device, &amp;createInfo, <span class="literal">nullptr</span>, &amp;swapChainImageViews[i]) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"failed to create image views!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>与图像不同，图像视图是由我们显式创建的，因此我们需要添加一个类似的循环以在程序结束时再次销毁它们：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> imageView : swapChainImageViews) &#123;</span><br><span class="line">        vkDestroyImageView(device, imageView, <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>图像视图已经足够作为将图像用作纹理功能的开端了，但它现在还不能用于渲染目标。还需要一个称为帧缓冲的间接步骤。但首先我们必须设置图形管道。</p>
-
-        
+                </div>
+            </div>
         </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
+    
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/" data-id="cjodmd2xi000fhktr62fjpa1u" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Más nuevo</strong>
-            <div class="article-nav-title">
-                
-                    学习一个vulkan(9)-画个三角形(图形管道)-简介
-                
-            </div>
-        </a>
-    
-    
-        <a href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Más viejo</strong>
-            <div class="article-nav-title">学习一个vulkan(7)-画个三角形(显示)-交换链</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-
+    <nav id="page-nav">
+        <a class="extend prev" rel="prev" href="/archives/2018/11/">&laquo; Anterior</a><a class="page-number" href="/archives/2018/11/">1</a><span class="page-number current">2</span>
+    </nav>
 </section>
             
                 
