@@ -3,22 +3,15 @@
 <head>
     <meta charset="utf-8">
     
-    <title>学习一个erlang-afile | waterpool</title>
+    <title>Archive: 2018 | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="学习一个erlang，参考《Erlang程序设计》-Joe Armstrong">
-<meta name="keywords" content="erlang">
-<meta property="og:type" content="article">
-<meta property="og:title" content="学习一个erlang-afile">
-<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/03/学习一个erlang-afile/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="waterpool">
+<meta property="og:url" content="http://gloriaswaterpool.com/archives/2018/page/3/index.html">
 <meta property="og:site_name" content="waterpool">
-<meta property="og:description" content="学习一个erlang，参考《Erlang程序设计》-Joe Armstrong">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://gloriaswaterpool.com/images/frog.jpg">
-<meta property="og:updated_time" content="2018-11-03T08:41:10.460Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习一个erlang-afile">
-<meta name="twitter:description" content="学习一个erlang，参考《Erlang程序设计》-Joe Armstrong">
-<meta name="twitter:image" content="http://gloriaswaterpool.com/images/frog.jpg">
+<meta name="twitter:title" content="waterpool">
     
 
     
@@ -200,165 +193,54 @@
 </aside>
 
             
-            <section id="main"><article id="post-学习一个erlang-afile" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
+            <section id="main"><div class="timeline timeline-wrap">
+    
+            <div class="timeline-row timeline-row-major">
+                <span class="node"><i class="fas fa-calendar-alt"></i></span>
+                <h1 class="title">2018</h1>
+            </div>
         
-        
-            <header class="article-header">
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
                 
     
-        <h1 class="article-title" itemprop="name">
-            学习一个erlang-afile
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/2018/09/26/How-to-Write-a-Lisp-Interpreter-in-Python-翻译/">How to Write a Lisp Interpreter in Python(翻译)</a>
         </h1>
     
 
-                
-                    <div class="article-meta">
-                        
+                <div class="article-meta">
+                    
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/03/学习一个erlang-afile/">
-            <time datetime="2018-11-03T07:25:12.000Z" itemprop="datePublished">2018-11-03</time>
+        <a href="/2018/09/26/How-to-Write-a-Lisp-Interpreter-in-Python-翻译/">
+            <time datetime="2018-09-26T11:32:41.000Z" itemprop="datePublished">2018-09-26</time>
         </a>
     </div>
 
 
-                        
+                    
     <div class="article-category">
     	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
+        <a class="article-category-link" href="/categories/translate/">translate</a>
     </div>
 
-                        
+                    
     <div class="article-tag">
         <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/erlang/">erlang</a>
+        <a class="tag-link" href="/tags/lisp/">lisp</a>
     </div>
 
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>学习一个erlang，参考《Erlang程序设计》-Joe Armstrong<br><a id="more"></a><br>一个书中的示例，简单的文件服务器。<br>分为两个部分，客户端和服务端。<br>书里实现了ls和get_file功能，还有作为习题之类的put_file功能<br>首先看客户端的实现，首先是3个函数，参数分别是1,2,3：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">-export</span><span class="params">([ls/<span class="number">1</span>,get_file/<span class="number">2</span>,put_file/<span class="number">3</span>])</span>.</span><br></pre></td></tr></table></figure></p>
-<p>对于ls功能，就是查看当前服务器目录下的所有文件了，有：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">ls</span><span class="params">(Server)</span> -&gt;</span></span><br><span class="line">	Server ! &#123;self(), list_dir&#125;,</span><br><span class="line">	<span class="keyword">receive</span></span><br><span class="line">		&#123;Server, FileList&#125; -&gt;</span><br><span class="line">			FileList</span><br><span class="line">	<span class="keyword">end</span>.</span><br></pre></td></tr></table></figure></p>
-<p>很好理解，接受的参数就是Server了，<br>Server ! {self(), list_dir}表示发送一个{self(),list_dir}消息给Server<br>然后接收一个来自于Server的FileList消息，打印出来<br>对于其他两个功能同理。<br>get_file需要添加参数文件名用来查找<br>put_file需要添加参数文件名和插入的字符串<br>对于服务端，有两个函数，start和loop：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">start</span><span class="params">(Dir)</span> -&gt;</span> spawn(afile_server, loop, [Dir]).</span><br></pre></td></tr></table></figure></p>
-<p>接收一个Dir参数作为文件服务器目录，然后创建服务端进程。<br>对于loop函数有：<br><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">loop</span><span class="params">(Dir)</span> -&gt;</span></span><br><span class="line">	<span class="keyword">receive</span></span><br><span class="line">		&#123;Client, list_dir&#125; -&gt;</span><br><span class="line">			Client ! &#123;self(), file:list_dir(Dir)&#125;;</span><br><span class="line">		&#123;Client, &#123;get_file, File&#125;&#125; -&gt;</span><br><span class="line">			Full = filename:join(Dir,File),</span><br><span class="line">			Client ! &#123;self(), file:read_file(Full)&#125;;</span><br><span class="line">		&#123;Client, &#123;put_file, File, String&#125;&#125; -&gt;</span><br><span class="line">			Full = filename:join(Dir,File),</span><br><span class="line">			Client ! &#123;self(), file:write_file(Full,String,[append])&#125;</span><br><span class="line">	<span class="keyword">end</span>,</span><br><span class="line">	loop(Dir).</span><br></pre></td></tr></table></figure></p>
-<p>不停循环监听消息。<br>这里按客户端的消息分为3类：<br>接收到客户端ls后发送的消息之后向其发送file:list_dir(Dir)作为结果。<br>其余的则是发送相应处理结果后的返回值，一般就是成功或者失败。<br>大概长这样：<br><img src="/2018/11/03/学习一个erlang-afile/1.png" alt=""></p>
-<p><a href="https://github.com/mioyuki2009/erlangLearn/tree/master/afile" target="_blank" rel="noopener">code</a></p>
-
-        
+                </div>
+            </div>
         </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
+    
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/03/学习一个erlang-afile/" data-id="cjonpte7a0000qwtr85k9dmzd" class="article-share-link"><i class="fas fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    学习一个vulkan(7)-画个三角形(显示)-交换链
-                
-            </div>
-        </a>
-    
-    
-        <a href="/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Older</strong>
-            <div class="article-nav-title">学习一个vulkan(6)-画个三角形(显示)-Window surface</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-
+    <nav id="page-nav">
+        <a class="extend prev" rel="prev" href="/archives/2018/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/2018/">1</a><a class="page-number" href="/archives/2018/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
 </section>
             
                 
