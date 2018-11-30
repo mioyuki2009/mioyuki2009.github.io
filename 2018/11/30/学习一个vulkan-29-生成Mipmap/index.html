@@ -14,7 +14,7 @@
 <meta property="og:description" content="继续上一次的">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
-<meta property="og:updated_time" content="2018-11-30T02:40:43.813Z">
+<meta property="og:updated_time" content="2018-11-30T08:04:27.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习一个vulkan(29)-生成Mipmap">
 <meta name="twitter:description" content="继续上一次的">
@@ -289,6 +289,7 @@
 <p>最明显的区别是木牌上的文字。使用mipmap时，文字会平滑处理。如果没有mipmaps，那么文字就会有莫尔条纹的粗糙边缘和间隙。</p>
 <p>您可以使用采样器设置来查看它们如何影响mipmapping。例如，通过更改minLod，您可以强制采样器不使用最低的mip级别：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">samplerInfo.minLod = <span class="keyword">static_cast</span>&lt;<span class="keyword">float</span>&gt;(mipLevels / <span class="number">2</span>);</span><br></pre></td></tr></table></figure></p>
 <p>这些设置将生成此图像：<br><img src="/2018/11/30/学习一个vulkan-29-生成Mipmap/4.png" alt=""></p>
+<p>这是当物体远离相机时将使用的更高mip级别的方式。</p>
 
         
         </div>
@@ -299,7 +300,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/30/学习一个vulkan-29-生成Mipmap/" data-id="cjp3ff5fv002ghstr2n1bq24u" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/30/学习一个vulkan-29-生成Mipmap/" data-id="cjp3qsofz002g3ktrgs5mip74" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
