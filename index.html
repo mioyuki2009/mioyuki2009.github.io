@@ -88,7 +88,7 @@
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -107,10 +107,10 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Entradas',
+            POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'Categorias',
-            TAGS: 'Etiquetas',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
@@ -141,7 +141,7 @@
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
     </div>
 
                 </td>
@@ -161,16 +161,16 @@
             <h2 id="name">mioyuki2009</h2>
             <h3 id="title">salt fish</h3>
             <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
-            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">SEGUIR</a>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                30
-                <span>Entradas</span>
+                31
+                <span>posts</span>
             </div>
             <div class="article-info-block">
                 3
-                <span>Etiquetas</span>
+                <span>tags</span>
             </div>
         </div>
         
@@ -194,6 +194,137 @@
 
             
             <section id="main">
+    <article id="post-学习一个vulkan-29-生成Mipmap" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/11/30/学习一个vulkan-29-生成Mipmap/">学习一个vulkan(29)-生成Mipmap</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/30/学习一个vulkan-29-生成Mipmap/">
+            <time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><p>继续上一次的<br></p></p>
+            <p class="article-more-link">
+                <a href="/2018/11/30/学习一个vulkan-29-生成Mipmap/#more">Read More</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/30/学习一个vulkan-29-生成Mipmap/" data-id="cjp3ff5fv002ghstr2n1bq24u" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-学习一个vulkan-28-加载模型" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -249,7 +380,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/29/学习一个vulkan-28-加载模型/" data-id="cjp20o5b1001yfotrscg1x6eq" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/29/学习一个vulkan-28-加载模型/" data-id="cjp3ff5ez001yhstrzg7yimt4" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -380,7 +511,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/28/学习一个vulkan-27-深度缓冲/" data-id="cjp20o5c3002efotrphv5luzs" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/28/学习一个vulkan-27-深度缓冲/" data-id="cjp3ff5fu002ehstrzufq5sbg" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -511,7 +642,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/27/学习一个vulkan-26-纹理映射-组合图像采样器/" data-id="cjp20o5az001vfotrawnjdppw" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/27/学习一个vulkan-26-纹理映射-组合图像采样器/" data-id="cjp3ff5f30024hstr3wws32xv" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -642,7 +773,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/26/学习一个vulkan-25-纹理映射-图像视图和采样器/" data-id="cjp20o5b40024fotrneqq2diy" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/26/学习一个vulkan-25-纹理映射-图像视图和采样器/" data-id="cjp3ff5ex001vhstri9ke61vv" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -773,7 +904,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/24/学习一个vulkan-24-纹理映射-图像/" data-id="cjp20o5cr002nfotrzfmdur3y" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/24/学习一个vulkan-24-纹理映射-图像/" data-id="cjp3ff5gz002qhstrq5t4rsfb" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -904,7 +1035,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/23/学习一个vulkan-23-统一缓冲区-描述符池和描述符集/" data-id="cjp20o5aw001sfotre0jlu960" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/23/学习一个vulkan-23-统一缓冲区-描述符池和描述符集/" data-id="cjp3ff5ew001shstrrqpw5ai9" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1035,7 +1166,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/22/学习一个vulkan-22-统一缓冲区-描述符布局和缓冲区/" data-id="cjp20o5ao001mfotrfoz8dcje" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/22/学习一个vulkan-22-统一缓冲区-描述符布局和缓冲区/" data-id="cjp3ff5et001mhstrsz42xugf" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1166,7 +1297,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/21/学习一个vulkan-21-顶点缓冲区-索引缓冲区/" data-id="cjp20o57f000jfotrs962jx3d" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/21/学习一个vulkan-21-顶点缓冲区-索引缓冲区/" data-id="cjp3ff5d7000jhstrh10fy4ie" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1297,138 +1428,7 @@
 
 </div>
 
-    <a data-url="http://gloriaswaterpool.com/2018/11/20/学习一个vulkan-20-顶点缓冲区-临时缓冲区/" data-id="cjp20o5au001pfotrqjqn1p9q" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-学习一个vulkan-19-顶点缓冲区-创建顶点缓冲区" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/11/19/学习一个vulkan-19-顶点缓冲区-创建顶点缓冲区/">学习一个vulkan(19)-顶点缓冲区-创建顶点缓冲区</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/19/学习一个vulkan-19-顶点缓冲区-创建顶点缓冲区/">
-            <time datetime="2018-11-19T01:56:22.000Z" itemprop="datePublished">2018-11-19</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>继续上一次的<br></p></p>
-            <p class="article-more-link">
-                <a href="/2018/11/19/学习一个vulkan-19-顶点缓冲区-创建顶点缓冲区/#more">Read More</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://gloriaswaterpool.com/2018/11/19/学习一个vulkan-19-顶点缓冲区-创建顶点缓冲区/" data-id="cjp20o5al001jfotrcnu6sv60" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+    <a data-url="http://gloriaswaterpool.com/2018/11/20/学习一个vulkan-20-顶点缓冲区-临时缓冲区/" data-id="cjp3ff5eu001phstr94a41hoh" class="article-share-link"><i class="fas fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -1505,7 +1505,7 @@
 
 
     <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Siguiente  &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
 </section>
             
@@ -1514,9 +1514,28 @@
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Recientes</h3>
+        <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/学习一个vulkan-29-生成Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/学习一个vulkan-29-生成Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1594,25 +1613,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/11/24/学习一个vulkan-24-纹理映射-图像/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(24)-纹理映射-图像" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
-                            <p class="item-title"><a href="/2018/11/24/学习一个vulkan-24-纹理映射-图像/" class="title">学习一个vulkan(24)-纹理映射-图像</a></p>
-                            <p class="item-date"><time datetime="2018-11-24T01:35:16.000Z" itemprop="datePublished">2018-11-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1620,34 +1620,34 @@
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Categorias</h3>
+        <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">30</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Archivos</h3>
+        <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Etiquetas</h3>
+        <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">28</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/">vulkan</a><span class="tag-list-count">29</span></li></ul>
         </div>
     </div>
 
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Nube de etiquetas</h3>
+        <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
         </div>
