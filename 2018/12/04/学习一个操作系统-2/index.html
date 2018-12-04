@@ -3,15 +3,22 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Archive: 2018 | waterpool</title>
+    <title>学习一个操作系统-2 | waterpool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta property="og:type" content="website">
-<meta property="og:title" content="waterpool">
-<meta property="og:url" content="http://gloriaswaterpool.com/archives/2018/page/3/index.html">
+    <meta name="description" content="继续上次的">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个操作系统-2">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/12/04/学习一个操作系统-2/index.html">
 <meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上次的">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/sad.jpg">
+<meta property="og:updated_time" content="2018-12-04T02:18:27.252Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="waterpool">
+<meta name="twitter:title" content="学习一个操作系统-2">
+<meta name="twitter:description" content="继续上次的">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/sad.jpg">
     
 
     
@@ -193,378 +200,166 @@
 </aside>
 
             
-            <section id="main"><div class="timeline timeline-wrap">
-    
-            <div class="timeline-row timeline-row-major">
-                <span class="node"><i class="fas fa-calendar-alt"></i></span>
-                <h1 class="title">2018</h1>
-            </div>
+            <section id="main"><article id="post-学习一个操作系统-2" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/10/学习一个vulkan-12-画个三角形-图形管道-渲染过程/">学习一个vulkan(12)-画个三角形(图形管道)-渲染过程</a>
+        <h1 class="article-title" itemprop="name">
+            学习一个操作系统-2
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/10/学习一个vulkan-12-画个三角形-图形管道-渲染过程/">
-            <time datetime="2018-11-10T01:30:19.000Z" itemprop="datePublished">2018-11-10</time>
+        <a href="/2018/12/04/学习一个操作系统-2/">
+            <time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time>
         </a>
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
+        <a class="article-category-link" href="/categories/os/">os</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
+        <a class="tag-link" href="/tags/linux/">linux</a>
     </div>
 
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+                    </div>
                 
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/09/学习一个vulkan-11-画个三角形-图形管道-固定功能/">学习一个vulkan(11)-画个三角形(图形管道)-固定功能</a>
-        </h1>
-    
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上次的<br><a id="more"></a><br>上次是使用qemu进行模拟的，但是原书中使用的bochs，觉得还是保持一致比较好</p>
+<p>首先安装bochs：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S bochs</span><br></pre></td></tr></table></figure></p>
+<p>然后输入命令进行软盘映像的创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bximage</span><br></pre></td></tr></table></figure></p>
+<p>得到下图所示：<br><img src="/2018/12/04/学习一个操作系统-2/1.png" alt=""></p>
+<p>第一个输入1，因为我们需要创建一个映像，第二个输入fd作为软盘创建，之后的输入默认就行，直接回车就行。<br>之后会在目录下得到一个a.img文件。现在可以将之前的引导扇区写入这个文件了：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=boot.bin of=a.img bs=512 count=1 conv=notrunc</span><br></pre></td></tr></table></figure></p>
+<p>相比上一次多了一个conv参数，如果不用的话软盘映像文件会被截断（truncated），因为boot.bin比a.img要小。</p>
+<p>之后需要实现一个bochs的配置文件bochsrc：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">megs=32</span><br><span class="line"></span><br><span class="line">romimage: file=/usr/share/bochs/file=BIOS-bochs-latest</span><br><span class="line">vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest</span><br><span class="line"></span><br><span class="line">floppya: 1_44=a.img, status=inserted</span><br><span class="line"></span><br><span class="line">log: bochsout.txt</span><br><span class="line"></span><br><span class="line">mouse: enable=0</span><br><span class="line"></span><br><span class="line">keyboard: keymap=/usr/share/bochs/keymaps/x11-pc-de.map</span><br></pre></td></tr></table></figure></p>
+<p>第一行设置模拟的物理内存，meg会将’guest’和’host’内存都设置为32mb</p>
+<p>第二三行是设置rom，和真机一样，Bochs也需要系统BIOS和VGA BIOS才能在打开电源或硬件复位后初始化机器，这里就是这两个的位置，这个是bochs安装的默认目录，如果有新的更改可以参考<a href="http://bochs.sourceforge.net/doc/docbook/user/rom-images.html" target="_blank" rel="noopener">这里</a>。</p>
+<p>第四行是软盘文件，状态设置为插入（inserted）。<br>第五行是输入文件，将相关信息输出到文件中。</p>
+<p>第六行是鼠标设置为禁用<br>第七行是键盘设置，这里设置为us键盘布局。</p>
+<p>设置好了之后使用bochs -f bochsrc启动模拟：<br><img src="/2018/12/04/学习一个操作系统-2/2.png" alt=""></p>
+<p>这里选择默认的6开始模拟：<br><img src="/2018/12/04/学习一个操作系统-2/3.png" alt=""></p>
+<p>这里每一个<code>&lt;bochs:num&gt;</code>之后都是一个调试命令，简单解释一下：<br>b 0x7c00 在0x7c00处打一个断点<br>c 继续执行到断点处，没有断点则一直运行<br>r 查看数据寄存器和标志寄存器<br>ps:现版本的bochs没有dump_cpu了,可以用r，fp，mmx，sse，dreg，sreg，creg命令组合来代替。<br>x /64xb 0x7c00 从0x7c00以16进制显示之后64个地址的内容<br>n 单步执行，遇到函数则跳过<br>trace-reg on 让bochs每走一步都显示主要寄存器的值</p>
+<p>如果有不清晰的，可以使用help命令查询</p>
+<p>最后使用c命令，就可以看到和之前一样的结果了：<br><img src="/2018/12/04/学习一个操作系统-2/4.png" alt=""></p>
 
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/09/学习一个vulkan-11-画个三角形-图形管道-固定功能/">
-            <time datetime="2018-11-09T01:22:18.000Z" itemprop="datePublished">2018-11-09</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
+        
         </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/08/学习一个vulkan-10-画个三角形-图形管道-着色器模块/">学习一个vulkan(10)-画个三角形(图形管道)-着色器模块</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/08/学习一个vulkan-10-画个三角形-图形管道-着色器模块/">
-            <time datetime="2018-11-08T01:38:21.000Z" itemprop="datePublished">2018-11-08</time>
-        </a>
-    </div>
+        <footer class="article-footer">
+            <div class="share-container">
 
 
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
 
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/">学习一个vulkan(9)-画个三角形(图形管道)-简介</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/07/学习一个vulkan-9-画个三角形-图形管道-简介/">
-            <time datetime="2018-11-07T01:23:19.000Z" itemprop="datePublished">2018-11-07</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">学习一个vulkan(8)-画个三角形(显示)-图像视图</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/06/学习一个vulkan-8-画个三角形-显示-图像视图/">
-            <time datetime="2018-11-06T01:11:35.000Z" itemprop="datePublished">2018-11-06</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/">学习一个vulkan(7)-画个三角形(显示)-交换链</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/05/学习一个vulkan-7-画个三角形-显示-交换链/">
-            <time datetime="2018-11-05T00:56:13.000Z" itemprop="datePublished">2018-11-05</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/03/学习一个erlang-afile/">学习一个erlang-afile</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/03/学习一个erlang-afile/">
-            <time datetime="2018-11-03T07:25:12.000Z" itemprop="datePublished">2018-11-03</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/erlang/">erlang</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/">学习一个vulkan(6)-画个三角形(显示)-Window surface</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/03/学习一个vulkan-6-画个三角形-显示-Window-surface/">
-            <time datetime="2018-11-03T01:35:05.000Z" itemprop="datePublished">2018-11-03</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/">学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/02/学习一个vulkan-5-画个三角形-构建-逻辑设备和队列/">
-            <time datetime="2018-11-02T01:19:22.000Z" itemprop="datePublished">2018-11-02</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/">学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fas fa-calendar-alt"></i>
-        <a href="/2018/11/01/学习一个vulkan-4-画个三角形-构建-物理设备和队列簇/">
-            <time datetime="2018-11-01T01:49:28.000Z" itemprop="datePublished">2018-11-01</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fas fa-folder"></i>
-        <a class="article-category-link" href="/categories/learn/">learn</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link" href="/tags/vulkan/">vulkan</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
 </div>
 
-    <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/2018/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/2018/">1</a><a class="page-number" href="/archives/2018/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/2018/page/4/">4</a><a class="extend next" rel="next" href="/archives/2018/page/4/">Next &raquo;</a>
-    </nav>
+    <a data-url="http://gloriaswaterpool.com/2018/12/04/学习一个操作系统-2/" data-id="cjp93s6gz0013h4tr8wf2rzyk" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/12/03/学习一个操作系统-1/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个操作系统-1</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
 </section>
             
                 
