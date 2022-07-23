@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(6)-画个三角形(显示)-Window surface | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(6)-画个三角形(显示)-Window surface">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-6-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%98%BE%E7%A4%BA-Window-surface/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-03T01:35:05.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.259Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-6-画个三角形-显示-Window-surface" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(6)-画个三角形(显示)-Window surface
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-6-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%98%BE%E7%A4%BA-Window-surface/">
+            <time datetime="2018-11-03T01:35:05.000Z" itemprop="datePublished">2018-11-03</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p>由于Vulkan是一个与平台特性无关联的API集合，不能直接与窗口系统进行交互。为了在Vulkan和窗口系统之间建立连接来显示结果，这里需要WSI（窗口系统集成）扩展。<br>在本章中将讨论其中的第一个，即VK_KHR_surface。它使用VkSurfaceKHR对象，这个对象是一个表示呈现渲染图像surface的抽象类型。<br>本程序中的surface将由使用GLFW打开的窗口来支持。</p>
+<p>VK_KHR_surface扩展是一个实例级扩展，我们实际上在之前已经启用了它，因为它包含在glfwGetRequiredInstanceExtensions返回的列表中了，该列表还包括我们将在接下来的几章中使用的一些其他WSI扩展。</p>
+<p>窗口surface需要在实例创建后创建，因为它实际上可以影响物理设备的选择。现在才说这个是因为这个主题太大了，之前说可能引起混乱。<br>值得注意的是，如果不需要屏幕渲染的话，窗口surface在vulkan中是完全可选的。Vulkan允许这样做，不需要同OpenGL一样必须要创建窗体。</p>
+<p><b>创建窗体surface</b><br>在callback成员下面添加一个新的成员变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkSurfaceKHR surface;</span><br></pre></td></tr></table></figure>
+<p>虽然VkSurfaceKHR对象及其用法与平台无关，但创建过程需要依赖具体的窗体系统的细节。例如在Windows中就需要需要HWND和HMODULE句柄。因此针对特定平台会提供相应的扩展，在Windows上为VK_KHR_win32_surface，它自动包含在glfwGetRequiredInstanceExtensions列表中。</p>
+<p>我将演示如何使用这个特定于平台的扩展在Windows上的创建方法，但是并不会在这个程序中使用。使用像GLFW这样的库然后继续使用特定于平台的代码是没有意义的。GLFW实际上有glfwCreateWindowSurface来处理平台之间的差异，不过在使用他之前，还是要知道背后的原理。</p>
+<p>因为窗口surface 是Vulkan对象，所以它也需要一个填充好的VkWin32SurfaceCreateInfoKHR结构来构建。<br>它有两个重要参数：hwnd和hinstance，分别是窗口和进程的句柄：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkWin32SurfaceCreateInfoKHR createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;</span><br><span class="line">createInfo.hwnd = <span class="built_in">glfwGetWin32Window</span>(window);</span><br><span class="line">createInfo.hinstance = <span class="built_in">GetModuleHandle</span>(<span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
+<p>glfwGetWin32Window函数用于从GLFW窗口对象获取原始HWND,GetModuleHandle返回当前进程的HINSTANCE句柄。</p>
+<p>之后就可以使用VkWin32SurfaceCreateInfoKHR来创建，同样需要显示加载。<br>调用很简单，参数分别是实例，surface的创建细节，自定义分配器和要存储的surface句柄的变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> CreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR) <span class="built_in">vkGetInstanceProcAddr</span>(instance, <span class="string">&quot;vkCreateWin32SurfaceKHR&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!CreateWin32SurfaceKHR || <span class="built_in">CreateWin32SurfaceKHR</span>(instance, &amp;createInfo, <span class="literal">nullptr</span>, &amp;surface) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create window surface!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个过程在Linux等其他平台也是类似的，使用X11界面窗体系统，可以通过vkCreateXcbSurfaceKHR函数建立连接。</p>
+<p>glfwCreateWindowSurface函数正好可以实现这种操作，并在每个平台下执行不同的实现，我们现在将它集成到我们的程序中，在initVulkan中添加createSurface函数，在setupDebugCallback后面调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">createInstance</span>();</span><br><span class="line">    <span class="built_in">setupDebugCallback</span>();</span><br><span class="line">    <span class="built_in">createSurface</span>();</span><br><span class="line">    <span class="built_in">pickPhysicalDevice</span>();</span><br><span class="line">    <span class="built_in">createLogicalDevice</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSurface</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>GLFW的调用采用简单的参数而不是结构，这使得函数的使用非常简单：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSurface</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">glfwCreateWindowSurface</span>(instance, window, <span class="literal">nullptr</span>, &amp;surface) != VK_SUCCESS) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create window surface!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参数分别是VkInstance，GLFW窗口指针，自定义分配器和指向VkSurfaceKHR类型的指针变量。它只是通过相关平台传递调用VkResult。<br>GLFW不提供清理surface的相关功能，可以通过原始API轻松完成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="built_in">vkDestroySurfaceKHR</span>(instance, surface, <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroyInstance</span>(instance, <span class="literal">nullptr</span>);</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确保在销毁实例之前销毁surface </p>
+<p><b>查询显示（presentation）支持</b><br>虽然Vulkan支持窗口系统集成的功能，但这不代表系统中的设备都支持。因此，我们需要扩展isDeviceSuitable以确保设备可以将图像呈现给我们创建的surface。<br>由于显示是专用队列（queue-specific）的功能，问题就变成了找到一个支持在surface上进行显示功能的队列簇。</p>
+<p>支持绘图命令的队列簇和支持显示的队列簇可能不是一个，考虑到可能存在的不同的表示队列，所以需要对QueueFamilyIndices结构进行修改：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">QueueFamilyIndices</span> &#123;</span><br><span class="line">    std::optional&lt;<span class="type">uint32_t</span>&gt; graphicsFamily;</span><br><span class="line">    std::optional&lt;<span class="type">uint32_t</span>&gt; presentFamily;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isComplete</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> graphicsFamily.<span class="built_in">has_value</span>() &amp;&amp; presentFamily.<span class="built_in">has_value</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>接下来，需要修改find​​QueueFamilies函数来查找具有在窗口surface进行显示功能的队列簇。<br>相关的查找函数是vkGetPhysicalDeviceSurfaceSupportKHR，参数分别是物理设备，队列簇索引和surface。将这个函数添加到VK_QUEUE_GRAPHICS_BIT所在的循环体中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkBool32 presentSupport = <span class="literal">false</span>;</span><br><span class="line"><span class="built_in">vkGetPhysicalDeviceSurfaceSupportKHR</span>(device, i, surface, &amp;presentSupport);</span><br></pre></td></tr></table></figure>
+<p>之后需检查返回的布尔值并存储显示功能队列簇的索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (queueFamily.queueCount &gt; 0 &amp;&amp; presentSupport) &#123;</span><br><span class="line">    indices.presentFamily = i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>值得注意的，支持绘图命令的队列簇和支持显示的队列簇可能是相同的队列簇，在程序中这两种情况会有统一的处理方式（当成不同的队列簇）。<br>不过，可以添加逻辑来优先选择同时支持这两个功能的物理设备以提高性能。</p>
+<p><b>创建显示队列</b><br>现在要做的就是修改逻辑设备的创建过程，创建显示队列并获取VkQueue句柄，添加句柄成员变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkQueue presentQueue;</span><br></pre></td></tr></table></figure>
+<p>接下来，我们需要多个VkDeviceQueueCreateInfo结构来创建不同功能的队列。一个优雅的方式是set集合来保存需要的所有队列簇，这样就可以保证唯一性了:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;set&gt;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">QueueFamilyIndices indices = <span class="built_in">findQueueFamilies</span>(physicalDevice);</span><br><span class="line"></span><br><span class="line">std::vector&lt;VkDeviceQueueCreateInfo&gt; queueCreateInfos;</span><br><span class="line">std::set&lt;<span class="type">uint32_t</span>&gt; uniqueQueueFamilies = &#123;indices.graphicsFamily.<span class="built_in">value</span>(), indices.presentFamily.<span class="built_in">value</span>()&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> queuePriority = <span class="number">1.0f</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">uint32_t</span> queueFamily : uniqueQueueFamilies) &#123;</span><br><span class="line">    VkDeviceQueueCreateInfo queueCreateInfo = &#123;&#125;;</span><br><span class="line">    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;</span><br><span class="line">    queueCreateInfo.queueFamilyIndex = queueFamily;</span><br><span class="line">    queueCreateInfo.queueCount = <span class="number">1</span>;</span><br><span class="line">    queueCreateInfo.pQueuePriorities = &amp;queuePriority;</span><br><span class="line">    queueCreateInfos.<span class="built_in">push_back</span>(queueCreateInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时还需要修改VkDeviceCreateInfo指向的队列集合：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createInfo.queueCreateInfoCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(queueCreateInfos.<span class="built_in">size</span>());</span><br><span class="line">createInfo.pQueueCreateInfos = queueCreateInfos.<span class="built_in">data</span>();</span><br></pre></td></tr></table></figure>
+<p>如果队列簇相同，那么我们只需要传递一次索引。<br>最后，添加一个函数来检索队列句柄：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkGetDeviceQueue</span>(device, indices.presentFamily.<span class="built_in">value</span>(), <span class="number">0</span>, &amp;presentQueue);</span><br></pre></td></tr></table></figure>
+<p>如果队列簇相同，则两个句柄很可能具有相同的值。<br>在下一章中，我们将讨论交换链以及如何使用他来在surface上呈现图像。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-6-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%98%BE%E7%A4%BA-Window-surface/" data-id="cl5xdmzn3002bc4uxfda35m40" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAerlang-afile/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个erlang-afile
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/02/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-5-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E9%80%BB%E8%BE%91%E8%AE%BE%E5%A4%87%E5%92%8C%E9%98%9F%E5%88%97/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(5)-画个三角形(构建)-逻辑设备和队列</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

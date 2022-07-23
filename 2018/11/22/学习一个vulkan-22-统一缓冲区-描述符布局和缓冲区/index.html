@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(22)-统一缓冲区-描述符布局和缓冲区 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(22)-统一缓冲区-描述符布局和缓冲区">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/22/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-22-%E7%BB%9F%E4%B8%80%E7%BC%93%E5%86%B2%E5%8C%BA-%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B8%83%E5%B1%80%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-22T01:18:53.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-22-统一缓冲区-描述符布局和缓冲区" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(22)-统一缓冲区-描述符布局和缓冲区
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/22/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-22-%E7%BB%9F%E4%B8%80%E7%BC%93%E5%86%B2%E5%8C%BA-%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B8%83%E5%B1%80%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA/">
+            <time datetime="2018-11-22T01:18:53.000Z" itemprop="datePublished">2018-11-22</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>介绍</b><br>我们现在能够将任意属性传递给每个顶点的顶点着色器，但是全局变量呢？我们将从本章开始转向3D图形，这需要一个模型-视图-投影矩阵。我们可以将它包含为顶点数据，但这会浪费内存，并且只要转换发生变化，就需要我们更新顶点缓冲区。这种变换通常会发生在每一帧。</p>
+<p>在Vulkan中解决这个问题的正确方法是使用资源描述符（resource descriptors）。描述符是着色器可以自由访问缓冲区和图像等资源的一种方式。我们将设置一个包含转换矩阵的缓冲区，并让顶点着色器通过描述符访问它们。描述符的使用包括三个部分：</p>
+<ul>
+<li>在管道创建期间指定描述符布局</li>
+<li>从描述符池分配描述符集</li>
+<li>在渲染期间绑定描述符集</li>
+</ul>
+<p>描述符布局（descriptor layout）指定了管道将访问的资源类型，就像渲染过程指定了要访问的附件类型一样。描述符集（descriptor set）指定将绑定到描述符的实际缓冲区或图像资源，就像帧缓冲区指定要绑定到渲染通道附件的实际图像视图一样。然后，描述符集绑定到绘图命令，就像顶点缓冲区和帧缓冲区一样。</p>
+<p>描述符有很多种类，但在本章中我们将使用统一缓冲区对象（UBO）。我们将在后面的章节中介绍其他类型的描述符，但基本过程是相同的。假设我们有一个数据，我们希望顶点着色器拥有一个这样的C语言形式的结构体：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">UniformBufferObject</span> &#123;</span><br><span class="line">    glm::mat4 model;</span><br><span class="line">    glm::mat4 view;</span><br><span class="line">    glm::mat4 proj;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>然后我们可以将数据复制到VkBuffer并通过顶点着色器中的统一缓冲区对象描述符访问它，如下所示：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">layout</span>(<span class="keyword">binding</span> = <span class="number">0</span>) <span class="keyword">uniform</span> UniformBufferObject &#123;</span><br><span class="line">    <span class="type">mat4</span> model;</span><br><span class="line">    <span class="type">mat4</span> view;</span><br><span class="line">    <span class="type">mat4</span> proj;</span><br><span class="line">&#125; ubo;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = ubo.proj * ubo.view * ubo.model * <span class="type">vec4</span>(inPosition, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">    fragColor = inColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们会在每一帧更新模型，视图和投影矩阵，使前一章的矩形以3D旋转。</p>
+<p><b>顶点着色器</b><br>修改顶点着色器以包含上面指定的统一缓冲区对象。这里假设您熟悉MVP转换，如果不是，请参阅<a target="_blank" rel="noopener" href="http://opengl.datenwolf.net/gltut/html/index.html">这个资源</a>。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">binding</span> = <span class="number">0</span>) <span class="keyword">uniform</span> UniformBufferObject &#123;</span><br><span class="line">    <span class="type">mat4</span> model;</span><br><span class="line">    <span class="type">mat4</span> view;</span><br><span class="line">    <span class="type">mat4</span> proj;</span><br><span class="line">&#125; ubo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec2</span> inPosition;</span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec3</span> inColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = ubo.proj * ubo.view * ubo.model * <span class="type">vec4</span>(inPosition, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">    fragColor = inColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>请注意，uniform，in和out声明的顺序无关紧要。binding指令类似于属性的location指令，我们将在描述符布局中引用此绑定。将gl_Position行更改为使用变换矩阵计算裁剪坐标的最终位置。与2D三角形不同，裁剪坐标的最后一个分量可能不是1，这将导致在屏幕上转换为最终标准化设备坐标时会做一个除法。在透视投影中的透视除法（perspective division）也用到了这种方法，而且这对于能使更近的物体看起来比远离的物体更大是必要的。</p>
+<p><b>描述符集布局</b><br>下一步是在C++端定义UBO，并告知Vulkan在顶点着色器使用该描述符：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">UniformBufferObject</span> &#123;</span><br><span class="line">    glm::mat4 model;</span><br><span class="line">    glm::mat4 view;</span><br><span class="line">    glm::mat4 proj;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>我们可以使用GLM中的与着色器中结构体完全匹配的数据类型。矩阵中的数据与着色器预期的二进制数据兼容，所以我们可以稍后将一个UniformBufferObject通过memcpy拷贝到VkBuffer中。</p>
+<p>我们需要提供有关在着色器中用于管道创建的每个描述符绑定的详细信息，就像我们必须对每个顶点属性及其位置索引所做的那样。我们将设置一个新函数来定义所有这些名为createDescriptorSetLayout的信息，它应该在管道创建之前调用，因为我们之后就会用到它。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">createDescriptorSetLayout</span>();</span><br><span class="line">    <span class="built_in">createGraphicsPipeline</span>();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">createDescriptorSetLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个绑定都需要通过VkDescriptorSetLayoutBinding结构来描述。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createDescriptorSetLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkDescriptorSetLayoutBinding uboLayoutBinding = &#123;&#125;;</span><br><span class="line">    uboLayoutBinding.binding = <span class="number">0</span>;</span><br><span class="line">    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;</span><br><span class="line">    uboLayoutBinding.descriptorCount = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前两个参数指定了着色器中使用的绑定和描述符的类型，他是一个统一缓冲区对象。着色器变量可以表示统一缓冲区对象的数组，而descriptorCount则指定数组中的值的数量。这可以用于为骨架动画指定骨架中每个骨骼的变换。我们的MVP转换在一个统一的缓冲区对象中，因此我们使用的descriptorCount为1。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;</span><br></pre></td></tr></table></figure>
+<p>我们还需要指定描述符将被引用于哪个着色器阶段。stageFlags字段可以是VkShaderStageFlagBits或VK_SHADER_STAGE_ALL_GRAPHICS的各种组合，在我们的例子中，我们只引用顶点着色器中的描述符。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uboLayoutBinding.pImmutableSamplers = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>pImmutableSamplers字段仅与图像采样相关的描述符相关，我们将在后面介绍。现在可以将其保留为默认值。</p>
+<p>所有描述符绑定都会组合到一个VkDescriptorSetLayout对象中。在pipelineLayout上面定义一个新的类成员：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkDescriptorSetLayout descriptorSetLayout;</span><br><span class="line">VkPipelineLayout pipelineLayout;</span><br></pre></td></tr></table></figure>
+<p>然后我们可以使用vkCreateDescriptorSetLayout创建它。这个函数接受一个简单的结构体VkDescriptorSetLayoutCreateInfo，该结构体持有一个绑定数组：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">VkDescriptorSetLayoutCreateInfo layoutInfo = &#123;&#125;;</span><br><span class="line">layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;</span><br><span class="line">layoutInfo.bindingCount = <span class="number">1</span>;</span><br><span class="line">layoutInfo.pBindings = &amp;uboLayoutBinding;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">vkCreateDescriptorSetLayout</span>(device, &amp;layoutInfo, <span class="literal">nullptr</span>, &amp;descriptorSetLayout) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create descriptor set layout!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们需要在管道创建期间指定描述符集布局，用以告诉Vulkan着色器将使用哪些描述符。描述符集布局在管道布局对象中指定，修改VkPipelineLayoutCreateInfo来引用布局对象：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineLayoutCreateInfo pipelineLayoutInfo = &#123;&#125;;</span><br><span class="line">pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;</span><br><span class="line">pipelineLayoutInfo.setLayoutCount = <span class="number">1</span>;</span><br><span class="line">pipelineLayoutInfo.pSetLayouts = &amp;descriptorSetLayout;</span><br></pre></td></tr></table></figure>
+<p>您可能想知道为什么可以在此指定多个描述符集布局，这是因为单个布局已包含所有绑定了。我们将在下一章回到这里，那时我们将研究描述符池和描述符集。</p>
+<p>描述符布局应该在程序退出前始终有效：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cleanupSwapChain</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyDescriptorSetLayout</span>(device, descriptorSetLayout, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><b>统一缓冲区</b><br>在下一章中，我们将指定包含着色器的UBO数据的缓冲区，但我们需要首先创建此缓冲区。我们将每帧的新数据都复制到统一缓冲区，因此拥有一个临时缓冲区并没有任何意义，在这种情况下，它只会增加额外的开销，并可能降低性能而不是改进它。</p>
+<p>我们应该有多个缓冲区，因为多个帧可能同时都在飞行状态，我们不希望更新缓冲区以准备下一帧的时候，前一帧仍然在读取。但是，由于我们需要从每个交换链图像的命令缓冲区引用统一缓冲区，因此每个交换链图像也有一个统一的缓冲区是很有意义的。</p>
+<p>为此，需要为uniformBuffers和uniformBuffersMemory添加新的类成员：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VkBuffer indexBuffer;</span><br><span class="line">VkDeviceMemory indexBufferMemory;</span><br><span class="line"></span><br><span class="line">std::vector&lt;VkBuffer&gt; uniformBuffers;</span><br><span class="line">std::vector&lt;VkDeviceMemory&gt; uniformBuffersMemory;</span><br></pre></td></tr></table></figure>
+<p>同样，创建一个新函数createUniformBuffers，它在createIndexBuffer之后调用并分配缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">createVertexBuffer</span>();</span><br><span class="line">    <span class="built_in">createIndexBuffer</span>();</span><br><span class="line">    <span class="built_in">createUniformBuffer</span>();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">createUniformBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkDeviceSize bufferSize = <span class="built_in">sizeof</span>(UniformBufferObject);</span><br><span class="line"></span><br><span class="line">    uniformBuffers.<span class="built_in">resize</span>(swapChainImages.<span class="built_in">size</span>());</span><br><span class="line">    uniformBuffersMemory.<span class="built_in">resize</span>(swapChainImages.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImages.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="built_in">createBuffer</span>(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将编写一个单独的函数来更新统一缓冲区，每帧都有一个新的变换，因此这里不会有vkMapMemory。统一数据将将用于所有绘制调用，因此包含它的缓冲区会在最后才进行销毁：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cleanupSwapChain</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyDescriptorSetLayout</span>(device, descriptorSetLayout, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImages.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroyBuffer</span>(device, uniformBuffers[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkFreeMemory</span>(device, uniformBuffersMemory[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><b>更新统一数据</b><br>在我们知道要获取哪个交换链图像后，立即创建一个新函数updateUniformBuffer并在drawFrame函数里添加对它的调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="type">uint32_t</span> imageIndex;</span><br><span class="line">    VkResult result = <span class="built_in">vkAcquireNextImageKHR</span>(device, swapChain, std::numeric_limits&lt;<span class="type">uint64_t</span>&gt;::<span class="built_in">max</span>(), imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &amp;imageIndex);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">updateUniformBuffer</span>(imageIndex);</span><br><span class="line"></span><br><span class="line">    VkSubmitInfo submitInfo = &#123;&#125;;</span><br><span class="line">    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateUniformBuffer</span><span class="params">(<span class="type">uint32_t</span> currentImage)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此函数将每帧生成一个新变换，来使几何体旋转。我们需要包含两个新的头文件来实现此功能：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> GLM_FORCE_RADIANS</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/glm.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;glm/gtc/matrix_transform.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>glm&#x2F;gtc&#x2F;matrix_transform.hpp拥有可用于生成模型转换的函数，如glm::rotate，查看转换的函数，如glm::lookAt，以及投影变换函数，比如glm::perspective。GLM_FORCE_RADIANS的定义是必要的，这可以确保像glm::rotate这样的函数会使用弧度作为参数，用以避免任何可能的混淆。</p>
+<p>chrono标准库拥有执行精确计时的功能。我们将使用它来确保几何体每秒旋转90度，而不管帧速率如何。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">updateUniformBuffer</span><span class="params">(<span class="type">uint32_t</span> currentImage)</span> </span>&#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">auto</span> startTime = std::chrono::high_resolution_clock::<span class="built_in">now</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> currentTime = std::chrono::high_resolution_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="type">float</span> time = std::chrono::<span class="built_in">duration</span>&lt;<span class="type">float</span>, std::chrono::seconds::period&gt;(currentTime - startTime).<span class="built_in">count</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>updateUniformBuffer函数将以一些逻辑开始以浮点精度来计算自渲染开始以来的经过的秒数。</p>
+<p>我们现在将在统一缓冲区对象中定义模型，视图和投影变换。模型的旋转将使用时间变量围绕Z轴进行简单旋转：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UniformBufferObject ubo = &#123;&#125;;</span><br><span class="line">ubo.model = glm::<span class="built_in">rotate</span>(glm::<span class="built_in">mat4</span>(<span class="number">1.0f</span>), time * glm::<span class="built_in">radians</span>(<span class="number">90.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>));</span><br></pre></td></tr></table></figure>
+<p>glm::rotate函数将现有变换矩阵，旋转角度和旋转轴作为参数。glm::mat4(1.0f)构造函数返回一个单位矩阵。使用旋转角度time*glm::radians(90.0f)可以实现每秒90度旋转的目的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubo.view = glm::<span class="built_in">lookAt</span>(glm::<span class="built_in">vec3</span>(<span class="number">2.0f</span>, <span class="number">2.0f</span>, <span class="number">2.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>), glm::<span class="built_in">vec3</span>(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>));</span><br></pre></td></tr></table></figure>
+<p>对于视图变换，我决定以45度角从上面来观察。glm::lookAt函数将眼睛位置，中心位置和向上轴作为参数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubo.proj = glm::<span class="built_in">perspective</span>(glm::<span class="built_in">radians</span>(<span class="number">45.0f</span>), swapChainExtent.width / (<span class="type">float</span>) swapChainExtent.height, <span class="number">0.1f</span>, <span class="number">10.0f</span>);</span><br></pre></td></tr></table></figure>
+<p>我选择使用具有45度垂直视场角（FOV）的透视投影。其他参数分别是宽高比，近裁剪面和远裁剪面。使用当前交换链的范围来计算宽高比非常重要，以便在调整大小后考虑窗口的新宽度和高度。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubo.proj[<span class="number">1</span>][<span class="number">1</span>] *= <span class="number">-1</span>;</span><br></pre></td></tr></table></figure>
+<p>GLM最初是为OpenGL设计的，其中裁剪坐标的Y坐标是反转的。最简单的修正方法是在投影矩阵中翻转Y轴缩放因子的符号。如果你不这样做，那么图像将被颠倒渲染。</p>
+<p>现在定义了所有转换，因此我们可以将统一缓冲区对象中的数据复制到当前的统一缓冲区。这与我们对顶点缓冲区的操作完全相同，除了没有暂存缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span>* data;</span><br><span class="line"><span class="built_in">vkMapMemory</span>(device, uniformBuffersMemory[currentImage], <span class="number">0</span>, <span class="built_in">sizeof</span>(ubo), <span class="number">0</span>, &amp;data);</span><br><span class="line">    <span class="built_in">memcpy</span>(data, &amp;ubo, <span class="built_in">sizeof</span>(ubo));</span><br><span class="line"><span class="built_in">vkUnmapMemory</span>(device, uniformBuffersMemory[currentImage]);</span><br></pre></td></tr></table></figure>
+<p>使用UBO这种方式不是将频繁更改的值传递给着色器的最有效方法。将小数据缓冲区传递给着色器的更有效方法是推式常量（push constants）。我们可以在以后的章节中看到。</p>
+<p>在下一章中，我们将讨论描述符集，它实际上将VkBuffers绑定到统一缓冲区描述符，以便着色器可以访问相关的转换数据（转换矩阵等）。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/22/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-22-%E7%BB%9F%E4%B8%80%E7%BC%93%E5%86%B2%E5%8C%BA-%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B8%83%E5%B1%80%E5%92%8C%E7%BC%93%E5%86%B2%E5%8C%BA/" data-id="cl5xdmzmu001bc4uxe8fy36v1" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/23/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-23-%E7%BB%9F%E4%B8%80%E7%BC%93%E5%86%B2%E5%8C%BA-%E6%8F%8F%E8%BF%B0%E7%AC%A6%E6%B1%A0%E5%92%8C%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9B%86/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(23)-统一缓冲区-描述符池和描述符集
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/21/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-21-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E7%B4%A2%E5%BC%95%E7%BC%93%E5%86%B2%E5%8C%BA/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(21)-顶点缓冲区-索引缓冲区</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

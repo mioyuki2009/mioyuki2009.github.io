@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(11)-画个三角形(图形管道)-固定功能 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(11)-画个三角形(图形管道)-固定功能">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/09/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-11-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-09T01:22:18.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-11-画个三角形-图形管道-固定功能" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(11)-画个三角形(图形管道)-固定功能
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/09/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-11-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD/">
+            <time datetime="2018-11-09T01:22:18.000Z" itemprop="datePublished">2018-11-09</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p>较旧的图形API都会为图形管道的大多数阶段提供一个默认状态。在Vulkan中，您必须明确指定所有内容，从视口大小到颜色混合功能都需要。在本章中，我们将填写配置这些固定功能操作的所有结构。</p>
+<p><b>输入顶点</b><br>VkPipelineVertexInputStateCreateInfo结构描述了用于传递给顶点着色器的顶点数据的格式。一般会从下面两个方面来说明：</p>
+<ul>
+<li>Bindings：数据之间的间距以及数据是顶点还是实例（请参阅<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Geometry_instancing">instancing</a>）。</li>
+<li>Attribute descriptions：描述将要进行绑定及加载属性的顶点着色器中的相关属性类型。</li>
+</ul>
+<p>因为我们在顶点着色器中是直接对顶点数据进行硬编码的，所以我们在填充此结构的时候需要指定现在没有要加载的顶点数据，我们之后将在顶点缓冲区章节中回来修改：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineVertexInputStateCreateInfo vertexInputInfo = &#123;&#125;;</span><br><span class="line">vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;</span><br><span class="line">vertexInputInfo.vertexBindingDescriptionCount = <span class="number">0</span>;</span><br><span class="line">vertexInputInfo.pVertexBindingDescriptions = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br><span class="line">vertexInputInfo.vertexAttributeDescriptionCount = <span class="number">0</span>;</span><br><span class="line">vertexInputInfo.pVertexAttributeDescriptions = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>pVertexBindingDescriptions和pVertexAttributeDescriptions成员指向一个结构数组，用于描述上述加载顶点数据的细节。将这个结构添加到createGraphicsPipeline函数中shaderStages数组后面。</p>
+<p><b>输入组件</b><br>VkPipelineInputAssemblyStateCreateInfo结构描述了两件事：将从顶点绘制什么样的几何体以及是否开启图元重构（primitive restart）。前者在topology成员中指定，可以具有如下值：</p>
+<ul>
+<li>VK_PRIMITIVE_TOPOLOGY_POINT_LIST：顶点到点</li>
+<li>VK_PRIMITIVE_TOPOLOGY_LINE_LIST：两点成线，顶点不重复使用</li>
+<li>VK_PRIMITIVE_TOPOLOGY_LINE_STRIP：每条线的结束顶点用作下一行的起始顶点</li>
+<li>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST：三个点成为一个三角形，顶点不重复使用</li>
+<li>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP：每个三角形的第二个和第三个顶点用作下一个三角形的前两个顶点</li>
+</ul>
+<p>通常，顶点会按顺序索引从顶点缓冲区加载，但是使用元素缓冲区（element buffer）也可以指定要自定义的索引，这允许您执行重用顶点等优化方式。如果将primitiveRestartEnable成员设置为VK_TRUE，则可以通过使用特殊索引0xFFFF或0xFFFFFFFF来分解_STRIP拓扑模式中的线和三角形。</p>
+<p>我们打算在本教程中绘制三角形，因此将使用下面的结构数据：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineInputAssemblyStateCreateInfo inputAssembly = &#123;&#125;;</span><br><span class="line">inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;</span><br><span class="line">inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;</span><br><span class="line">inputAssembly.primitiveRestartEnable = VK_FALSE;</span><br></pre></td></tr></table></figure>
+
+<p><b>视口和裁剪</b><br>视口简单描述了将用于渲染输出的的帧缓冲区域。基本上都是(0, 0)到(width, height)，在本教程中也是如此：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VkViewport viewport = &#123;&#125;;</span><br><span class="line">viewport.x = <span class="number">0.0f</span>;</span><br><span class="line">viewport.y = <span class="number">0.0f</span>;</span><br><span class="line">viewport.width = (<span class="type">float</span>) swapChainExtent.width;</span><br><span class="line">viewport.height = (<span class="type">float</span>) swapChainExtent.height;</span><br><span class="line">viewport.minDepth = <span class="number">0.0f</span>;</span><br><span class="line">viewport.maxDepth = <span class="number">1.0f</span>;</span><br></pre></td></tr></table></figure>
+<p>请记住，交换链及其图像的大小可能与窗口的WIDTH和HEIGHT不同。交换链图像将在以后用作帧缓冲区，因此我们应该坚持它们的大小不变。</p>
+<p>minDepth和maxDepth值指定用于帧缓冲区的深度值的范围。这些值必须在[0.0f，1.0f]范围内，minDepth也是可能高于maxDepth的。如果没有特殊需求的话，使用标准的0.0f和1.0f就行了。</p>
+<p>视口定义了从图像到帧缓冲的转换方式，裁剪矩形定义了实际存储像素的区域。裁剪矩形外的任何像素都将在光栅化阶段丢弃。在功能上它们更加类似于过滤而不是转换。差异如下图所示。请注意，对于图像比视口尺寸大的情况下，左侧的裁剪矩形只是众多可能方式其中一个表现。<br><img src="/2018/11/09/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-11-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD/1.png"><br>在本教程中，我们只想绘制整个帧缓冲区，因此我们将指定一个完全覆盖它的剪刀矩形：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkRect2D scissor = &#123;&#125;;</span><br><span class="line">scissor.offset = &#123;<span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">scissor.extent = swapChainExtent;</span><br></pre></td></tr></table></figure>
+<p>现在，需要使用VkPipelineViewportStateCreateInfo结构将此视口和裁剪矩形组合到一起。由于某些显卡上支持使用多个视口和裁剪矩形，因此这里的成员是引用它们的数组的，要使用这个特性（多个视口和裁剪矩阵同时组合）需要启用相应的GPU功能（请参阅创建逻辑设备章节）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineViewportStateCreateInfo viewportState = &#123;&#125;;</span><br><span class="line">viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;</span><br><span class="line">viewportState.viewportCount = <span class="number">1</span>;</span><br><span class="line">viewportState.pViewports = &amp;viewport;</span><br><span class="line">viewportState.scissorCount = <span class="number">1</span>;</span><br><span class="line">viewportState.pScissors = &amp;scissor;</span><br></pre></td></tr></table></figure>
+
+<p><b>光栅化</b><br>光栅化器使用由顶点着色器的顶点组成的几何体，并将其转换为片段着色器着色的片段。它还可以执行<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Z-buffering">深度测试</a>，<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Back-face_culling">面部剔除</a>和裁剪测试，并且为输出来选择配置是填充整个多边形还是仅仅填充边缘的片段（线框渲染）。所有的这些都是使用VkPipelineRasterizationStateCreateInfo结构来配置的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineRasterizationStateCreateInfo rasterizer = &#123;&#125;;</span><br><span class="line">rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;</span><br><span class="line">rasterizer.depthClampEnable = VK_FALSE;</span><br></pre></td></tr></table></figure>
+<p>如果depthClampEnable设置为VK_TRUE，那么超出近平面和远平面的片段将会收敛它们来使用而不是丢弃。这在阴影贴图等特殊情况下很有用，使用此功能需要开启相应的GPU功能。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rasterizer.rasterizerDiscardEnable = VK_FALSE;</span><br></pre></td></tr></table></figure>
+<p>如果rasterizerDiscardEnable设置为VK_TRUE，则几何体永远不会通过光栅化器阶段。这基本上禁用了帧缓冲的所有输出。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rasterizer.polygonMode = VK_POLYGON_MODE_FILL;</span><br></pre></td></tr></table></figure>
+<p>polygonMode设置如何为几何生成片段。有以下几个选项可供选择：</p>
+<ul>
+<li>VK_POLYGON_MODE_FILL：用片段填充多边形的区域</li>
+<li>VK_POLYGON_MODE_LINE：多边形边缘绘制为线条</li>
+<li>VK_POLYGON_MODE_POINT：多边形顶点绘制为点</li>
+</ul>
+<p>使用除填充之外的任何模式都需要启用相应的GPU功能。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rasterizer.lineWidth = <span class="number">1.0f</span>;</span><br></pre></td></tr></table></figure>
+<p>lineWidth成员很简单，它根据片段数目描述线的粗细。支持的最大线宽取决于硬件，任何厚度大于1.0f的线都要求启用wideLines的GPU功能。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;</span><br><span class="line">rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;</span><br></pre></td></tr></table></figure>
+<p>cullMode变量确定要使用的面部剔除的类型，可以选择禁用剔除，剔除正面，剔除背面或都剔除。frontFace变量指定面向前面的面的顶点顺序，可以是顺时针或逆时针。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rasterizer.depthBiasEnable = VK_FALSE;</span><br><span class="line">rasterizer.depthBiasConstantFactor = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">rasterizer.depthBiasClamp = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">rasterizer.depthBiasSlopeFactor = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>光栅化器可以通过添加常量值或根据片段的斜率更改偏置来更改深度值。这个方法有时用于阴影贴图，但我们在这里不会使用，只需将depthBiasEnable设置为VK_FALSE即可。</p>
+<p><b>多重采样</b><br>VkPipelineMultisampleStateCreateInfo结构用来配置多重采样，这是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Multisample_anti-aliasing">消除锯齿的方法之一</a>。它会将光栅化后位于同一像素的点经过片段着色器进行处理后得到的结果来进行组合。这主要发生在边缘，这也是最明显的锯齿出现的地方。如果只有一个多边形映射到一个像素，是不需要多次运行片段着色器，它比简单地渲染到更高的分辨率然后再缩小尺寸开销要低得多。开启这个功能也需要开启相应的gpu功能：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineMultisampleStateCreateInfo multisampling = &#123;&#125;;</span><br><span class="line">multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;</span><br><span class="line">multisampling.sampleShadingEnable = VK_FALSE;</span><br><span class="line">multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;</span><br><span class="line">multisampling.minSampleShading = <span class="number">1.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">multisampling.pSampleMask = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br><span class="line">multisampling.alphaToCoverageEnable = VK_FALSE; <span class="comment">// Optional</span></span><br><span class="line">multisampling.alphaToOneEnable = VK_FALSE; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>我们将在后面的章节中重新进行多重采样，现在先禁用它。</p>
+<p><b>深度测试和模板测试</b><br>如果使用深度或模板缓冲区，则还需要使用VkPipelineDepthStencilStateCreateInfo来配置深度和模板测试。我们现在没有用到，所以我们简单地传递一个nullptr而不是指向这样一个结构的指针。之后将在深度缓冲章节回来进行配置。</p>
+<p><b>颜色混合</b><br>片段着色器返回颜色后，需要将其与帧缓冲区中已有的颜色组合。这种转换称为颜色混合（混色），有两种方式：</p>
+<ul>
+<li>混合旧值和新值以生成新的颜色</li>
+<li>使用位运算来组合旧值和新值</li>
+</ul>
+<p>有两种类型的结构来配置颜色混合。<br>第一个结构，VkPipelineColorBlendAttachmentState包含了每个附加帧缓冲区的配置。<br>第二个结构，VkPipelineColorBlendStateCreateInfo包含全局的颜色混合设置。<br>在我们的例子中，我们只有一个帧缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineColorBlendAttachmentState colorBlendAttachment = &#123;&#125;;</span><br><span class="line">colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;</span><br><span class="line">colorBlendAttachment.blendEnable = VK_FALSE;</span><br><span class="line">colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; <span class="comment">// Optional</span></span><br><span class="line">colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; <span class="comment">// Optional</span></span><br><span class="line">colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; <span class="comment">// Optional</span></span><br><span class="line">colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; <span class="comment">// Optional</span></span><br><span class="line">colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; <span class="comment">// Optional</span></span><br><span class="line">colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>这个per-framebuffer结构允许你配置首选的颜色混合方式。<br>使用以下伪代码可以最好地演示将要执行的操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (blendEnable) &#123;</span><br><span class="line">    finalColor.rgb = (srcColorBlendFactor * newColor.rgb) &lt;colorBlendOp&gt; (dstColorBlendFactor * oldColor.rgb);</span><br><span class="line">    finalColor.a = (srcAlphaBlendFactor * newColor.a) &lt;alphaBlendOp&gt; (dstAlphaBlendFactor * oldColor.a);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    finalColor = newColor;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">finalColor = finalColor &amp; colorWriteMask;</span><br></pre></td></tr></table></figure>
+<p>如果将blendEnable设置为VK_FALSE，则片段着色器中的新颜色直接使用原始的颜色不做任何改变，否则将会执行两个混合操作来计算新颜色。生成的颜色与colorWriteMask进行AND运算，来决定实际传递的通道。</p>
+<p>颜色混合的最常用方法是alpha混合，新颜色会根据其不透明度与旧颜色混合。finalColor会按如下方式计算：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">finalColor.rgb = newAlpha * newColor + (<span class="number">1</span> - newAlpha) * oldColor;</span><br><span class="line">finalColor.a = newAlpha.a;</span><br></pre></td></tr></table></figure>
+<p>这也可以通过以下参数来完成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">colorBlendAttachment.blendEnable = VK_TRUE;</span><br><span class="line">colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;</span><br><span class="line">colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;</span><br><span class="line">colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;</span><br><span class="line">colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;</span><br><span class="line">colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;</span><br><span class="line">colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;</span><br></pre></td></tr></table></figure>
+<p>可以查询文档中的VkBlendFactor和VkBlendOp枚举值中找到所有可能的操作。</p>
+<p>第二个结构引用所有帧缓冲区的结构数组，并允许您设置混合常量，您可以看成在上述计算中所用的混合因子。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineColorBlendStateCreateInfo colorBlending = &#123;&#125;;</span><br><span class="line">colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;</span><br><span class="line">colorBlending.logicOpEnable = VK_FALSE;</span><br><span class="line">colorBlending.logicOp = VK_LOGIC_OP_COPY; <span class="comment">// Optional</span></span><br><span class="line">colorBlending.attachmentCount = <span class="number">1</span>;</span><br><span class="line">colorBlending.pAttachments = &amp;colorBlendAttachment;</span><br><span class="line">colorBlending.blendConstants[<span class="number">0</span>] = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">colorBlending.blendConstants[<span class="number">1</span>] = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">colorBlending.blendConstants[<span class="number">2</span>] = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br><span class="line">colorBlending.blendConstants[<span class="number">3</span>] = <span class="number">0.0f</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>如果要使用第二种混合方法（按位组合），则应将logicOpEnable设置为VK_TRUE，然后可以在logicOp字段中指定按位操作的方式。请注意，这将自动禁用第一个方法，这和把每个连接的帧缓冲区的blendEnable设置为VK_FALSE是一样的效果。colorWriteMask也将在此模式下用于确定帧缓冲区中的哪些通道实际受影响。也可以禁用这两种模式，就像我们在这里做的这样样，在这种情况下，片段颜色将被无修改地写入帧缓冲区。</p>
+<p><b>动态</b><br>我们在之前的结构中指定的有限数量的状态实际上可以在不重新创建管道的情况下进行更改，比如是视口的大小，线宽以及混合常量。如果你想这样做，那么你必须填充VkPipelineDynamicStateCreateInfo结构，如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VkDynamicState dynamicStates[] = &#123;</span><br><span class="line">    VK_DYNAMIC_STATE_VIEWPORT,</span><br><span class="line">    VK_DYNAMIC_STATE_LINE_WIDTH</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">VkPipelineDynamicStateCreateInfo dynamicState = &#123;&#125;;</span><br><span class="line">dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;</span><br><span class="line">dynamicState.dynamicStateCount = <span class="number">2</span>;</span><br><span class="line">dynamicState.pDynamicStates = dynamicStates;</span><br></pre></td></tr></table></figure>
+<p>这将导致现在忽略这些值的配置，之后需要在绘图的时候来指定。我们将在之后的章节中回来修改。如果没有任何动态状态，则可以使用nullptr替换此结构。</p>
+<p><b>管道布局</b><br>您可以在着色器中使用uniform，这种类型值是类似于动态状态变量的全局变量，可以在绘制时更改这些变量以更改着色器的行为，而无需重新创建它们。它们通常用于将变换矩阵传递到顶点着色器，或者在片段着色器中创建纹理采样器。</p>
+<p>需要在管道创建期间通过创建VkPipelineLayout对象来指定这些uniform值。即使我们在之后的章节中不会用到它们，仍然需要创建一个空的管道布局。</p>
+<p>创建一个类成员来保存这个对象，因为我们之后会从其他函数中引用它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineLayout pipelineLayout;</span><br></pre></td></tr></table></figure>
+<p>然后在createGraphicsPipeline函数中创建对象：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineLayoutCreateInfo pipelineLayoutInfo = &#123;&#125;;</span><br><span class="line">pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;</span><br><span class="line">pipelineLayoutInfo.setLayoutCount = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">pipelineLayoutInfo.pSetLayouts = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br><span class="line">pipelineLayoutInfo.pushConstantRangeCount = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">pipelineLayoutInfo.pPushConstantRanges = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">vkCreatePipelineLayout</span>(device, &amp;pipelineLayoutInfo, <span class="literal">nullptr</span>, &amp;pipelineLayout) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create pipeline layout!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该结构还指定了推送常量（push constants），这是将动态值传递给着色器的另一种方式，我们可能会在将来的章节中介绍这些方法。管道布局将在整个程序的生命周期中被引用，因此它应该在最后被销毁：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkDestroyPipelineLayout</span>(device, pipelineLayout, <span class="literal">nullptr</span>);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><b>总结</b><br>这就是所有固定功能了。从头开始设置所有这些看起来非常麻烦，但优点是我们现在几乎完全了解了图形管道中正在发生的一切。这减少了遇到意外行为的可能性，因为某些组件的默认状态不是我们所期望的。</p>
+<p>然而，在我们最终创建图形管道之前还有一个要创建的对象，那就是渲染过程。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/09/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-11-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD/" data-id="cl5xdmzmj0009c4ux64h13fjx" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/10/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-12-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(12)-画个三角形(图形管道)-渲染过程
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(10)-画个三角形(图形管道)-着色器模块</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

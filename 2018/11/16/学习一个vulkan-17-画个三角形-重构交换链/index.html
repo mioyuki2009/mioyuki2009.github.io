@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(17)-画个三角形-重构交换链 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(17)-画个三角形-重构交换链">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/16/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-17-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E9%87%8D%E6%9E%84%E4%BA%A4%E6%8D%A2%E9%93%BE/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-16T01:45:47.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-17-画个三角形-重构交换链" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(17)-画个三角形-重构交换链
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/16/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-17-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E9%87%8D%E6%9E%84%E4%BA%A4%E6%8D%A2%E9%93%BE/">
+            <time datetime="2018-11-16T01:45:47.000Z" itemprop="datePublished">2018-11-16</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>介绍</b><br>我们现在的应用程序可以成功绘制一个三角形了，但对于某些情况它还不能正确的处理。其中一个可能的情况就是窗口表面可能会发生变化，使得交换链不再与之兼容。导致这种情况发生的原因之一是窗口大小的变化，我们必须捕获这些事件并重新创建交换链。</p>
+<p><b>重新创建交换链</b><br>创建一个新的recreateSwapChain函数，该函数调用createSwapChain以及依赖于交换链或窗口大小对象的所有相关的创建函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">recreateSwapChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkDeviceWaitIdle</span>(device);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">createSwapChain</span>();</span><br><span class="line">    <span class="built_in">createImageViews</span>();</span><br><span class="line">    <span class="built_in">createRenderPass</span>();</span><br><span class="line">    <span class="built_in">createGraphicsPipeline</span>();</span><br><span class="line">    <span class="built_in">createFramebuffers</span>();</span><br><span class="line">    <span class="built_in">createCommandBuffers</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们首先调用vkDeviceWaitIdle，因为就像在上一章中一样，我们不应该触及到可能仍在使用中的资源。显然，我们要做的第一件事就是重新构建交换链本身，还需要重新创建图像视图，因为它们是直接基于交换链图像的，也需要重新创建渲染过程，因为它取决于交换链图像的格式，虽然交换链图像格式很少在窗口调整大小等操作期间发生变化，但仍应进行处理。视口和裁剪矩形的大小是在创建图形管道期间指定的，因此还需要重建管道。也可以通过对视口和裁剪矩形使用动态状态来避免这种情况。最后，帧缓冲区和命令缓冲区也直接依赖于交换链图像，所以也要重建。</p>
+<p>为了确保在重新创建它们之前可以清除这些对象的旧版本，我们应该将一些清理代码移动到我们可以从recreateSwapChain中调用的单独的函数中。这里创建cleanupSwapChain：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanupSwapChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">recreateSwapChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkDeviceWaitIdle</span>(device);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cleanupSwapChain</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">createSwapChain</span>();</span><br><span class="line">    <span class="built_in">createImageViews</span>();</span><br><span class="line">    <span class="built_in">createRenderPass</span>();</span><br><span class="line">    <span class="built_in">createGraphicsPipeline</span>();</span><br><span class="line">    <span class="built_in">createFramebuffers</span>();</span><br><span class="line">    <span class="built_in">createCommandBuffers</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们从cleanup中将需要被重新创建的对象所对应的清理代码移动到cleanupSwapChain中:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanupSwapChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; swapChainFramebuffers.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroyFramebuffer</span>(device, swapChainFramebuffers[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkFreeCommandBuffers</span>(device, commandPool, <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(commandBuffers.<span class="built_in">size</span>()), commandBuffers.<span class="built_in">data</span>());</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyPipeline</span>(device, graphicsPipeline, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkDestroyPipelineLayout</span>(device, pipelineLayout, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkDestroyRenderPass</span>(device, renderPass, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImageViews.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroyImageView</span>(device, swapChainImageViews[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroySwapchainKHR</span>(device, swapChain, <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cleanupSwapChain</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, renderFinishedSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, imageAvailableSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroyFence</span>(device, inFlightFences[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyCommandPool</span>(device, commandPool, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyDevice</span>(device, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (enableValidationLayers) &#123;</span><br><span class="line">        <span class="built_in">DestroyDebugReportCallbackEXT</span>(instance, callback, <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroySurfaceKHR</span>(instance, surface, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkDestroyInstance</span>(instance, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glfwDestroyWindow</span>(window);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glfwTerminate</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以从头开始重新创建命令池，但这太浪费了。这里选择使用vkFreeCommandBuffers函数来清理现有的命令缓冲区。这样我们就可以重用现有的池来分配新的命令缓冲区。</p>
+<p>要正确处理窗口大小调整，我们还需要查询帧缓冲区的当前大小，以确保交换链图像具有（新的）正确的尺寸。要做到这一点，需要更改chooseSwapExtent函数以考虑实际大小：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VkExtent2D <span class="title">chooseSwapExtent</span><span class="params">(<span class="type">const</span> VkSurfaceCapabilitiesKHR&amp; capabilities)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (capabilities.currentExtent.width != std::numeric_limits&lt;<span class="type">uint32_t</span>&gt;::<span class="built_in">max</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span> capabilities.currentExtent;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">int</span> width, height;</span><br><span class="line">        <span class="built_in">glfwGetFramebufferSize</span>(window, &amp;width, &amp;height);</span><br><span class="line"></span><br><span class="line">        VkExtent2D actualExtent = &#123;</span><br><span class="line">            <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(width),</span><br><span class="line">            <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(height)</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是重建交换链需要的所有东西了。但是，这种方法的缺点是我们需要在创建新的交换链之前停止所有渲染。在旧交换链的绘制命令执行过程时来创建新的交换链是可能的，您需要将之前的交换链传递给VkSwapchainCreateInfoKHR结构中的oldSwapChain字段，并在完成使用后立即销毁旧的交换链。</p>
+<p><b>次优或过时的交换链</b><br>现在我们只需要确定何时需要交换链重新创建并调用我们的新的recreateSwapChain函数。幸运的是，Vulkan在显示期间通常可以告诉我们交换链已经不再适用了，vkAcquireNextImageKHR和vkQueuePresentKHR函数可以返回以下特殊值来指示这个信息：</p>
+<ul>
+<li>VK_ERROR_OUT_OF_DATE_KHR：交换链已与表面不兼容，无法再用于渲染。通常在窗口调整大小后发生。</li>
+<li>VK_SUBOPTIMAL_KHR：交换链仍然可以用于成功呈现到表面，但表面属性不再完全匹配。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">VkResult result = <span class="built_in">vkAcquireNextImageKHR</span>(device, swapChain, std::numeric_limits&lt;<span class="type">uint64_t</span>&gt;::<span class="built_in">max</span>(), imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &amp;imageIndex);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (result == VK_ERROR_OUT_OF_DATE_KHR) &#123;</span><br><span class="line">    <span class="built_in">recreateSwapChain</span>();</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (result != VK_SUCCESS &amp;&amp; result != VK_SUBOPTIMAL_KHR) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to acquire swap chain image!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果交换链在尝试获取图像时过时（out of date）了，则不会再呈现给它。因此，我们应该立即重新创建交换链，并在下一个drawFrame的调用中再次尝试。</p>
+<p>但是，如果我们在此时中止绘图，那么栅栏将永远无法通过vkQueueSubmit进行提交，并且当我们稍后尝试等待它时它将处于意外（unexpected）状态。我们可以重新创建围栏作为交换链重新创建的一部分，但移动vkResetFences调用显得更简单：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkResetFences</span>(device, <span class="number">1</span>, &amp;inFlightFences[currentFrame]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">vkQueueSubmit</span>(graphicsQueue, <span class="number">1</span>, &amp;submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to submit draw command buffer!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果交换链不是最理想的话，您也可以同样处理，但在这种情况下我选择继续进行，因为我们已经获取到一个图像了。VK_SUCCESS和VK_SUBOPTIMAL_KHR都被视为“成功”的返回码。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">result = <span class="built_in">vkQueuePresentKHR</span>(presentQueue, &amp;presentInfo);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) &#123;</span><br><span class="line">    <span class="built_in">recreateSwapChain</span>();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (result != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to present swap chain image!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">currentFrame = (currentFrame + <span class="number">1</span>) % MAX_FRAMES_IN_FLIGHT;</span><br></pre></td></tr></table></figure>
+<p>vkQueuePresentKHR函数返回具有相同含义的相同的值。在这种情况下，如果交换链不是最理想的，我们也会重新创建交换链，因为我们希望得到最好的结果。</p>
+<p><b>处理尺寸变化</b><br>虽然许多驱动程序和平台在窗口调整大小后都会自动触发VK_ERROR_OUT_OF_DATE_KHR，但这种情况是不能完全保证的。这就是为什么我们会添加一些额外的代码来明确的处理尺寸的改变。首先添加一个新的成员变量，标记尺寸改变已发生：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;VkFence&gt; inFlightFences;</span><br><span class="line"><span class="type">size_t</span> currentFrame = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> framebufferResized = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p>然后修改drawFrame函数检查此标志：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) &#123;</span><br><span class="line">    framebufferResized = <span class="literal">false</span>;</span><br><span class="line">    <span class="built_in">recreateSwapChain</span>();</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (result != VK_SUCCESS) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在要实际检测调整大小，我们可以使用GLFW框架中的glfwSetFramebufferSizeCallback函数来设置回调：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">glfwInit</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glfwWindowHint</span>(GLFW_CLIENT_API, GLFW_NO_API);</span><br><span class="line"></span><br><span class="line">    window = <span class="built_in">glfwCreateWindow</span>(WIDTH, HEIGHT, <span class="string">&quot;Vulkan&quot;</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">glfwSetFramebufferSizeCallback</span>(window, framebufferResizeCallback);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">framebufferResizeCallback</span><span class="params">(GLFWwindow* window, <span class="type">int</span> width, <span class="type">int</span> height)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们创建一个静态函数作为回调的原因是因为GLFW不知道如何正确的使用指向HelloTriangleApplication实例的指针来调用相应的成员函数。</p>
+<p>但是，我们确实在回调中获得了对GLFWwindow的引用，并且还有另一个GLFW函数允许您在其中存储任意指针：glfwSetWindowUserPointer：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">window = <span class="built_in">glfwCreateWindow</span>(WIDTH, HEIGHT, <span class="string">&quot;Vulkan&quot;</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line"><span class="built_in">glfwSetWindowUserPointer</span>(window, <span class="keyword">this</span>);</span><br><span class="line"><span class="built_in">glfwSetFramebufferSizeCallback</span>(window, framebufferResizeCallback);</span><br></pre></td></tr></table></figure>
+<p>现在可以使用glfwGetWindowUserPointer从回调中检索这个值，来正确设置标志：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">framebufferResizeCallback</span><span class="params">(GLFWwindow* window, <span class="type">int</span> width, <span class="type">int</span> height)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> app = <span class="built_in">reinterpret_cast</span>&lt;HelloTriangleApplication*&gt;(<span class="built_in">glfwGetWindowUserPointer</span>(window));</span><br><span class="line">    app-&gt;framebufferResized = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在尝试运行程序并调整窗口大小，查看帧缓冲区是否确实能通过窗口大小的改变来正确调整大小。</p>
+<p><b>处理最小化</b><br>还有另一种情况，交换链可能会丢失数据，这是一种特殊的窗口大小调整：窗口最小化。这种情况很特殊，因为它会导致帧缓冲区大小为0。在本教程中，我们将通过扩展recreateSwapChain函数，使窗口一直暂停直到他再次回到前台：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">recreateSwapChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> width = <span class="number">0</span>, height = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (width == <span class="number">0</span> || height == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">glfwGetFramebufferSize</span>(window, &amp;width, &amp;height);</span><br><span class="line">        <span class="built_in">glfwWaitEvents</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDeviceWaitIdle</span>(device);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在已经完成了的第一个表现还不错的Vulkan程序。在下一章中，我们将抛弃顶点着色器中的硬编码顶点，真正的使用顶点缓冲区。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/16/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-17-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E9%87%8D%E6%9E%84%E4%BA%A4%E6%8D%A2%E9%93%BE/" data-id="cl5xdmzmq000tc4uxgj0a9bn5" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/17/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-18-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E9%A1%B6%E7%82%B9%E8%BE%93%E5%85%A5%E6%8F%8F%E8%BF%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(18)-顶点缓冲区-顶点输入描述
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(16)-画个三角形(绘制)-渲染和显示</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

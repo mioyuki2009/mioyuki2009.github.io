@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(20)-顶点缓冲区-临时缓冲区 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(20)-顶点缓冲区-临时缓冲区">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/20/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-20-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E4%B8%B4%E6%97%B6%E7%BC%93%E5%86%B2%E5%8C%BA/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-20T01:05:14.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-20-顶点缓冲区-临时缓冲区" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(20)-顶点缓冲区-临时缓冲区
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/20/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-20-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E4%B8%B4%E6%97%B6%E7%BC%93%E5%86%B2%E5%8C%BA/">
+            <time datetime="2018-11-20T01:05:14.000Z" itemprop="datePublished">2018-11-20</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>介绍</b><br>我们现在的顶点缓冲区工作正常，但允许我们从CPU访问它的内存类型可能不是显卡本身能够读取的最佳内存类型。最佳内存具有VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT的标志，并且CPU通常无法在专用显卡上访问。在本章中，我们将创建两个顶点缓冲区。一个是临时缓冲区（staging buffer），CPU可以将数据从顶点数组上传到其中，另一个是用于设备本地内存中的最终顶点缓冲区。然后，我们将使用缓冲区复制命令将数据从临时缓冲区移动到实际的顶点缓冲区。</p>
+<p><b>传输队列</b><br>缓冲区复制命令需要一个支持传输操作的队列簇，使用VK_QUEUE_TRANSFER_BIT指示。好消息是任何具有VK_QUEUE_GRAPHICS_BIT或VK_QUEUE_COMPUTE_BIT功能的队列簇都已经隐式支持VK_QUEUE_TRANSFER_BIT操作了。在这些情况下，并不需要在queueFlags中明确的列出它。</p>
+<p>如果您喜欢挑战，那么仍然可以尝试使用专门用于传输操作的不同队列簇。它将要求您对您的程序进行以下修改：</p>
+<ul>
+<li>修改QueueFamilyIndi​​ces和findQueueFamilies以显式查找具有VK_QUEUE_TRANSFER标志位位但不是VK_QUEUE_GRAPHICS_BIT的队列簇。</li>
+<li>修改createLogicalDevice以请求传输队列的句柄</li>
+<li>为传输队列簇上提交的命令缓冲区创建第二个命令池</li>
+<li>将资源的sharingMode更改为VK_SHARING_MODE_CONCURRENT并指定图形和传输队列簇</li>
+<li>任何传输命令，如vkCmdCopyBuffer（我们将在本章中使用）都需要提交到到传输队列而不是图形队列</li>
+</ul>
+<p>工作量有一点点，但它可以教你如何在队列簇之间共享资源。</p>
+<p><b>创建抽象缓冲区</b><br>因为我们将在本章中创建多个缓冲区，所以将缓冲区创建移动到辅助函数会更好一点。创建一个新的函数createBuffer并将createVertexBuffer中的代码（除外映射相关的）移动到这里。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createBuffer</span><span class="params">(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer&amp; buffer, VkDeviceMemory&amp; bufferMemory)</span> </span>&#123;</span><br><span class="line">    VkBufferCreateInfo bufferInfo = &#123;&#125;;</span><br><span class="line">    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;</span><br><span class="line">    bufferInfo.size = size;</span><br><span class="line">    bufferInfo.usage = usage;</span><br><span class="line">    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">vkCreateBuffer</span>(device, &amp;bufferInfo, <span class="literal">nullptr</span>, &amp;buffer) != VK_SUCCESS) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create buffer!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    VkMemoryRequirements memRequirements;</span><br><span class="line">    <span class="built_in">vkGetBufferMemoryRequirements</span>(device, buffer, &amp;memRequirements);</span><br><span class="line"></span><br><span class="line">    VkMemoryAllocateInfo allocInfo = &#123;&#125;;</span><br><span class="line">    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;</span><br><span class="line">    allocInfo.allocationSize = memRequirements.size;</span><br><span class="line">    allocInfo.memoryTypeIndex = <span class="built_in">findMemoryType</span>(memRequirements.memoryTypeBits, properties);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">vkAllocateMemory</span>(device, &amp;allocInfo, <span class="literal">nullptr</span>, &amp;bufferMemory) != VK_SUCCESS) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to allocate buffer memory!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkBindBufferMemory</span>(device, buffer, bufferMemory, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确保为缓冲区大小，内存属性和用法添加参数，以便我们可以使用此函数创建许多不同类型的缓冲区。最后两个参数是输出变量用来写入句柄。</p>
+<p>从createVertexBuffer中删除缓冲区创建和内存分配代码，现在只需调用createBuffer就行了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createVertexBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkDeviceSize bufferSize = <span class="built_in">sizeof</span>(vertices[<span class="number">0</span>]) * vertices.<span class="built_in">size</span>();</span><br><span class="line">    <span class="built_in">createBuffer</span>(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer, vertexBufferMemory);</span><br><span class="line"></span><br><span class="line">    <span class="type">void</span>* data;</span><br><span class="line">    <span class="built_in">vkMapMemory</span>(device, vertexBufferMemory, <span class="number">0</span>, bufferSize, <span class="number">0</span>, &amp;data);</span><br><span class="line">        <span class="built_in">memcpy</span>(data, vertices.<span class="built_in">data</span>(), (<span class="type">size_t</span>) bufferSize);</span><br><span class="line">    <span class="built_in">vkUnmapMemory</span>(device, vertexBufferMemory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序以确保顶点缓冲区仍能正常工作。</p>
+<p><b>使用临时缓冲区</b><br>我们现在要将createVertexBuffer更改为仅使用主机可见缓冲区作为临时缓冲区，并使用设备本地缓冲区作为实际顶点缓冲区。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createVertexBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkDeviceSize bufferSize = <span class="built_in">sizeof</span>(vertices[<span class="number">0</span>]) * vertices.<span class="built_in">size</span>();</span><br><span class="line"></span><br><span class="line">    VkBuffer stagingBuffer;</span><br><span class="line">    VkDeviceMemory stagingBufferMemory;</span><br><span class="line">    <span class="built_in">createBuffer</span>(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">    <span class="type">void</span>* data;</span><br><span class="line">    <span class="built_in">vkMapMemory</span>(device, stagingBufferMemory, <span class="number">0</span>, bufferSize, <span class="number">0</span>, &amp;data);</span><br><span class="line">        <span class="built_in">memcpy</span>(data, vertices.<span class="built_in">data</span>(), (<span class="type">size_t</span>) bufferSize);</span><br><span class="line">    <span class="built_in">vkUnmapMemory</span>(device, stagingBufferMemory);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">createBuffer</span>(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们现在使用带有stagingBufferMemory的新stagingBuffer来映射和复制顶点数据。在本章中，我们将使用两个新的缓冲区使用标志符：</p>
+<ul>
+<li>VK_BUFFER_USAGE_TRANSFER_SRC_BIT：缓冲区可用作存储器传输操作中的源头。</li>
+<li>VK_BUFFER_USAGE_TRANSFER_DST_BIT：缓冲区可用作存储器传输操作中的目标。</li>
+</ul>
+<p>vertexBuffer现在是从设备本地的内存类型中分配的，这通常意味着我们无法使用vkMapMemory。但是，我们可以将数据从stagingBuffer复制到vertexBuffer。我们需要指定stagingBuffer的传输源标志位，还要为顶点缓冲区vertexBuffer设置传输目标标志位以及顶点缓冲区使用标志。</p>
+<p>我们现在要写一个copyBuffer函数将相关内容从一个缓冲区复制到另一个缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">copyBuffer</span><span class="params">(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>内存传输操作也是通过命令缓冲区执行的，就像绘制命令一样。因此我们必须首先分配一个临时命令缓冲区。您可能希望为短期缓冲区来创建单独的命令池，因为该实现可能能够应用内存分配优化。在这种情况下，您应该在命令池生成期间使用VK_COMMAND_POOL_CREATE_TRANSIENT_BIT标志。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">copyBuffer</span><span class="params">(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)</span> </span>&#123;</span><br><span class="line">    VkCommandBufferAllocateInfo allocInfo = &#123;&#125;;</span><br><span class="line">    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;</span><br><span class="line">    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;</span><br><span class="line">    allocInfo.commandPool = commandPool;</span><br><span class="line">    allocInfo.commandBufferCount = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    VkCommandBuffer commandBuffer;</span><br><span class="line">    <span class="built_in">vkAllocateCommandBuffers</span>(device, &amp;allocInfo, &amp;commandBuffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并立即开始命令缓冲区的记录：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VkCommandBufferBeginInfo beginInfo = &#123;&#125;;</span><br><span class="line">beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;</span><br><span class="line">beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;</span><br><span class="line"></span><br><span class="line"><span class="built_in">vkBeginCommandBuffer</span>(commandBuffer, &amp;beginInfo);</span><br></pre></td></tr></table></figure>
+<p>这里不需要我们用于绘图命令缓冲区的VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT标志，因为我们只使用命令缓冲区一次并等待从函数返回直到复制操作完成执行。使用VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT来告诉驱动程序我们的意图是一个好习惯。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VkBufferCopy copyRegion = &#123;&#125;;</span><br><span class="line">copyRegion.srcOffset = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">copyRegion.dstOffset = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">copyRegion.size = size;</span><br><span class="line"><span class="built_in">vkCmdCopyBuffer</span>(commandBuffer, srcBuffer, dstBuffer, <span class="number">1</span>, &amp;copyRegion);</span><br></pre></td></tr></table></figure>
+<p>使用vkCmdCopyBuffer命令来传输缓冲区的内容。它将源缓冲区和目标缓冲区以及要复制的区域数组作为参数。区域在VkBufferCopy结构中定义，由源缓冲区、目标缓冲区的偏移量和大小组成。与vkMapMemory命令不同，此处无法指定VK_WHOLE_SIZE。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkEndCommandBuffer</span>(commandBuffer);</span><br></pre></td></tr></table></figure>
+<p>此命令缓冲区仅包含复制命令，因此我们可以在此之后立即停止录制。现在执行命令缓冲区以完成传输：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">VkSubmitInfo submitInfo = &#123;&#125;;</span><br><span class="line">submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line">submitInfo.commandBufferCount = <span class="number">1</span>;</span><br><span class="line">submitInfo.pCommandBuffers = &amp;commandBuffer;</span><br><span class="line"></span><br><span class="line"><span class="built_in">vkQueueSubmit</span>(graphicsQueue, <span class="number">1</span>, &amp;submitInfo, VK_NULL_HANDLE);</span><br><span class="line"><span class="built_in">vkQueueWaitIdle</span>(graphicsQueue);</span><br></pre></td></tr></table></figure>
+<p>与绘制命令不同的是，这个时候我们不需要等待任何事件，我们只想立即在缓冲区上执行传输命令。还有两种方法可以等待传输命令完成。我们可以使用栅栏fence并使用vkWaitForFences来等待，或者只是使用vkQueueWaitIdle来等待传输队列变为空闲。栅栏允许您同时安排多个传输并等待所有传输完成，而不是一次执行一个，这就给了驱动程序更多的优化空间。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkFreeCommandBuffers</span>(device, commandPool, <span class="number">1</span>, &amp;commandBuffer);</span><br></pre></td></tr></table></figure>
+<p>不要忘记清理用于传输操作的命令缓冲区。</p>
+<p>我们现在可以从createVertexBuffer函数调用copyBuffer来将顶点数据移动到设备本地缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">createBuffer</span>(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);</span><br><span class="line"></span><br><span class="line"><span class="built_in">copyBuffer</span>(stagingBuffer, vertexBuffer, bufferSize);</span><br></pre></td></tr></table></figure>
+<p>将数据从临时缓冲区复制到设备缓冲区后，我们应该清理它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">copyBuffer</span>(stagingBuffer, vertexBuffer, bufferSize);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyBuffer</span>(device, stagingBuffer, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkFreeMemory</span>(device, stagingBufferMemory, <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行程序以验证是否再次看到三角形。这种改进目前可能不可见，但其顶点数据现在正从高性能内存加载。当我们要开始渲染更复杂的几何体时，这会变得很重要。</p>
+<p><b>结论</b><br>应该注意的是，在实际的应用程序中，您不应该为每个缓冲区都调用vkAllocateMemory。最大并发内存分配数受maxMemoryAllocationCount物理设备限制的限制，即使在像NVIDIA GTX 1080这样的高端硬件上也可能低至4096。为大量对象同时分配内存的正确方法是创建一个自定义分配器，通过使用我们在许多函数中看到的偏移参数，在多个不同对象之间拆分成单个进行分配。</p>
+<p>您可以自己实现这样的分配器，也可以使用GPUOpen计划提供的<a target="_blank" rel="noopener" href="https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator">VulkanMemoryAllocator</a>库。但是，对于本教程，可以为每个资源使用单独的分配，因为我们现在不会接近任何的限制。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/20/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-20-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E4%B8%B4%E6%97%B6%E7%BC%93%E5%86%B2%E5%8C%BA/" data-id="cl5xdmzms0012c4ux9dpw2utk" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/21/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-21-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E7%B4%A2%E5%BC%95%E7%BC%93%E5%86%B2%E5%8C%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(21)-顶点缓冲区-索引缓冲区
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/19/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-19-%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA-%E5%88%9B%E5%BB%BA%E9%A1%B6%E7%82%B9%E7%BC%93%E5%86%B2%E5%8C%BA/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(19)-顶点缓冲区-创建顶点缓冲区</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(26)-纹理映射-组合图像采样器 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(26)-纹理映射-组合图像采样器">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-27T01:03:17.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.212Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-26-纹理映射-组合图像采样器" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(26)-纹理映射-组合图像采样器
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/">
+            <time datetime="2018-11-27T01:03:17.000Z" itemprop="datePublished">2018-11-27</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>介绍</b><br>我们在本教程的统一缓冲区章节中第一次了解到了描述符。在本章中，我们将介绍一种新类型的描述符：组合图像采样器（combined image sampler）。此描述符使着色器可以通过采样器对象访问图像资源，就是我们在上一章中创建的那种采样器。</p>
+<p>我们将首先修改描述符布局，描述符池和描述符集用来包含新的组合图像采样器描述符。之后，我们将向Vertex中添加纹理坐标，并修改片段着色器以从纹理中读取颜色，而不是仅仅是插入顶点颜色。</p>
+<p><b>更新描述符</b><br>在createDescriptorSetLayout函数中为组合图像采样器添加VkDescriptorSetLayoutBinding对象，我们只需将它放在统一缓冲区后进行绑定：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">VkDescriptorSetLayoutBinding samplerLayoutBinding = &#123;&#125;;</span><br><span class="line">samplerLayoutBinding.binding = <span class="number">1</span>;</span><br><span class="line">samplerLayoutBinding.descriptorCount = <span class="number">1</span>;</span><br><span class="line">samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;</span><br><span class="line">samplerLayoutBinding.pImmutableSamplers = <span class="literal">nullptr</span>;</span><br><span class="line">samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;</span><br><span class="line"></span><br><span class="line">std::array&lt;VkDescriptorSetLayoutBinding, 2&gt; bindings = &#123;uboLayoutBinding, samplerLayoutBinding&#125;;</span><br><span class="line">VkDescriptorSetLayoutCreateInfo layoutInfo = &#123;&#125;;</span><br><span class="line">layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;</span><br><span class="line">layoutInfo.bindingCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(bindings.<span class="built_in">size</span>());</span><br><span class="line">layoutInfo.pBindings = bindings.<span class="built_in">data</span>();</span><br></pre></td></tr></table></figure>
+<p>确保设置stageFlags以指示我们打算在片段着色器中使用组合图像采样器描述符，这就是要确定片段颜色的地方了。也可以在顶点着色器中使用纹理采样，例如通过<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Heightmap">高度图</a>动态地变形顶点的网格。</p>
+<p>如果您现在将运行带有验证层的应用程序，那么您将看到它抱怨描述符池无法使用此布局来分配描述符集，因为它还没有任何组合图像采样器描述符。转到createDescriptorPool函数并修改它来包含此描述符的VkDescriptorPoolSize：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;VkDescriptorPoolSize, 2&gt; poolSizes = &#123;&#125;;</span><br><span class="line">poolSizes[<span class="number">0</span>].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;</span><br><span class="line">poolSizes[<span class="number">0</span>].descriptorCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(swapChainImages.<span class="built_in">size</span>());</span><br><span class="line">poolSizes[<span class="number">1</span>].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;</span><br><span class="line">poolSizes[<span class="number">1</span>].descriptorCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(swapChainImages.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">VkDescriptorPoolCreateInfo poolInfo = &#123;&#125;;</span><br><span class="line">poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;</span><br><span class="line">poolInfo.poolSizeCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(poolSizes.<span class="built_in">size</span>());</span><br><span class="line">poolInfo.pPoolSizes = poolSizes.<span class="built_in">data</span>();</span><br><span class="line">poolInfo.maxSets = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(swapChainImages.<span class="built_in">size</span>());</span><br></pre></td></tr></table></figure>
+<p>最后一步是将实际图像和采样器资源绑定到描述符集中的描述符，转到createDescriptorSets函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; swapChainImages.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">    VkDescriptorBufferInfo bufferInfo = &#123;&#125;;</span><br><span class="line">    bufferInfo.buffer = uniformBuffers[i];</span><br><span class="line">    bufferInfo.offset = <span class="number">0</span>;</span><br><span class="line">    bufferInfo.range = <span class="built_in">sizeof</span>(UniformBufferObject);</span><br><span class="line"></span><br><span class="line">    VkDescriptorImageInfo imageInfo = &#123;&#125;;</span><br><span class="line">    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;</span><br><span class="line">    imageInfo.imageView = textureImageView;</span><br><span class="line">    imageInfo.sampler = textureSampler;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>VkDescriptorImageInfo结构指定了组合图像采样器结构的资源，就像在VkDescriptorBufferInfo结构中指定统一缓冲区描述符的缓冲区资源一样。这是前一章中的对象汇集在一起​​的地方。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">std::array&lt;VkWriteDescriptorSet, 2&gt; descriptorWrites = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">descriptorWrites[<span class="number">0</span>].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;</span><br><span class="line">descriptorWrites[<span class="number">0</span>].dstSet = descriptorSets[i];</span><br><span class="line">descriptorWrites[<span class="number">0</span>].dstBinding = <span class="number">0</span>;</span><br><span class="line">descriptorWrites[<span class="number">0</span>].dstArrayElement = <span class="number">0</span>;</span><br><span class="line">descriptorWrites[<span class="number">0</span>].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;</span><br><span class="line">descriptorWrites[<span class="number">0</span>].descriptorCount = <span class="number">1</span>;</span><br><span class="line">descriptorWrites[<span class="number">0</span>].pBufferInfo = &amp;bufferInfo;</span><br><span class="line"></span><br><span class="line">descriptorWrites[<span class="number">1</span>].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;</span><br><span class="line">descriptorWrites[<span class="number">1</span>].dstSet = descriptorSets[i];</span><br><span class="line">descriptorWrites[<span class="number">1</span>].dstBinding = <span class="number">1</span>;</span><br><span class="line">descriptorWrites[<span class="number">1</span>].dstArrayElement = <span class="number">0</span>;</span><br><span class="line">descriptorWrites[<span class="number">1</span>].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;</span><br><span class="line">descriptorWrites[<span class="number">1</span>].descriptorCount = <span class="number">1</span>;</span><br><span class="line">descriptorWrites[<span class="number">1</span>].pImageInfo = &amp;imageInfo;</span><br><span class="line"></span><br><span class="line"><span class="built_in">vkUpdateDescriptorSets</span>(device, <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(descriptorWrites.<span class="built_in">size</span>()), descriptorWrites.<span class="built_in">data</span>(), <span class="number">0</span>, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
+<p>描述符必须与此图像信息一起更新，就像缓冲区一样，这次我们使用的是pImageInfo数组而不是pBufferInfo。描述符现在可以被着色器使用了。</p>
+<p><b>纹理坐标</b><br>纹理映射有一个重要的因素仍然缺失，那就是每个顶点的实际坐标。坐标确定了图像实际映射到几何体的方式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Vertex</span> &#123;</span><br><span class="line">    glm::vec2 pos;</span><br><span class="line">    glm::vec3 color;</span><br><span class="line">    glm::vec2 texCoord;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> VkVertexInputBindingDescription <span class="title">getBindingDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        VkVertexInputBindingDescription bindingDescription = &#123;&#125;;</span><br><span class="line">        bindingDescription.binding = <span class="number">0</span>;</span><br><span class="line">        bindingDescription.stride = <span class="built_in">sizeof</span>(Vertex);</span><br><span class="line">        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> bindingDescription;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">static</span> std::array&lt;VkVertexInputAttributeDescription, 3&gt; <span class="title">getAttributeDescriptions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::array&lt;VkVertexInputAttributeDescription, 3&gt; attributeDescriptions = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[<span class="number">0</span>].binding = <span class="number">0</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">0</span>].location = <span class="number">0</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">0</span>].format = VK_FORMAT_R32G32_SFLOAT;</span><br><span class="line">        attributeDescriptions[<span class="number">0</span>].offset = <span class="built_in">offsetof</span>(Vertex, pos);</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[<span class="number">1</span>].binding = <span class="number">0</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">1</span>].location = <span class="number">1</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">1</span>].format = VK_FORMAT_R32G32B32_SFLOAT;</span><br><span class="line">        attributeDescriptions[<span class="number">1</span>].offset = <span class="built_in">offsetof</span>(Vertex, color);</span><br><span class="line"></span><br><span class="line">        attributeDescriptions[<span class="number">2</span>].binding = <span class="number">0</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">2</span>].location = <span class="number">2</span>;</span><br><span class="line">        attributeDescriptions[<span class="number">2</span>].format = VK_FORMAT_R32G32_SFLOAT;</span><br><span class="line">        attributeDescriptions[<span class="number">2</span>].offset = <span class="built_in">offsetof</span>(Vertex, texCoord);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> attributeDescriptions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>修改Vertex结构以包含纹理坐标的vec2，确保还添加了VkVertexInputAttributeDescription，以便我们可以在顶点着色器中使用访问纹理坐标作为输入。这是必要的，是为了能够将它们传递给片段着色器，以便在正方形的表面上进行插值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> std::vector&lt;Vertex&gt; vertices = &#123;</span><br><span class="line">    &#123;&#123;<span class="number">-0.5f</span>, <span class="number">-0.5f</span>&#125;, &#123;<span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>&#125;, &#123;<span class="number">1.0f</span>, <span class="number">0.0f</span>&#125;&#125;,</span><br><span class="line">    &#123;&#123;<span class="number">0.5f</span>, <span class="number">-0.5f</span>&#125;, &#123;<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>&#125;, &#123;<span class="number">0.0f</span>, <span class="number">0.0f</span>&#125;&#125;,</span><br><span class="line">    &#123;&#123;<span class="number">0.5f</span>, <span class="number">0.5f</span>&#125;, &#123;<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>&#125;, &#123;<span class="number">0.0f</span>, <span class="number">1.0f</span>&#125;&#125;,</span><br><span class="line">    &#123;&#123;<span class="number">-0.5f</span>, <span class="number">0.5f</span>&#125;, &#123;<span class="number">1.0f</span>, <span class="number">1.0f</span>, <span class="number">1.0f</span>&#125;, &#123;<span class="number">1.0f</span>, <span class="number">1.0f</span>&#125;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在本教程中，我将简单地使用从左上角的0,0到右下角的1,1的坐标来填充纹理。在这里可以尝试各种坐标。尝试使用低于0或者高于1的坐标来观察寻址模式的不同表现。</p>
+<p><b>着色器</b><br>最后一步是修改着色器以从纹理中采样颜色。我们首先需要修改顶点着色器以将纹理坐标传递给片段着色器：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec2</span> inPosition;</span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec3</span> inColor;</span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">2</span>) <span class="keyword">in</span> <span class="type">vec2</span> inTexCoord;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">out</span> <span class="type">vec2</span> fragTexCoord;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = ubo.proj * ubo.view * ubo.model * <span class="type">vec4</span>(inPosition, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">    fragColor = inColor;</span><br><span class="line">    fragTexCoord = inTexCoord;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就像每个顶点的颜色，fragTexCoord值通过光栅化平滑的插值到矩形区域内。我们可以通过让片段着色器将纹理坐标输出为颜色来可视化：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec2</span> fragTexCoord;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec4</span> outColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="type">vec4</span>(fragTexCoord, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>您应该可以看到如下图所示的内容。别忘了重新编译着色器！<br><img src="/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/1.png"></p>
+<p>绿色通道表示水平坐标，红色通道表示垂直坐标。黑色和黄色角确认纹理坐标是从0,0到1,1正确的在正方形上进行插值。在着色器编程中使用颜色可视化数据相当于printf调试，因为也没有更好的选择了。</p>
+<p>组合图像采样器描述符在GLSL中由均匀采样器表示。在片段着色器中添加对它的引用：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">layout</span>(<span class="keyword">binding</span> = <span class="number">1</span>) <span class="keyword">uniform</span> <span class="type">sampler2D</span> texSampler;</span><br></pre></td></tr></table></figure>
+<p>对于其他类型的图像，可以使用相似的sampler1D和sampler3D类型，确保在此处使用正确的绑定。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="built_in">texture</span>(texSampler, fragTexCoord);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用内置的纹理函数对纹理进行采样，它需要一个采样器和坐标作为参数。采样器会自动处理后台中的过滤和转换。现在，您应该可以在运行应用程序时看到正方形上的纹理了：<br><img src="/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/2.png"></p>
+<p>尝试通过将纹理坐标缩放到大于1的值来尝试寻址模式。例如，使用VK_SAMPLER_ADDRESS_MODE_REPEAT时，可以使用下面的片段着色器生成下图中的结果：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="built_in">texture</span>(texSampler, fragTexCoord * <span class="number">2.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/3.png"></p>
+<p>您还可以使用顶点颜色来处理纹理颜色：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="type">vec4</span>(fragColor * <span class="built_in">texture</span>(texSampler, fragTexCoord).rgb, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我在这里将RGB和alpha通道分开以不缩放alpha通道。<br><img src="/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/4.png"></p>
+<p>您现在知道如何在着色器中访问图像了。当与帧缓冲区中的图像进行结合时，这是一个非常有效的技术。您可以使用这些图像作为输入来实现非常酷炫的效果，如3D世界中的后期处理和相机显示。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/27/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-26-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E7%BB%84%E5%90%88%E5%9B%BE%E5%83%8F%E9%87%87%E6%A0%B7%E5%99%A8/" data-id="cl5xdmzmy001nc4ux6mr841r6" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/28/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-27-%E6%B7%B1%E5%BA%A6%E7%BC%93%E5%86%B2/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(27)-深度缓冲
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/26/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-25-%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-%E5%9B%BE%E5%83%8F%E8%A7%86%E5%9B%BE%E5%92%8C%E9%87%87%E6%A0%B7%E5%99%A8/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(25)-纹理映射-图像视图和采样器</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

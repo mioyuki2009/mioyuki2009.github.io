@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(3)-画个三角形(构建)-验证层 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(3)-画个三角形(构建)-验证层">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/10/31/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-3-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E9%AA%8C%E8%AF%81%E5%B1%82/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-10-31T07:04:41.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.228Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-3-画个三角形-构建-验证层" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(3)-画个三角形(构建)-验证层
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/10/31/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-3-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E9%AA%8C%E8%AF%81%E5%B1%82/">
+            <time datetime="2018-10-31T07:04:41.000Z" itemprop="datePublished">2018-10-31</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>有关验证层</b><br>Vulkan API设计的初衷是让相关的驱动程序开销最小，为了达到这个目标，对API的错误检查的部分就十分有限了<br>即使是将枚举设置为不正确的值或将空指针传递给所需参数这样简单的错误通常也不会被显式处理，只会导致崩溃或未定义的行为<br>由于Vulkan要求对所做的一切都非常了解，所以很容易犯很多小错误，比如使用新的GPU功能而忘记在逻辑设备创建时请求<br>但是，这并不意味着无法将这些错误检查添加到API中</p>
+<p>Vulkan使用了叫做验证层的方式来实现，验证层是可选的组件，它钩（hook）到Vulkan其他的函数上来实现额外的操作<br>常见操作如下：</p>
+<ul>
+<li>根据规范检查参数值以检测是否误用</li>
+<li>跟踪对象的创建和销毁以检测资源泄漏</li>
+<li>通过跟踪调用父线程来检查线程安全性</li>
+<li>将每个调用及其参数记录到标准输出</li>
+<li>跟踪Vulkan的函数调用进行性能分析和重现<br>下面是一个验证层中函数实现的示例：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VkResult <span class="title">vkCreateInstance</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> VkInstanceCreateInfo* pCreateInfo,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> VkAllocationCallbacks* pAllocator,</span></span></span><br><span class="line"><span class="params"><span class="function">    VkInstance* instance)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pCreateInfo == <span class="literal">nullptr</span> || instance == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="built_in">log</span>(<span class="string">&quot;Null pointer passed to required parameter!&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> VK_ERROR_INITIALIZATION_FAILED;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">real_vkCreateInstance</span>(pCreateInfo, pAllocator, instance);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+这些验证层可以自由堆叠所有你想用到的各种功能，也可以只为调试版本启用验证层，并在发布版本完全禁用它们<br>Vulkan没有内置任何验证层，但是LunarG Vulkan SDK提供了一组很好的层来检查常见错误。它们也是完全<a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/Vulkan-ValidationLayers">开源</a>的，因此可以自由查看相关代码的功能以及贡献代码<br>使用验证层是避免应用程序由于未定义的行为在不同驱动程序上崩溃的最佳方法了</li>
+</ul>
+<p>验证层只有在已安装到系统上时才能使用，例如，LunarG的验证层仅适用于安装了Vulkan SDK的PC<br>以前在Vulkan里有两种不同类型的验证层，实例（instance）和特定设备（device specific）的<br>这个想法是实例层只会检查与实例等全局Vulkan对象相关的调用，特定设备的层只会检查与特定GPU相关的调用<br>现在已弃用特定设备的层，这意味着实例验证层适用于所有Vulkan调用。</p>
+<p>规范文档仍然建议在设备级别启用验证层以及实现某些功能所需的兼容性设置，这只需要在逻辑设备级别指定与实例相同的层，之后就会看到如何实现这一点</p>
+<p><b>使用验证层</b><br>在本节中，将了解如何启用Vulkan SDK提供的标准诊断层。就像扩展一样，需要通过指定其名称来启用验证层。<br>SDK不需要显式指定所有有用的层，直接使用VK_LAYER_LUNARG_standard_validation层就可以隐式的启用一系列有用的诊断层了</p>
+<p>首先向程序添加两个用来配置的变量，以指定要启用的层以及是否启用它们。<br>这里选择将该值仅仅在程序在调试模式下编译使用为true，NDEBUG宏是C ++标准的一部分，意味着“不调试”</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> WIDTH = <span class="number">800</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> HEIGHT = <span class="number">600</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> std::vector&lt;<span class="type">const</span> <span class="type">char</span>*&gt; validationLayers = &#123;</span><br><span class="line">    <span class="string">&quot;VK_LAYER_LUNARG_standard_validation&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> NDEBUG</span></span><br><span class="line">    <span class="type">const</span> <span class="type">bool</span> enableValidationLayers = <span class="literal">false</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    <span class="type">const</span> <span class="type">bool</span> enableValidationLayers = <span class="literal">true</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>之后添加一个新函数checkValidationLayerSupport，用于检查所有请求的层是否都可用<br>首先使用vkEnumerateInstanceLayerProperties函数列出所有可用图层，它的用法与之前说到的vkEnumerateInstanceExtensionProperties的用法相同。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">checkValidationLayerSupport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> layerCount;</span><br><span class="line">    <span class="built_in">vkEnumerateInstanceLayerProperties</span>(&amp;layerCount, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;VkLayerProperties&gt; <span class="title">availableLayers</span><span class="params">(layerCount)</span></span>;</span><br><span class="line">    <span class="built_in">vkEnumerateInstanceLayerProperties</span>(&amp;layerCount, availableLayers.<span class="built_in">data</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来，检查验证层中的所有图层是否都存在于可用的pLayers列表中，这里的strcmp函数需要#include <cstring>。</cstring></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="type">char</span>* layerName : validationLayers) &#123;</span><br><span class="line">    <span class="type">bool</span> layerFound = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; layerProperties : availableLayers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(layerName, layerProperties.layerName) == <span class="number">0</span>) &#123;</span><br><span class="line">            layerFound = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!layerFound) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<p>现在将这个函数添加到createInstance里：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (enableValidationLayers &amp;&amp; !<span class="built_in">checkValidationLayerSupport</span>()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;validation layers requested, but not available!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在以调试模式运行程序并确保不会发生错误，如果有错误，检查是否正确安装了Vulkan SDK。<br>如果没有显示任何图层，或者显示的极少，或许是碰到了<a target="_blank" rel="noopener" href="https://vulkan.lunarg.com/issue/home?limit=10;q=;mine=false;org=false;khronos=false;lunarg=false;indie=false;status=new,open">这个问题</a>，可以按照他的方法来修正</p>
+<p>最后，修改VkInstanceCreateInfo结构的实例化来包含验证层：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (enableValidationLayers) &#123;</span><br><span class="line">    createInfo.enabledLayerCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(validationLayers.<span class="built_in">size</span>());</span><br><span class="line">    createInfo.ppEnabledLayerNames = validationLayers.<span class="built_in">data</span>();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    createInfo.enabledLayerCount = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果检查成功，那么vkCreateInstance就不会返回VK_ERROR_LAYER_NOT_PRESENT，但是最好还是运行一下来确保正确</p>
+<p><b>消息回调</b><br>不幸的是，只是启用图层并没有多大是的帮助，因为他们目前无法将调试消息返回我们的程序。<br>要接收这些消息，需要设置一个回调，这里需要VK_EXT_debug_utils扩展。<br>首先创建一个getRequiredExtensions函数，该函数将根据是否启用验证层返回所需的扩展列表：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::vector&lt;<span class="type">const</span> <span class="type">char</span>*&gt; <span class="title">getRequiredExtensions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> glfwExtensionCount = <span class="number">0</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>** glfwExtensions;</span><br><span class="line">    glfwExtensions = <span class="built_in">glfwGetRequiredInstanceExtensions</span>(&amp;glfwExtensionCount);</span><br><span class="line"></span><br><span class="line">    <span class="function">std::vector&lt;<span class="type">const</span> <span class="type">char</span>*&gt; <span class="title">extensions</span><span class="params">(glfwExtensions, glfwExtensions + glfwExtensionCount)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (enableValidationLayers) &#123;</span><br><span class="line">        extensions.<span class="built_in">push_back</span>(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> extensions;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>GLFW指定的扩展始终是必需的，但调试报告扩展可以根据条件来添加。<br>注意在这里使用了VK_EXT_DEBUG_UTILS_EXTENSION_NAME宏，这个和文字字符串“VK_EXT_debug_utils”是一样的，但是使用这个宏可以避免拼写错误。</p>
+<p>现在可以在createInstance中使用此函数了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> extensions = <span class="built_in">getRequiredExtensions</span>();</span><br><span class="line">createInfo.enabledExtensionCount = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(extensions.<span class="built_in">size</span>());</span><br><span class="line">createInfo.ppEnabledExtensionNames = extensions.<span class="built_in">data</span>();</span><br></pre></td></tr></table></figure>
+<p>运行该程序来确保没有VK_ERROR_EXTENSION_NOT_PRESENT错误。实际上不需要检查此扩展的存在，因为这个在验证层的可用性检查时已经包含了。</p>
+<p>现在来实现一下回调函数，使用PFN_vkDebugUtilsMessengerCallbackEXT原型来添加一个名为debugCallback的新静态成员函数，VKAPI_ATTR和VKAPI_CALL确保这个函数具有正确的签名可以让Vulkan来调用它。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> VKAPI_ATTR VkBool32 VKAPI_CALL <span class="title">debugCallback</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,</span></span></span><br><span class="line"><span class="params"><span class="function">    VkDebugUtilsMessageTypeFlagsEXT messageType,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">void</span>* pUserData)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    std::cerr &lt;&lt; <span class="string">&quot;validation layer: &quot;</span> &lt;&lt; pCallbackData-&gt;pMessage &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> VK_FALSE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一个参数表示消息的严重性，它可以是以下几个标志之一：</p>
+<ul>
+<li>VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT：诊断消息</li>
+<li>VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT：信息性消息，如创建资源</li>
+<li>VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT：有关行为的消息，不一定是错误（error），但很可能是某个的错误（bug，这个实在不知道怎么表达区别了）</li>
+<li>VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT：有关无效行为的消息，可能导致崩溃<br>这个枚举的值的设置方式让我们可以使用比较操作来检查消息是否与某个严重级别相等或更差，例如：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (messageSeverity &gt;= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) &#123;</span><br><span class="line">    <span class="comment">// Message is important enough to show</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+messageType参数可以是以下几个标志之一：</li>
+<li>VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT：发生了一些与规范或性能无关的事件</li>
+<li>VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT：发生了违反规范或表明可能存在错误的事情</li>
+<li>VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT：Vulkan的潜在非最佳使用<br>pCallbackData参数是一个VkDebugUtilsMessengerCallbackDataEXT结构，其中包含消息本身的详细信息，比较重要的成员有以下几个：</li>
+<li>pMessage：以null结尾的调试消息字符串</li>
+<li>pObjects：与消息相关的Vulkan对象句柄的数组</li>
+<li>objectCount：数组中的对象个数<br>最后，pUserData参数是一个在回调设置期间指定的指针，并允许将自身的数据传递给它。</li>
+</ul>
+<p>回调函数返回一个布尔值，指示是否应该中止触发验证层消息的Vulkan调用。<br>如果回调返回true，则调用将因VK_ERROR_VALIDATION_FAILED_EXT错误而中止，这个通常仅用于测试验证层本身，所以应始终返回VK_FALSE。</p>
+<p>现在剩下的就是把回调函数告知Vulkan了。有些令人惊讶的是，Vulkan中的调试回调也是通过需要显式创建和销毁的句柄来管理的。<br>这样的回调称为信使（messenger），可以根据需要随意添加。在instance下面添加这个句柄的类成员：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkDebugUtilsMessengerEXT callback;</span><br></pre></td></tr></table></figure>
+<p>添加函数setupDebugCallback，在initVulkan中的createInstance之后调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">createInstance</span>();</span><br><span class="line">    <span class="built_in">setupDebugCallback</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">setupDebugCallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!enableValidationLayers) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来使用回调的相关信息来填充一个结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VkDebugUtilsMessengerCreateInfoEXT createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;</span><br><span class="line">createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;</span><br><span class="line">createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;</span><br><span class="line">createInfo.pfnUserCallback = debugCallback;</span><br><span class="line">createInfo.pUserData = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>messageSeverity字段指定要为其调用回调的所有类型的严重性。<br>这里设定为除了VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT之外的所有类型，来接收有关可能出现的问题的通知，同时省略大量的一般调试信息。<br>messageType字段设置通知回调的消息类型。在这里启用了所有类型，可以根据实际情况随时禁用它们。<br>最后，pfnUserCallback字段指定回调函数的指针。<br>同时可以选择将指针传递给pUserData字段，该字段将通过pUserData参数传递给回调函数。<br>例如，可以使用它来传递指向HelloTriangleApplication类的指针。</p>
+<p>注意，有许多方法可以配置验证层消息和调试回调，但这里说明的只是入门的一个很好的配置。如果想了解更多相关信息，可以参阅<a target="_blank" rel="noopener" href="https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VK_EXT_debug_utils">这里</a></p>
+<p>这时候将这个结构传递给vkCreateDebugUtilsMessengerEXT函数来创建VkDebugUtilsMessengerEXT对象。<br>不幸的是，因为此函数是扩展函数，所以它不会自动加载。这里还必须使用vkGetInstanceProcAddr查找其地址，我们将创建自己的代理函数，在后台处理它，这里将它添加到HelloTriangleApplication类定义的正上方：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VkResult <span class="title">CreateDebugUtilsMessengerEXT</span><span class="params">(VkInstance instance, <span class="type">const</span> VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, <span class="type">const</span> VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> func = (PFN_vkCreateDebugUtilsMessengerEXT) <span class="built_in">vkGetInstanceProcAddr</span>(instance, <span class="string">&quot;vkCreateDebugUtilsMessengerEXT&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (func != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">func</span>(instance, pCreateInfo, pAllocator, pCallback);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> VK_ERROR_EXTENSION_NOT_PRESENT;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果无法加载函数，vkGetInstanceProcAddr将返回nullptr。<br>我们现在可以调用这个函数来创建扩展对象（如果可用）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">CreateDebugUtilsMessengerEXT</span>(instance, &amp;createInfo, <span class="literal">nullptr</span>, &amp;callback) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to set up debug callback!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>倒数第二个参数同样也是可选的分配器回调指针，设为nullptr就行，其他参数就很直接了。<br>由于调试回调函数是根据特定Vulkan实例及其层来选择的，因此需要将其明确指定为第一个参数，在之后还能看到其他相关的子对象。<br>现在可以观察这样是否有效了。运行程序并关闭窗口可以看到以下消息打印到命令提示符：<br><img src="/2018/10/31/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-3-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E9%AA%8C%E8%AF%81%E5%B1%82/1.png"></p>
+<p>现在就已经有个错误了。需要通过调用vkDestroyDebugUtilsMessengerEXT来清理VkDebugUtilsMessengerEXT对象，与vkCreateDebugUtilsMessengerEXT类似，这个函数也需要显式加载<br>注意，此消息多次打印是正常的。发生这种情况是因为多个验证层都检查到了调试信使的缺失。</p>
+<p>在CreateDebugUtilsMessengerEXT下创建另一个代理函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">DestroyDebugUtilsMessengerEXT</span><span class="params">(VkInstance instance, VkDebugUtilsMessengerEXT callback, <span class="type">const</span> VkAllocationCallbacks* pAllocator)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> func = (PFN_vkDestroyDebugUtilsMessengerEXT) <span class="built_in">vkGetInstanceProcAddr</span>(instance, <span class="string">&quot;vkDestroyDebugUtilsMessengerEXT&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (func != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="built_in">func</span>(instance, callback, pAllocator);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确保这个函数是静态类函数或类外的函数。然后我们可以在cleanup函数中调用它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (enableValidationLayers) &#123;</span><br><span class="line">        <span class="built_in">DestroyDebugUtilsMessengerEXT</span>(instance, callback, <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDestroyInstance</span>(instance, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glfwDestroyWindow</span>(window);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">glfwTerminate</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当再次运行该程序时，可以将看到错误消息没有了。如果要查看哪个调用触发了消息，可以在消息回调中添加断点并查看堆栈并跟踪调试。</p>
+<p><b>布局</b><br>除了VkDebugUtilsMessengerCreateInfoEXT结构中指定的标志，验证层还有很多设置。浏览到Vulkan SDK的Config目录。在那里，可以将找到一个vk_layer_settings.txt文件，该文件解释了如何配置图层。<br>要为自己的应用程序配置图层设置，请将该文件复制到项目的“Debug”和“Release”目录中，然后按照说明设置所需的配置。但是对于本教程的后文讲直接采用默认的配置。<br>在本教程中，将做一些故意的错误，用来展示验证层对捕获它们的巨大帮助，并明确的解释正在使用Vulkan做的事情。<br>下一部分将查看系统中的Vulkan设备了。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/10/31/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-3-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E9%AA%8C%E8%AF%81%E5%B1%82/" data-id="cl5xdmzn0001zc4ux75ubda1r" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-4-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E7%89%A9%E7%90%86%E8%AE%BE%E5%A4%87%E5%92%8C%E9%98%9F%E5%88%97%E7%B0%87/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(4)-画个三角形(构建)-物理设备和队列簇
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/10/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-2-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E6%9E%84%E5%BB%BA-%E5%AE%9E%E4%BE%8B/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(2)-画个三角形(构建)-实例</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

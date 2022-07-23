@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(10)-画个三角形(图形管道)-着色器模块 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(10)-画个三角形(图形管道)-着色器模块">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-08T01:38:21.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-10-画个三角形-图形管道-着色器模块" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(10)-画个三角形(图形管道)-着色器模块
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/">
+            <time datetime="2018-11-08T01:38:21.000Z" itemprop="datePublished">2018-11-08</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p>与早期的API不同，Vulkan中的着色器代码必须以字节码格式，而不是像<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/OpenGL_Shading_Language">GLSL</a>和<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/High-Level_Shading_Language">HLSL</a>这样的比较有可读性的语法。这种字节码格式称为<a target="_blank" rel="noopener" href="https://www.khronos.org/spir/">SPIR-V</a>，旨在与Vulkan和OpenCL（两种都是Khronos API）一起使用，这是一种可用于编写图形和计算着色器的格式，但我们将重点介绍本教程中Vulkan图形管道中使用的着色器。</p>
+<p>使用字节码格式的优点是GPU供应商编写的将着色器代码转换为本机代码的编译器要没那么复杂。过去的经验表明，使用像GLSL这样的人类可读语法，一些GPU供应商对标准的解释太灵活了。如果您碰巧使用其中一个供应商的GPU编写非平凡着色器，那么由于语法错误，您将面临其他供应商的驱动程序拒绝您的代码的风险，更糟的是由于编译器错误，着色器的运行方式可能完全不同。使用像SPIR-V这样简单的字节码格式，希望可以避免这种局面。</p>
+<p>但是，这也不意味着我们需要手动编写这个字节码。Khronos发布了自己独立于供应商的编译器，可以将GLSL编译为SPIR-V。此编译器旨在验证着色器代码是否完全符合标准，并生成一个可与程序一起使用的SPIR-V二进制文件。</p>
+<p>您还可以将此编译器作为库包含项目中，这样可以在运行时同时生成SPIR-V，但在本教程中我们不会这样做。编译器已包含在LunarG SDK中，即glslangValidator.exe，因此无需额外下载任何内容。</p>
+<p>GLSL是一种带有C风格语法的着色语言。写在程序中的main函数会对为每个对象进行调用。GLSL使用全局变量来处理输入和输出，而不是使用输入参数和返回值作为输出，这个语言包括许多有助于图形编程的功能，如内置的向量和矩阵基元，还有求叉积，矩阵向量积以及反射向量等函数。矢量类型称为vec，然后使用一个数字来表示其中元素的数量，例如，一个3D坐标将存储在vec3中。可以通过.x等成员访问单个成员，也可以同时获取多个成员来创建新的向量。例如，表达式vec3（1.0,2.0,3.0）.xy将生成一个vec2向量。向量的构造函数也可以采用向量对象和标量值的组合。例如，vec3可以用vec3（vec2（1.0,2.0），3.0）来构建。</p>
+<p>如前一章所述，我们需要编写顶点着色器和片段着色器以在屏幕上获得三角形。接下来的两节将介绍每个部分的GLSL代码，之后我将向您展示如何生成两个SPIR-V二进制文件并将它们加载到程序中。</p>
+<p><b>顶点着色器</b><br>顶点着色器处理每个传入的顶点，它将其属性（世界位置，颜色，法线和纹理坐标等等）作为输入。输出是裁剪坐标中的最终位置以及需要传递到片段着色器的属性，如颜色和纹理坐标。然后，光栅化阶段将这些值插入片段中，来产生平滑的梯度。裁剪坐标（clip coordinate）是顶点着色器产生的四维向量，在之后通过将整个向量除以其最后一个成员变化为标准化的设备坐标。标准化的设备坐标是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Homogeneous_coordinates">齐次坐标</a>，它将帧缓冲区映射到[-1,1]乘[-1,1]坐标系，如下所示：<br><img src="/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/1.png"><br>如果您之前涉足过计算机图形学，那么您应该已经熟悉了这些了。如果您之前使用过OpenGL，那么您会注意到Y坐标的符号现在被翻转了，现在用到的Z坐标的范围与Direct3D中相同，从0到1。</p>
+<p>对于我们的第一个三角形，我们不会应用任何变换，只需将三个顶点的位置直接指定为规范化设备坐标即可创建以下形状：</p>
+<p><img src="/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/2.png"></p>
+<p>我们可以直接输出归一化的设备坐标，方法是将它们作为顶点着色器的裁剪坐标输出，其中的最后一个组件设置为1。这样之后，将裁剪坐标转化为标准化的设备坐标时将不会有任何改变。</p>
+<p>通常的做法是将这些坐标存储在顶点缓冲区中，但在Vulkan中创建顶点缓冲区以及用数据进行填充并不简单。所以我决定推迟这一步，直到我们可以看到屏幕上出现一个满意的三角形。我们将做一些非一般流程的事情：直接在顶点着色器中包含坐标。代码如下所示：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> gl_PerVertex &#123;</span><br><span class="line">    <span class="type">vec4</span> <span class="built_in">gl_Position</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">vec2</span> positions[<span class="number">3</span>] = <span class="type">vec2</span>[](</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">0.0</span>, <span class="number">-0.5</span>),</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">0.5</span>, <span class="number">0.5</span>),</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">-0.5</span>, <span class="number">0.5</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(positions[gl_VertexIndex], <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>main函数将会作用于每个顶点，内置的gl_VertexIndex变量包含当前顶点的索引。这通常是顶点缓冲区的索引，但在我们的例子中，它是硬编码顶点数据数组的索引。从着色器中的常量数组访问每个顶点的位置，并与虚拟的z坐标和w组合来生成裁剪坐标中的位置，内置变量gl_Position用作输出。Vulkan着色器需要GL_ARB_separate_shader_objects扩展才能工作。</p>
+<p><b>片段着色器</b><br>由顶点着色器的生成的位置形成的三角形将用片段（fragments，候选像素）填充屏幕上的区域。在这些片段上调用片段着色器来为帧缓冲区（单个或多个）生成颜色和深度。为整个三角形输出红色的简单片段着色器如下所示：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec4</span> outColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="type">vec4</span>(<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就像顶点着色器中的main函数会作用于每个顶点一样，这里的main函数将会作用于每个片段。GLSL中的颜色是4个分量的矢量，其中R，G，B和α通道的值都在[0,1]范围内。与顶点着色器中的gl_Position不同，这里没有内置变量来输出当前片段的颜色。您必须为每个帧缓冲区指定自己的输出变量，其中layout（location &#x3D; 0）这里的0就是指定了帧缓冲区的索引。这里将红色写入了outColor变量，这个变量链接到索引为0的第一个（也是唯一的）帧缓冲区。</p>
+<p><b>逐个顶点着色（Per-vertex colors）</b><br>整个三角形都是红色的太无趣了，下面这个看起来好多了：</p>
+<p><img src="/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/3.png"></p>
+<p>我们必须对两个着色器进行一些更改才能实现这个目标。首先，我们需要为每一个顶点都指定不同的颜色。顶点着色器现在应该包含一个颜色数组，就像它们的位置一样：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec3</span> colors[<span class="number">3</span>] = <span class="type">vec3</span>[](</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>),</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>),</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>现在我们只需要将每个顶点的颜色传递给片段着色器，这样它就可以将它们的插值输出到帧缓冲区了。将颜色输出变量添加到顶点着色器并在main函数中写入：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(positions[gl_VertexIndex], <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">    fragColor = colors[gl_VertexIndex];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来需要在片段着色器中添加匹配的输入：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="type">vec4</span>(fragColor, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的输入变量并不需要使用相同的名称（fragColor），它们将使用location指令指定的索引链接在一起。main函数的功能已被修改，现在会输出颜色和alpha值。如上图所示，fragColor的值将自动插入三个顶点之间的片段，从而产生平滑的渐变。</p>
+<p><b>编译着色器</b><br>在项目的根目录中创建一个名为shaders的目录，并将顶点着色器存储在名为shader.vert的文件中，将片段着色器存储名为shader.frag的文件中。GLSL着色器没有官方扩展来说明，但这两个名字通常用于区分它们。</p>
+<p>shader.vert的应该如下所示：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> gl_PerVertex &#123;</span><br><span class="line">    <span class="type">vec4</span> <span class="built_in">gl_Position</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"></span><br><span class="line"><span class="type">vec2</span> positions[<span class="number">3</span>] = <span class="type">vec2</span>[](</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">0.0</span>, <span class="number">-0.5</span>),</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">0.5</span>, <span class="number">0.5</span>),</span><br><span class="line">    <span class="type">vec2</span>(<span class="number">-0.5</span>, <span class="number">0.5</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="type">vec3</span> colors[<span class="number">3</span>] = <span class="type">vec3</span>[](</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>),</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">1.0</span>, <span class="number">0.0</span>),</span><br><span class="line">    <span class="type">vec3</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(positions[gl_VertexIndex], <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">    fragColor = colors[gl_VertexIndex];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>shader.frag的内容应该是：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 450</span></span><br><span class="line"><span class="meta">#extension GL_ARB_separate_shader_objects : enable</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> fragColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">layout</span>(<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec4</span> outColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    outColor = <span class="type">vec4</span>(fragColor, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们现在要使用glslangValidator程序将它们编译成SPIR-V字节码。<br><b>Windows</b><br>创建一个compile.bat文件，写入以下内容：</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">C:/<span class="title">VulkanSDK</span>/1.1.85.0/<span class="title">Bin32</span>/<span class="title">glslangValidator.exe</span> -<span class="title">V</span> <span class="title">shader.vert</span></span></span><br><span class="line"><span class="function"><span class="title">C</span>:/<span class="title">VulkanSDK</span>/1.1.85.0/<span class="title">Bin32</span>/<span class="title">glslangValidator.exe</span> -<span class="title">V</span> <span class="title">shader.frag</span></span></span><br><span class="line"><span class="function"><span class="title">pause</span></span></span><br></pre></td></tr></table></figure>
+<p>将glslangValidator.exe的路径替换为你安装Vulkan SDK的路径，双击文件并运行。<br><b>Linux</b><br>创建一个compile.bat文件，写入以下内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/home/user/VulkanSDK/x.x.x.x/x86_64/bin/glslangValidator -V shader.vert</span><br><span class="line">/home/user/VulkanSDK/x.x.x.x/x86_64/bin/glslangValidator -V shader.frag</span><br></pre></td></tr></table></figure>
+<p>将glslangValidator.exe的路径替换为你安装Vulkan SDK的路径，使用chmod + x compile.sh使脚本可以执行然后运行。<br><b>有关特定平台的说明</b><br>这两个命令都使用了使用-V标志进行调用，这个标志用于将GLSL源文件编译为SPIR-V字节码。运行编译脚本后，可以看到创建了两个SPIR-V二进制文件：vert.spv和frag.spv。名称是根据着色器的类型自动派生，但您可以随意更改。在编译着色器时，可能会收到有关某些缺失功能的警告，但您可以放心地忽略它。</p>
+<p>如果着色器包含语法错误，则编译器会告诉您行号和问题。例如，可以试一下省略分号并再次运行编译脚本。也可以可以尝试在没有任何参数的情况下运行编译器，以查看它支持的标志。例如，它还可以将字节码输出为人类可读的格式，这样就可以准确地看到着色器正在做什么以及在此阶段应用的优化。</p>
+<p>在命令行上编译着色器是最直接的选则之一，这也是我们将在本教程中使用的方式。你也可以直接从代码中来编译着色器，Vulkan SDK包含libshaderc，它是一个库，用于从程序中将GLSL代码编译为SPIR-V。</p>
+<p><b>加载着色器</b><br>现在我们有了生成SPIR-V着色器的方法，现在是时候将它们加载到我们的程序中，以便在之后将它们插入到图形管道中了。我们首先编写一个简单的辅助函数来从文件中加载二进制数据。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> std::vector&lt;<span class="type">char</span>&gt; <span class="title">readFile</span><span class="params">(<span class="type">const</span> std::string&amp; filename)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::ifstream <span class="title">file</span><span class="params">(filename, std::ios::ate | std::ios::binary)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!file.<span class="built_in">is_open</span>()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to open file!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>readFile函数将读取指定文件中的所有字节，并将它们返回到由std::vector管理的字节数组中。我们首先用这两个标志来打开的文件：</p>
+<ul>
+<li>ate： 从文件末尾开始阅读</li>
+<li>binary：将文件读取为二进制文件（避免文本转换）</li>
+</ul>
+<p>从文件末尾开始读取的优点是我们可以利用读取位置来确定文件的大小并分配缓冲区：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">size_t</span> fileSize = (<span class="type">size_t</span>) file.<span class="built_in">tellg</span>();</span><br><span class="line"><span class="function">std::vector&lt;<span class="type">char</span>&gt; <span class="title">buffer</span><span class="params">(fileSize)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>之后，我们可以回到文件的开头重新读取所有字节：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file.<span class="built_in">seekg</span>(<span class="number">0</span>);</span><br><span class="line">file.<span class="built_in">read</span>(buffer.<span class="built_in">data</span>(), fileSize);</span><br></pre></td></tr></table></figure>
+<p>最后关闭文件并返回字节：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">file.<span class="built_in">close</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> buffer;</span><br></pre></td></tr></table></figure>
+<p>现在将从createGraphicsPipeline调用此函数来加载两个着色器的字节码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createGraphicsPipeline</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> vertShaderCode = <span class="built_in">readFile</span>(<span class="string">&quot;shaders/vert.spv&quot;</span>);</span><br><span class="line">    <span class="keyword">auto</span> fragShaderCode = <span class="built_in">readFile</span>(<span class="string">&quot;shaders/frag.spv&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过打印缓冲区的大小并检查它们是否与实际文件大小（以字节为单位）匹配，可以确保正确加载着色器。</p>
+<p><b>创建着色器模块</b><br>在我们将代码传递给管道之前，我们必须将它包装在VkShaderModule对象中。创建一个辅助函数createShaderModule来做这件事：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VkShaderModule <span class="title">createShaderModule</span><span class="params">(<span class="type">const</span> std::vector&lt;<span class="type">char</span>&gt;&amp; code)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该函数将使用字节缓冲区作为参数的，并从中创建一个VkShaderModule。</p>
+<p>创建着色器模块很简单，我们只需要指定一个指向缓冲区的指针，其中包含字节码及其长度。这个信息在VkShaderModuleCreateInfo结构中指定。有个问题是字节码的大小是以字节为单位指定的，但字节码指针是uint32_t类型指针而不是char指针。因此，我们需要使用reinterpret_cast指针进行转换，如下所示。当您执行此类转换时，还需要确保数据满足uint32_t的对齐要求。幸运的是，存储在std::vector中的数据，默认分配器已经确保数据满足最坏情况的对齐要求了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkShaderModuleCreateInfo createInfo = &#123;&#125;;</span><br><span class="line">createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;</span><br><span class="line">createInfo.codeSize = code.<span class="built_in">size</span>();</span><br><span class="line">createInfo.pCode = <span class="built_in">reinterpret_cast</span>&lt;<span class="type">const</span> <span class="type">uint32_t</span>*&gt;(code.<span class="built_in">data</span>());</span><br></pre></td></tr></table></figure>
+<p>然后可以通过调用vkCreateShaderModule来创建VkShaderModule：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkShaderModule shaderModule;</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">vkCreateShaderModule</span>(device, &amp;createInfo, <span class="literal">nullptr</span>, &amp;shaderModule) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create shader module!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参数与之前对象创建函数中的参数相同：逻辑设备，信息结构的指针，可选的自定义分配器指针和处理后的输出变量。创建着色器模块后会立即释放相应代码的缓冲区。最后不要忘记返回创建的着色器模块：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> shaderModule;</span><br></pre></td></tr></table></figure>
+<p>只有在管道创建过程中才需要着色器模块对象，因此我们不会将它们声明为类成员，而是在createGraphicsPipeline函数中创建局部变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkShaderModule vertShaderModule;</span><br><span class="line">VkShaderModule fragShaderModule;</span><br></pre></td></tr></table></figure>
+<p>调用我们创建的辅助函数来加载着色器模块：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vertShaderModule = <span class="built_in">createShaderModule</span>(vertShaderCode);</span><br><span class="line">fragShaderModule = <span class="built_in">createShaderModule</span>(fragShaderCode);</span><br></pre></td></tr></table></figure>
+<p>创建图形管道并返回createGraphicsPipeline后，需要清除它们，因此请确保在函数末尾删除它们：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    ...</span><br><span class="line">    <span class="built_in">vkDestroyShaderModule</span>(device, fragShaderModule, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkDestroyShaderModule</span>(device, vertShaderModule, <span class="literal">nullptr</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><b>创建着色器阶段</b><br>VkShaderModule对象只是字节码缓冲区的一个很蠢的包装器（dumb wrapper）。着色器尚未相互链接，它们甚至还没有被赋予一个目标。将着色器模块分配给管道中的顶点或片段着色器阶段是通过VkPipelineShaderStageCreateInfo结构进行的，该结构是实际管道创建过程的一部分。</p>
+<p>我们将首先在createGraphicsPipeline函数中填充顶点着色器的结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineShaderStageCreateInfo vertShaderStageInfo = &#123;&#125;;</span><br><span class="line">vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;</span><br><span class="line">vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;</span><br></pre></td></tr></table></figure>
+<p>除了必须设置的sType成员之外，第一步是告诉Vulkan将在哪个管道阶段使用着色器。在前一章中描述的每个可编程阶段都有一个对应枚举值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vertShaderStageInfo.<span class="keyword">module</span> = vertShaderModule;</span><br><span class="line">vertShaderStageInfo.pName = <span class="string">&quot;main&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>接下来的两个成员指定包含代码的着色器模块和要调用的函数。这意味着可以将多个片段着色器组合到一个着色器模块中，并使用不同的入口点来区分它们的行为。在这里，我们将坚持使用标准的main函数。</p>
+<p>还有一个（可选的）成员pSpecializationInfo，我们将不会在这里使用，但会说明一下。它允许您指定着色器常量的值，您可以使用单个的着色器模块，通过为其中使用的常量指定不同的值，就能实现在创建管道的时候配置其行为。这比在渲染时使用变量配置着色器更有效，因为编译器可以执行优化，例如消除依赖于这些值的if语句。如果没有这样的常量，那么你可以将成员设置为nullptr，相应的struct自动进行初始化。</p>
+<p>把结构修改为适合片段着色器的形式很简单：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineShaderStageCreateInfo fragShaderStageInfo = &#123;&#125;;</span><br><span class="line">fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;</span><br><span class="line">fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;</span><br><span class="line">fragShaderStageInfo.<span class="keyword">module</span> = fragShaderModule;</span><br><span class="line">fragShaderStageInfo.pName = <span class="string">&quot;main&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>最后定义一个包含这两个结构的数组，我们稍后将在实际的管道创建步骤中引用它们。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VkPipelineShaderStageCreateInfo shaderStages[] = &#123;vertShaderStageInfo, fragShaderStageInfo&#125;;</span><br></pre></td></tr></table></figure>
+<p>这就是描述管道的可编程的阶段的全部内容。在下一章中，我们将讨论固定功能的阶段。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/08/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-10-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%9D%80%E8%89%B2%E5%99%A8%E6%A8%A1%E5%9D%97/" data-id="cl5xdmzmj0008c4ux5oa1e91i" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/09/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-11-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(11)-画个三角形(图形管道)-固定功能
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/07/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-9-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E5%9B%BE%E5%BD%A2%E7%AE%A1%E9%81%93-%E7%AE%80%E4%BB%8B/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(9)-画个三角形(图形管道)-简介</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

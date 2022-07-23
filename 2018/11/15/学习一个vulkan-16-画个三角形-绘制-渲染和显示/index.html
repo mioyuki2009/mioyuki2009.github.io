@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(16)-画个三角形(绘制)-渲染和显示 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(16)-画个三角形(绘制)-渲染和显示">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-15T06:42:59.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.197Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-16-画个三角形-绘制-渲染和显示" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(16)-画个三角形(绘制)-渲染和显示
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/">
+            <time datetime="2018-11-15T06:42:59.000Z" itemprop="datePublished">2018-11-15</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>创建</b><br>在这个章节里，我们会将所有的东西聚合到一起。现在编写drawFrame函数，该函数在主循环中调用用于将三角形显示到屏幕上。创建函数并在mainLoop里调用它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">mainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!<span class="built_in">glfwWindowShouldClose</span>(window)) &#123;</span><br><span class="line">        <span class="built_in">glfwPollEvents</span>();</span><br><span class="line">        <span class="built_in">drawFrame</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><b>同步</b><br>drawFrame函数将执行以下操作：</p>
+<ul>
+<li>从交换链中获取图像</li>
+<li>在帧缓冲区中将该图像作为附件执行命令缓冲区中的命令</li>
+<li>将图像返回到交换链以进行演示</li>
+</ul>
+<p>这些事件中的每一个都需要使用单个函数调用来启动，但它们是异步执行的。函数的调用将会在操作实际完成之前就返回了，并且执行顺序也是未定义的。这是不幸的，因为我们希望每个操作都取决于前一个操作。</p>
+<p>有两种同步交换链消息的方法：栅栏和信号量。它们都是可用于协调操作的对象，具有一个操作信号和另一个操作等待栅栏或信号量从无信号状态变为信号状态，如果莫某个操作没有信号，则会一直等待着栅栏或者信号量来令他转换到有信号的状态。</p>
+<p>两种方式的区别在于可以使用vkWaitForFences之类的函数从程序中访问栅栏的状态，但是信号量却不行。栅栏主要用于将应用程序本身与渲染操作同步，而信号量用于同步命令队列内或跨命令队列的操作。我们想要同步绘制命令和显示队列操作，这使得使用信号量比较合适。</p>
+<p><b>信号量</b><br>我们需要一个信号量来表示已经获取了图像并准备好进行渲染，另一个信号量表示渲染已经完成并且可以进行显示。创建两个类成员来存储这些信号量对象：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VkSemaphore imageAvailableSemaphore;</span><br><span class="line">VkSemaphore renderFinishedSemaphore;</span><br></pre></td></tr></table></figure>
+<p>要创建信号量，还需要为添加最后的一个create函数：createSemaphores：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">initVulkan</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">createInstance</span>();</span><br><span class="line">    <span class="built_in">setupDebugCallback</span>();</span><br><span class="line">    <span class="built_in">createSurface</span>();</span><br><span class="line">    <span class="built_in">pickPhysicalDevice</span>();</span><br><span class="line">    <span class="built_in">createLogicalDevice</span>();</span><br><span class="line">    <span class="built_in">createSwapChain</span>();</span><br><span class="line">    <span class="built_in">createImageViews</span>();</span><br><span class="line">    <span class="built_in">createRenderPass</span>();</span><br><span class="line">    <span class="built_in">createGraphicsPipeline</span>();</span><br><span class="line">    <span class="built_in">createFramebuffers</span>();</span><br><span class="line">    <span class="built_in">createCommandPool</span>();</span><br><span class="line">    <span class="built_in">createCommandBuffers</span>();</span><br><span class="line">    <span class="built_in">createSemaphores</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSemaphores</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建信号量需要填充VkSemaphoreCreateInfo结构，但是在当前版本的API中，除了sType之外，实际上没有任何必需的字段：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSemaphores</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    VkSemaphoreCreateInfo semaphoreInfo = &#123;&#125;;</span><br><span class="line">    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Vulkan API的未来版本或有什么扩展可能会为flags和pNext参数添加一些功能，就像它的其他结构一样。创建信号量vkCreateSemaphor和其他对象的创建模式差不多：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;imageAvailableSemaphore) != VK_SUCCESS ||</span><br><span class="line">    <span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;renderFinishedSemaphore) != VK_SUCCESS) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create semaphores!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当程序结束时，所有命令都已完成且不再需要同步时，应清除信号量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkDestroySemaphore</span>(device, renderFinishedSemaphore, <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="built_in">vkDestroySemaphore</span>(device, imageAvailableSemaphore, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
+
+<p><b>从交换链中获取图像</b><br>如前所述，我们需要在drawFrame函数中做的第一件事就是从交换链中获取一个图像。回想一下，交换链是一个扩展功能，因此我们必须使用具有vk*KHR命名的函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> imageIndex;</span><br><span class="line">    <span class="built_in">vkAcquireNextImageKHR</span>(device, swapChain, std::numeric_limits&lt;<span class="type">uint64_t</span>&gt;::<span class="built_in">max</span>(), imageAvailableSemaphore, VK_NULL_HANDLE, &amp;imageIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>vkAcquireNextImageKHR的前两个参数是我们希望从中获取图像的逻辑设备和交换链。第三个参数指定处理图像可用的时间限制（以纳秒为单位），这里使用64位无符号整数的最大值可禁用时间的限制。</p>
+<p>接下来的两个参数指定当显示引擎处理完图像后要发出信号的同步对象。这就是开始绘制的时候了，可以指定使用信号量，栅栏或都使用，在此处我们使用imageAvailableSemaphore。</p>
+<p>最后一个参数指定一个变量，用于输出已变为可用的交换链图像的索引。索引引用了swapChainImages数组中的VkImage图像，我们将使用该索引来选择正确的命令缓冲区。</p>
+<p><b>提交命令缓冲区</b><br>队列提交和同步是通过配置VkSubmitInfo结构中的参数完成的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">VkSubmitInfo submitInfo = &#123;&#125;;</span><br><span class="line">submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;</span><br><span class="line"></span><br><span class="line">VkSemaphore waitSemaphores[] = &#123;imageAvailableSemaphore&#125;;</span><br><span class="line">VkPipelineStageFlags waitStages[] = &#123;VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT&#125;;</span><br><span class="line">submitInfo.waitSemaphoreCount = <span class="number">1</span>;</span><br><span class="line">submitInfo.pWaitSemaphores = waitSemaphores;</span><br><span class="line">submitInfo.pWaitDstStageMask = waitStages;</span><br></pre></td></tr></table></figure>
+<p>前三个参数指定在执行开始之前等待的信号量以及要等待的管道位于的阶段。我们希望一直等待为图像写入颜色直到它可用，所以我们指定了写入颜色附件的图形管道的阶段。这意味着从理论上讲，现在的实现已经可以开始执行我们的顶点着色器了，而图像还不可用。waitStages数组对应的pWaitSemaphores中会具有相同索引的信号量。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">submitInfo.commandBufferCount = <span class="number">1</span>;</span><br><span class="line">submitInfo.pCommandBuffers = &amp;commandBuffers[imageIndex];</span><br></pre></td></tr></table></figure>
+<p>接下来的两个参数指定实际提交来执行的命令缓冲区。和之前说的一样，我们提交到的命令缓冲区会将我们刚刚获取的交换链图像绑定为颜色附件。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkSemaphore signalSemaphores[] = &#123;renderFinishedSemaphore&#125;;</span><br><span class="line">submitInfo.signalSemaphoreCount = <span class="number">1</span>;</span><br><span class="line">submitInfo.pSignalSemaphores = signalSemaphores;</span><br></pre></td></tr></table></figure>
+<p>signalSemaphoreCount和pSignalSemaphores参数指定在命令缓冲区完成执行后向哪些信号量发出信号。在我们的例子中，根据需要我们使用了renderFinishedSemaphore。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">vkQueueSubmit</span>(graphicsQueue, <span class="number">1</span>, &amp;submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to submit draw command buffer!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们现在可以使用vkQueueSubmit将命令缓冲区提交到图形队列。当工作负载大得多时，该函数将VkSubmitInfo结构数组作为参数来改善效率。最后一个参数是一个可选的fence，当命令缓冲区完成执行时，它将发出信号。我们只使用信号量进行同步，因此这里只传递一个VK_NULL_HANDLE。</p>
+<p><b>子通道依赖项</b><br>请记住，渲染过程中的子通道会自动处理图像布局的变化。这些转换由子通道依赖项（subpass dependencies）控制，子通道依赖项指定了子通道之间的内存和执行依赖关系。我们现在只有一个子通道，但是在此子通道之前和之后的操作也算作隐式的“子通道”。</p>
+<p>有两个内置依赖项，用于处理渲染过程开始时和渲染过程结束时的转换，但前者发生的时间并不是刚好正确的。它假设转换发生是在管道的开始，但是那时我们还没有获得图像。有两种方法可以解决这个问题。可以将imageAvailableSemaphore的waitStages更改为VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT，确保在图像有效之前渲染过程不会开始，或者我们可以使渲染过程等待VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT阶段。我决定在这里使用第二个选项，因为它也是查看子通道的依赖关系以及它们如何工作的一个很好的方式。</p>
+<p>子通道依赖项在VkSubpassDependency结构中指​​定。转到createRenderPass函数并添加如下结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VkSubpassDependency dependency = &#123;&#125;;</span><br><span class="line">dependency.srcSubpass = VK_SUBPASS_EXTERNAL;</span><br><span class="line">dependency.dstSubpass = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>前两个字段指定了依赖关系和从属子通道的索引。VK_SUBPASS_EXTERNAL指的是渲染通道之前或之后的隐式子通道，具体取决于它是在srcSubpass还是dstSubpass中指定的。索引0指的是我们的子通道，它是第一个也是唯一一个。dstSubpass必须始终高于srcSubpass以防止依赖关系图中产生循环。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">dependency.srcAccessMask = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>接下来的两个字段指定要等待的操作以及这些操作发生的阶段。在我们访问之前，我们需要等待交换链完成从图像中进行读取，这可以通过等待颜色附件输出的阶段来实现。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;</span><br><span class="line">dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;</span><br></pre></td></tr></table></figure>
+<p>应该等待的操作是在颜色附加阶段，这里涉及到了读取和写入颜色附件。这些设置将阻止转换的发生，直到我们实际需要（并允许），也就是我们想要开始为其写入颜色的时候。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">renderPassInfo.dependencyCount = <span class="number">1</span>;</span><br><span class="line">renderPassInfo.pDependencies = &amp;dependency;</span><br></pre></td></tr></table></figure>
+<p>VkRenderPassCreateInfo结构有两个字段来指定依赖项数组。</p>
+<p><b>显示</b><br>绘制的最后一步是将结果提交回交换链，以使其最终显示在屏幕上。显示可以通过drawFrame函数末尾的VkPresentInfoKHR结构进行配置。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">VkPresentInfoKHR presentInfo = &#123;&#125;;</span><br><span class="line">presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;</span><br><span class="line"></span><br><span class="line">presentInfo.waitSemaphoreCount = <span class="number">1</span>;</span><br><span class="line">presentInfo.pWaitSemaphores = signalSemaphores;</span><br></pre></td></tr></table></figure>
+<p>前两个参数指定在显示发生之前要等待的信号量，和VkSubmitInfo一样。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VkSwapchainKHR swapChains[] = &#123;swapChain&#125;;</span><br><span class="line">presentInfo.swapchainCount = <span class="number">1</span>;</span><br><span class="line">presentInfo.pSwapchains = swapChains;</span><br><span class="line">presentInfo.pImageIndices = &amp;imageIndex;</span><br></pre></td></tr></table></figure>
+<p>接下来的两个参数指定用于呈现图像的交换链以及每个交换链的图像索引，大多数情况下只有一个。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">presentInfo.pResults = <span class="literal">nullptr</span>; <span class="comment">// Optional</span></span><br></pre></td></tr></table></figure>
+<p>最后参数是可选的，叫做pResults。它允许您指定一个VkResult数组，以便在显示成功时检查每个单独的交换链。如果您只使用单个交换链，则没有必要设置，因为可以简单地使用当前函数的返回值就能知道了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkQueuePresentKHR</span>(presentQueue, &amp;presentInfo);</span><br></pre></td></tr></table></figure>
+<p>vkQueuePresentKHR函数提交将图像呈现给交换链的请求。我们将在下一章中为vkAcquireNextImageKHR和vkQueuePresentKHR添加错误处理，因为他们的失败也并不一定意味着程序应该终止，这与我们迄今为止看到的功能不同。</p>
+<p>如果到目前为止你已经正确地完成了所有操作，那么在运行程序时，您现在应该看到类似于以下的内容：<br><img src="/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/1.png"></p>
+<p>好极了！<br>不幸的是，在启用验证图层后，可以看到程序会在关闭它时立即崩溃。从debugCallback打印到终端的消息可以看到原因：<br><img src="/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/2.png"></p>
+<p>请记住，drawFrame中的所有操作都是异步的。这意味着当我们退出mainLoop中的循环时，绘图和演示操作可能仍在继续，<br>在这时候清理资源是并不是一个好的想法。</p>
+<p>要解决这个问题，我们应该在退出mainLoop并销毁窗口之前等待逻辑设备完成操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">mainLoop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!<span class="built_in">glfwWindowShouldClose</span>(window)) &#123;</span><br><span class="line">        <span class="built_in">glfwPollEvents</span>();</span><br><span class="line">        <span class="built_in">drawFrame</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkDeviceWaitIdle</span>(device);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>您还可以等待特定命令队列中的操作以vkQueueWaitIdle结束。这些功能可以用作执行同步的非常基本的方法，现在关闭窗口时程序可以毫无问题地退出。</p>
+<p><b>飞行帧（Frames in flight）</b><br>如果运行启用了验证层的应用程序，则会监视应用程序的内存使用情况，您可能会注意到它正在缓慢增长。这样做的原因是应用程序正在drawFrame函数中快速提交工作，但却并没有检查它是否完成。如果CPU提交的工作速度超过了GPU可以跟上的速度，那么队列将慢慢被工作填满。更糟糕的是，我们还正在重复使用imageAvailableSemaphore和renderFinishedSemaphore同时进行多个帧的操作。</p>
+<p>解决此问题的简单方法是在提交后等待工作完成，例如使用vkQueueWaitIdle：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkQueuePresentKHR</span>(presentQueue, &amp;presentInfo);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkQueueWaitIdle</span>(presentQueue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是，这种方式并不能很好的使用GPU，这样做的话整个图形管道现在一次仅用于一帧。只有当前帧已经处理完毕而且是空闲的，才会用于下一帧。我们现在将扩展我们的应用程序，以允许多个帧在飞行同时仍然对堆积的工作量做出限制。</p>
+<p>首先在程序顶部添加一个常量，该常量定义应同时处理多少帧：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> MAX_FRAMES_IN_FLIGHT = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>每个框架都应该有一组自己的信号量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;VkSemaphore&gt; imageAvailableSemaphores;</span><br><span class="line">std::vector&lt;VkSemaphore&gt; renderFinishedSemaphores;</span><br></pre></td></tr></table></figure>
+<p>需要更改createSemaphores来创建以下的东西：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSemaphores</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    imageAvailableSemaphores.<span class="built_in">resize</span>(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line">    renderFinishedSemaphores.<span class="built_in">resize</span>(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line"></span><br><span class="line">    VkSemaphoreCreateInfo semaphoreInfo = &#123;&#125;;</span><br><span class="line">    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;imageAvailableSemaphores[i]) != VK_SUCCESS ||</span><br><span class="line">            <span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;renderFinishedSemaphores[i]) != VK_SUCCESS) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create semaphores for a frame!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样，它们也应该全部清理掉：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, renderFinishedSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, imageAvailableSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要每次使用正确的信号量，我们需要跟踪当前帧。因此需要使用帧索引：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">size_t</span> currentFrame = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>现在可以修改drawFrame函数来使用正确的对象：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkAcquireNextImageKHR</span>(device, swapChain, std::numeric_limits&lt;<span class="type">uint64_t</span>&gt;::<span class="built_in">max</span>(), imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &amp;imageIndex);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    VkSemaphore waitSemaphores[] = &#123;imageAvailableSemaphores[currentFrame]&#125;;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    VkSemaphore signalSemaphores[] = &#123;renderFinishedSemaphores[currentFrame]&#125;;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，也不要忘记每次都要进入下一帧：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    currentFrame = (currentFrame + <span class="number">1</span>) % MAX_FRAMES_IN_FLIGHT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过使用modulo（％）运算符，我们可以确保帧索引每隔MAX_FRAMES_IN_FLIGHT就会循环（和循环队列差不多）。</p>
+<p>虽然我们没有设置所需的对象来同时处理多个帧，我们实际上还并没有能够阻止提交的数目超过MAX_FRAMES_IN_FLIGHT。目前只有GPU-GPU同步，还没有CPU-GPU同步来继续跟踪工作的进展情况，也就是说在帧＃0仍然在飞行状态时，我们也可能在使用他。</p>
+<p>为了执行CPU-GPU同步，Vulkan提供了第二种类型的同步原语，称为栅栏（fences）。栅栏类似于信号量，因为它们可以发出信号并等待，但这次我们在我们自己的代码中来等待它们。首先为每个帧创建一个栅栏：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;VkSemaphore&gt; imageAvailableSemaphores;</span><br><span class="line">std::vector&lt;VkSemaphore&gt; renderFinishedSemaphores;</span><br><span class="line">std::vector&lt;VkFence&gt; inFlightFences;</span><br><span class="line"><span class="type">size_t</span> currentFrame = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>我们决定将栅栏和信号量在一起创建，将createSemaphores重命名为createSyncObjects：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSyncObjects</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    imageAvailableSemaphores.<span class="built_in">resize</span>(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line">    renderFinishedSemaphores.<span class="built_in">resize</span>(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line">    inFlightFences.<span class="built_in">resize</span>(MAX_FRAMES_IN_FLIGHT);</span><br><span class="line"></span><br><span class="line">    VkSemaphoreCreateInfo semaphoreInfo = &#123;&#125;;</span><br><span class="line">    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;</span><br><span class="line"></span><br><span class="line">    VkFenceCreateInfo fenceInfo = &#123;&#125;;</span><br><span class="line">    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;imageAvailableSemaphores[i]) != VK_SUCCESS ||</span><br><span class="line">            <span class="built_in">vkCreateSemaphore</span>(device, &amp;semaphoreInfo, <span class="literal">nullptr</span>, &amp;renderFinishedSemaphores[i]) != VK_SUCCESS ||</span><br><span class="line">            <span class="built_in">vkCreateFence</span>(device, &amp;fenceInfo, <span class="literal">nullptr</span>, &amp;inFlightFences[i]) != VK_SUCCESS) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to create synchronization objects for a frame!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>栅栏的创建（VkFence）与信号量的创建非常相似，当然最也还要确保清理干净：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; MAX_FRAMES_IN_FLIGHT; i++) &#123;</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, renderFinishedSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroySemaphore</span>(device, imageAvailableSemaphores[i], <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="built_in">vkDestroyFence</span>(device, inFlightFences[i], <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在来修改drawFrame以使用fences进行同步。调用vkQueueSubmit包含了一个可选参数，用于传递在命令缓冲区完成执行时应发出信号的栅栏。我们可以使用它来表示帧已经完成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">vkQueueSubmit</span>(graphicsQueue, <span class="number">1</span>, &amp;submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;failed to submit draw command buffer!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在唯一剩下的就是修改drawFrame的开头用来等待帧完成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">drawFrame</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">vkWaitForFences</span>(device, <span class="number">1</span>, &amp;inFlightFences[currentFrame], VK_TRUE, std::numeric_limits&lt;<span class="type">uint64_t</span>&gt;::<span class="built_in">max</span>());</span><br><span class="line">    <span class="built_in">vkResetFences</span>(device, <span class="number">1</span>, &amp;inFlightFences[currentFrame]);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>vkWaitForFences函数用一系列栅栏作为参数，并在返回之前等待其中的任何一个或全部发出信号。VK_TRUE表示我们要等待所有栅栏，但是在我们就只有一个，所以在我们的例子中它显然无关紧要。就像vkAcquireNextImageKHR一样，这个函数也有一个时间限制参数。与信号量不同的是，我们需要手动调用vkResetFences来重置栅栏使他恢复到没有信号的状态。</p>
+<p>如果你现在运行程序，你会发现一些奇怪的东西。应用程序似乎不再渲染任何东西。启用验证层后，您将看到以下错误信息：<br><img src="/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/3.png"></p>
+<p>这意味着我们正在等待尚未提交的栅栏。这里的问题是，默认情况下，栅栏是在没有信号状态下创建的，所以由于我们之前没有使用过栅栏，vkWaitForFences会永远等待。为了解决这个问题，我们可以更改栅栏的创建以在信号状态下初始化它，就好像我们已经渲染了一个完成的初始帧一样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createSyncObjects</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    VkFenceCreateInfo fenceInfo = &#123;&#125;;</span><br><span class="line">    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;</span><br><span class="line">    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在程序可以正常工作没有内存泄漏了。我们现在已经实现了所有需要的同步，以确保排队的工作帧不超过两帧。请注意，对于代码的其他部分（例如最终的清理）来说，如果能够依赖于更粗略的同步（如vkDeviceWaitIdle）会更好。您可以根据性能的要求决定使用哪种方法。</p>
+<p>要通过示例了解有关同步的更多信息，请查看Khronos的<a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/Vulkan-Docs/wiki/Synchronization-Examples#swapchain-image-acquire-and-present">相关概述</a>。</p>
+<p><b>总结</b><br>写了差不多900行代码后，终于进入了在屏幕上弹出一些东西的阶段。引导Vulkan程序肯定是需要做很多工作的，但好处是通过这些明细的操作步骤，Vulkan为您提供了巨大的控制权。我建议你现在花点时间重新阅读代码并在心中构建模型，了解程序中所有Vulkan对象的用途以及它们之间的关系。我们将在这些知识的基础上进一步扩展该程序的功能。</p>
+<p>在下一章中，我们将讨论一个好的Vulkan程序所需的一个小东西。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/15/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-16-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E6%B8%B2%E6%9F%93%E5%92%8C%E6%98%BE%E7%A4%BA/" data-id="cl5xdmzmp000qc4uxdjqh95ok" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/11/16/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-17-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E9%87%8D%E6%9E%84%E4%BA%A4%E6%8D%A2%E9%93%BE/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(17)-画个三角形-重构交换链
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/14/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-15-%E7%94%BB%E4%B8%AA%E4%B8%89%E8%A7%92%E5%BD%A2-%E7%BB%98%E5%88%B6-%E5%91%BD%E4%BB%A4%E7%BC%93%E5%86%B2%E5%8C%BA/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(15)-画个三角形(绘制)-命令缓冲区</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>

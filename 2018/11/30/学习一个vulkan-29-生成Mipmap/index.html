@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>学习一个vulkan(29)-生成Mipmap | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="继续上一次的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习一个vulkan(29)-生成Mipmap">
+<meta property="og:url" content="http://gloriaswaterpool.com/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="继续上一次的">
+<meta property="og:locale">
+<meta property="og:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+<meta property="article:published_time" content="2018-11-30T01:11:41.000Z">
+<meta property="article:modified_time" content="2022-07-23T03:12:46.212Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="vulkan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gloriaswaterpool.com/images/cat.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/goniko.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/goniko.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                35
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                4
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-学习一个vulkan-29-生成Mipmap" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            学习一个vulkan(29)-生成Mipmap
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/">
+            <time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/learn/">learn</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/vulkan/" rel="tag">vulkan</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>继续上一次的</p>
+<span id="more"></span>
+<p><b>介绍</b><br>我们的程序现在可以加载和渲染3D模型了。在本章中，我们将添加另一个功能，即生成mipmap。Mipmap广泛用于游戏和渲染软件，Vulkan让我们可以完全操作它们的创建过程。</p>
+<p>Mipmap是预先计算的缩小版图像，每个新图像的宽度和高度都是前一个图像的一半。Mipmap用作细节级别（Level of Detail，LOD）的形式。远离相机的物体将从较小的mip图像中采样纹理。使用较小的图像可提高渲染速度并能够避免产生莫尔图案之类的伪影（artifacts）。下面是一个mipmaps的示例：<br><img src="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/1.png"></p>
+<p><b>图像创建</b><br>在Vulkan中，每个mip图像都存储在VkImage的不同mip级别（mip levels）中。Mip级别0是原始图像，级别0之后的mip级别通常称为mip链（mip chain）。</p>
+<p>创建VkImage时指定mip级别的数量，到目前为止，我们始终将此值设置为1。我们需要根据图像的尺寸计算mip级别的数量。<br>首先，添加一个类成员来存储这个数字：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="type">uint32_t</span> mipLevels;</span><br><span class="line">VkImage textureImage;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>一旦我们在createTextureImage中加载纹理，就可以找到mipLevels的值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> texWidth, texHeight, texChannels;</span><br><span class="line">stbi_uc* pixels = <span class="built_in">stbi_load</span>(TEXTURE_PATH.<span class="built_in">c_str</span>(), &amp;texWidth, &amp;texHeight, &amp;texChannels, STBI_rgb_alpha);</span><br><span class="line">...</span><br><span class="line">mipLevels = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(std::<span class="built_in">floor</span>(std::<span class="built_in">log2</span>(std::<span class="built_in">max</span>(texWidth, texHeight)))) + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>这里计算了mip链中的级别数。max函数选择最大尺寸，log2函数计算该维度除以2的次数。floor函数处理最大维度不是2的幂的情况，添加1以使原始图像具有mip级别。</p>
+<p>要使用此值，需要更改createImage，createImageView和transitionImageLayout函数，以允许我们指定mip级别的数量。在函数中添加mipLevels参数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createImage</span><span class="params">(<span class="type">uint32_t</span> width, <span class="type">uint32_t</span> height, <span class="type">uint32_t</span> mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage&amp; image, VkDeviceMemory&amp; imageMemory)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    imageInfo.mipLevels = mipLevels;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VkImageView <span class="title">createImageView</span><span class="params">(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, <span class="type">uint32_t</span> mipLevels)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    viewInfo.subresourceRange.levelCount = mipLevels;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">transitionImageLayout</span><span class="params">(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, <span class="type">uint32_t</span> mipLevels)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    barrier.subresourceRange.levelCount = mipLevels;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>更新对这些函数的所有调用以使用正确的值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">createImage</span>(swapChainExtent.width, swapChainExtent.height, <span class="number">1</span>, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);</span><br><span class="line">...</span><br><span class="line"><span class="built_in">createImage</span>(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">swapChainImageViews[i] = <span class="built_in">createImageView</span>(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, <span class="number">1</span>);</span><br><span class="line">...</span><br><span class="line">depthImageView = <span class="built_in">createImageView</span>(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, <span class="number">1</span>);</span><br><span class="line">...</span><br><span class="line">textureImageView = <span class="built_in">createImageView</span>(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">transitionImageLayout</span>(depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, <span class="number">1</span>);</span><br><span class="line">...</span><br><span class="line"><span class="built_in">transitionImageLayout</span>(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);</span><br></pre></td></tr></table></figure>
+
+<p><b>生成Mipmap</b><br>我们的纹理图像现在具有多个mip级别，但是临时缓冲区只能用于填充mip级别0，其他级别仍未定义。为了填补这些级别，我们需要从我们拥有的单个级别来生成数据。我们将使用vkCmdBlitImage命令。此命令执行复制，缩放和筛选操作，我们将多次调用它来将数据位块传输（blit）到纹理图像的每个级别。</p>
+<p>VkCmdBlit被认为是传输操作，因此我们必须告知Vulkan我们用作传输的源和目标的纹理图像。将VK_IMAGE_USAGE_TRANSFER_SRC_BIT添加到createTextureImage中纹理图像的用法标志中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="built_in">createImage</span>(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>与其他图像操作一样，vkCmdBlitImage依赖于其操作的图像的布局，我们可以将整个图像转换为VK_IMAGE_LAYOUT_GENERAL，但这很可能很慢。为获得最佳性能，源映像应位于VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL中，目标映像应位于VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL中。Vulkan允许我们独立转换图像的每个mip级别。每个    一次只处理两个mip级别，因此我们可以在blit命令间歇的时候将级别转换为的最佳布局。</p>
+<p>transitionImageLayout只对整个图像执行布局转换，因此我们还需要编写一些管道屏障命令。删除createTextureImage中现有的转换为VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="built_in">transitionImageLayout</span>(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);</span><br><span class="line">    <span class="built_in">copyBufferToImage</span>(stagingBuffer, textureImage, <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(texWidth), <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(texHeight));</span><br><span class="line"><span class="comment">//transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这将使纹理图像的每个级别都保留在VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL。在读取blit命令完成后，每个级别将转换为VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL。</p>
+<p>我们现在要编写生成mipmap的函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">generateMipmaps</span><span class="params">(VkImage image, <span class="type">int32_t</span> texWidth, <span class="type">int32_t</span> texHeight, <span class="type">uint32_t</span> mipLevels)</span> </span>&#123;</span><br><span class="line">    VkCommandBuffer commandBuffer = <span class="built_in">beginSingleTimeCommands</span>();</span><br><span class="line">    </span><br><span class="line">    VkImageMemoryBarrier barrier = &#123;&#125;;</span><br><span class="line">    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;</span><br><span class="line">    barrier.image = image;</span><br><span class="line">    barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;</span><br><span class="line">    barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;</span><br><span class="line">    barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;</span><br><span class="line">    barrier.subresourceRange.baseArrayLayer = <span class="number">0</span>;</span><br><span class="line">    barrier.subresourceRange.layerCount = <span class="number">1</span>;</span><br><span class="line">    barrier.subresourceRange.levelCount = <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">endSingleTimeCommands</span>(commandBuffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们将进行多次转换，因此我们将重用此VkImageMemoryBarrier。对于所有屏障，上面设置的字段都将保持不变。每次转换需要更改的是subresourceRange.miplevel，oldLayout，newLayout，srcAccessMask和dstAccessMask。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int32_t</span> mipWidth = texWidth;</span><br><span class="line"><span class="type">int32_t</span> mipHeight = texHeight;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">uint32_t</span> i = <span class="number">1</span>; i &lt; mipLevels; i++) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该循环将记录每个VkCmdBlitImage命令。请注意，循环变量从1开始，而不是0。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">barrier.subresourceRange.baseMipLevel = i - <span class="number">1</span>;</span><br><span class="line">barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;</span><br><span class="line">barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;</span><br><span class="line">barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;</span><br><span class="line">barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;</span><br><span class="line"></span><br><span class="line"><span class="built_in">vkCmdPipelineBarrier</span>(commandBuffer,</span><br><span class="line">    VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, <span class="number">0</span>,</span><br><span class="line">    <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">    <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">    <span class="number">1</span>, &amp;barrier);</span><br></pre></td></tr></table></figure>
+<p>首先，我们将i-1级别转换为VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL，此转换将等待前一个blit命令或vkCmdCopyBufferToImage填充级别i-1完成。当前的blit命令也将等待此转换完成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">VkImageBlit blit = &#123;&#125;;</span><br><span class="line">blit.srcOffsets[<span class="number">0</span>] = &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> &#125;;</span><br><span class="line">blit.srcOffsets[<span class="number">1</span>] = &#123; mipWidth, mipHeight, <span class="number">1</span> &#125;;</span><br><span class="line">blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;</span><br><span class="line">blit.srcSubresource.mipLevel = i - <span class="number">1</span>;</span><br><span class="line">blit.srcSubresource.baseArrayLayer = <span class="number">0</span>;</span><br><span class="line">blit.srcSubresource.layerCount = <span class="number">1</span>;</span><br><span class="line">blit.dstOffsets[<span class="number">0</span>] = &#123; <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> &#125;;</span><br><span class="line">blit.dstOffsets[<span class="number">1</span>] = &#123; mipWidth &gt; <span class="number">1</span> ? mipWidth / <span class="number">2</span> : <span class="number">1</span>, mipHeight &gt; <span class="number">1</span> ? mipHeight / <span class="number">2</span> : <span class="number">1</span>, <span class="number">1</span> &#125;;</span><br><span class="line">blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;</span><br><span class="line">blit.dstSubresource.mipLevel = i;</span><br><span class="line">blit.dstSubresource.baseArrayLayer = <span class="number">0</span>;</span><br><span class="line">blit.dstSubresource.layerCount = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>接下来，我们指定将在blit操作中使用的区域。源mip级别为i-1，目标mip级别为i。srcOffsets数组的两个元素确定数据中进行blit的3D区域，dstOffsets确定数据将被blit到的区域。dstOffsets[1]的X和Y维度需要除以2，因为每个mip级别是前一级别的一半。srcOffsets[1]和dstOffsets[1]的Z维度必须为1，因为2D图像的深度为1。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vkCmdBlitImage</span>(commandBuffer,</span><br><span class="line">    image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,</span><br><span class="line">    image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,</span><br><span class="line">    <span class="number">1</span>, &amp;blit,</span><br><span class="line">    VK_FILTER_LINEAR);</span><br></pre></td></tr></table></figure>
+<p>现在，我们记录blit命令。请注意，textureImage会用作srcImage和dstImage参数。这是因为我们是在同一图像的不同级别之间进行blitting的。源mip级别刚刚转换为VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL，目标级别仍然是来自createTextureImage中的VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL。</p>
+<p>最后一个参数允许我们指定要在blit中使用的VkFilter，我们在制作VkSampler时具有相同的过滤选项，我们使用VK_FILTER_LINEAR来启用插值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;</span><br><span class="line">barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;</span><br><span class="line">barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;</span><br><span class="line">barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;</span><br><span class="line"></span><br><span class="line"><span class="built_in">vkCmdPipelineBarrier</span>(commandBuffer,</span><br><span class="line">    VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, <span class="number">0</span>,</span><br><span class="line">    <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">    <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">    <span class="number">1</span>, &amp;barrier);</span><br></pre></td></tr></table></figure>
+<p>此屏障将mip级别i-1转换为VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL。此转换等待当前blit命令完成，而所有采样操作都将等待此转换完成。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (mipWidth &gt; <span class="number">1</span>) mipWidth /= <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (mipHeight &gt; <span class="number">1</span>) mipHeight /= <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在循环结束时，我们将当前的mip尺寸除以2。我们在每次除法之前都要检查各个维度，以确保维度的值永远不会变为0。这处理了图像不是方形的情况，在这种情况下其中一个mip尺寸将在另一个尺寸之前达到1，发生这种情况时，对于所有剩余的级别，该维度都应保持为1。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">    barrier.subresourceRange.baseMipLevel = mipLevels - <span class="number">1</span>;</span><br><span class="line">    barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;</span><br><span class="line">    barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;</span><br><span class="line">    barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;</span><br><span class="line">    barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">vkCmdPipelineBarrier</span>(commandBuffer,</span><br><span class="line">        VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, <span class="number">0</span>,</span><br><span class="line">        <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">        <span class="number">0</span>, <span class="literal">nullptr</span>,</span><br><span class="line">        <span class="number">1</span>, &amp;barrier);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">endSingleTimeCommands</span>(commandBuffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在我们结束命令缓冲区之前，我们再插入一个管道屏障。此屏障将最后一个mip级别从VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL转换为VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL。这不是由循环处理的，因为最后一个mip级别从不进行blit操作。</p>
+<p>最后，在createTextureImage中添加对generateMipmaps的调用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">transitionImageLayout</span>(textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);</span><br><span class="line">    <span class="built_in">copyBufferToImage</span>(stagingBuffer, textureImage, <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(texWidth), <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(texHeight));</span><br><span class="line"><span class="comment">//transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">generateMipmaps</span>(textureImage, texWidth, texHeight, mipLevels);</span><br></pre></td></tr></table></figure>
+<p>现在我们的纹理图像的mipmap现在已经填充完毕了。</p>
+<p><b>线性过滤支持</b><br>使用像vkCmdBlitImage这样的内置函数生成所有mip级别非常方便，但遗憾的是并不能保证所有平台都支持。它需要我们的纹理图像格式支持线性过滤，这一点可以使用vkGetPhysicalDeviceFormatProperties函数进行检查。我们将为generateMipmaps函数添加一个检查。</p>
+<p>首先添加一个指定图像格式的附加参数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createTextureImage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="built_in">generateMipmaps</span>(textureImage, VK_FORMAT_R8G8B8A8_UNORM, texWidth, texHeight, mipLevels);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">generateMipmaps</span><span class="params">(VkImage image, VkFormat imageFormat, <span class="type">int32_t</span> texWidth, <span class="type">int32_t</span> texHeight, <span class="type">uint32_t</span> mipLevels)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在generateMipmaps函数中，使用vkGetPhysicalDeviceFormatProperties来获取纹理图像格式的属性：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">generateMipmaps</span><span class="params">(VkImage image, VkFormat imageFormat, <span class="type">int32_t</span> texWidth, <span class="type">int32_t</span> texHeight, <span class="type">uint32_t</span> mipLevels)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check if image format supports linear blitting</span></span><br><span class="line">    VkFormatProperties formatProperties;</span><br><span class="line">    <span class="built_in">vkGetPhysicalDeviceFormatProperties</span>(physicalDevice, imageFormat, &amp;formatProperties);</span><br><span class="line"></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>VkFormatProperties结构有三个名为linearTilingFeatures，optimalTilingFeatures和bufferFeatures的字段，每个字段都描述了相应格式的使用方式，具体取决于它的使用方式。我们使用的是最佳平铺格式来创建纹理图像，因此我们需要检查optimalTilingFeatures。可以使用VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT检查对线性过滤功能的支持：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(formatProperties.optimalTilingFeatures &amp; VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;texture image format does not support linear blitting!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这种情况下有两种选择。您可以实现一个函数，搜索某个常见的支持线性blitting的纹理图像格式，或者您可以使用像<a target="_blank" rel="noopener" href="https://github.com/nothings/stb/blob/master/stb_image_resize.h">stb_image_resize</a>这样的库在软件中自己实现mipmap的生成，然后可以按照加载原始图像的方式将每个mip级别加载到图像中。</p>
+<p>应该注意的是，实际上在运行时生成mipmap级别是不常见的。通常它们被预生成并存储在基本级别旁边的纹理文件中以提高加载速度。实现在软件中调整大小并从文件加载多个级别是留给读者的练习。</p>
+<p><b>采样</b><br>当VkImage保存mipmap数据时，VkSampler控制渲染时读取数据的方式。Vulkan允许我们指定minLod，maxLod，mipLodBias和mipmapMode（“Lod”表示“细节级别”）。采样纹理时，采样器根据以下伪代码进行mip级别的选择：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">lod = <span class="built_in">getLodLevelFromScreenSize</span>(); <span class="comment">//smaller when the object is close, may be negative</span></span><br><span class="line">lod = <span class="built_in">clamp</span>(lod + mipLodBias, minLod, maxLod);</span><br><span class="line"></span><br><span class="line">level = <span class="built_in">clamp</span>(<span class="built_in">floor</span>(lod), <span class="number">0</span>, texture.mipLevels - <span class="number">1</span>);  <span class="comment">//clamped to the number of mip levels in the texture</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (mipmapMode == VK_SAMPLER_MIPMAP_MODE_NEAREST) &#123;</span><br><span class="line">    color = <span class="built_in">sample</span>(level);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    color = <span class="built_in">blend</span>(<span class="built_in">sample</span>(level), <span class="built_in">sample</span>(level + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果samplerInfo.mipmapMode是VK_SAMPLER_MIPMAP_MODE_NEAREST，则lod选择要从中采样的mip级别。如果mipmap模式是VK_SAMPLER_MIPMAP_MODE_LINEAR，则lod用于选择要采样的两个mip级别，然后对这些级别进行采样，并将结果线性混合。</p>
+<p>采样操作也受到lod的影响：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (lod &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    color = <span class="built_in">readTexture</span>(uv, magFilter);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    color = <span class="built_in">readTexture</span>(uv, minFilter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果物体靠近相机，则使用magFilter作为滤镜，如果物体离相机较远，则使用minFilter。通常lod是非负的，关闭相机时值为0。mipLodBias让我们强迫Vulkan可以使用比通常使用的值更低的lod和level。</p>
+<p>要查看运行的结果，我们需要为textureSampler选择相应的值。我们已经将minFilter和magFilter设置为使用VK_FILTER_LINEAR了。现在只需要为minLod，maxLod，mipLodBias和mipmapMode选择值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">createTextureSampler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;</span><br><span class="line">    samplerInfo.minLod = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">    samplerInfo.maxLod = <span class="built_in">static_cast</span>&lt;<span class="type">float</span>&gt;(mipLevels);</span><br><span class="line">    samplerInfo.mipLodBias = <span class="number">0</span>; <span class="comment">// Optional</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了允许使用所有范围的mip级别，我们将minLod设置为0，并将maxLod设置为mip级别的数量。我们不需要更改lod值，因此将mipLodBias设置为0。</p>
+<p>现在运行程序，可以看到以下内容：<br><img src="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/2.png"></p>
+<p>差异并不明显，因为我们的场景非常简单。如果仔细观察，还是会有细微差别。<br><img src="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/3.png"></p>
+<p>最明显的区别是木牌上的文字。使用mipmap时，文字会平滑处理。如果没有mipmaps，那么文字就会有莫尔条纹的粗糙边缘和间隙。</p>
+<p>您可以使用采样器设置来查看它们如何影响mipmapping。例如，通过更改minLod，您可以强制采样器不使用最低的mip级别：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">samplerInfo.minLod = <span class="built_in">static_cast</span>&lt;<span class="type">float</span>&gt;(mipLevels / <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>这些设置将生成此图像：<br><img src="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/4.png"></p>
+<p>这是当物体远离相机时将使用的更高mip级别的方式。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://gloriaswaterpool.com/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" data-id="cl5xdmzn0001wc4ux1mi11yvz" class="article-share-link"><i class="fas fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    学习一个vulkan(30)-多重采样
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/11/29/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-28-%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9E%8B/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">学习一个vulkan(28)-加载模型</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(29)-生成Mipmap" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/learn/">learn</a></p>
+                            <p class="item-title"><a href="/2018/11/30/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-29-%E7%94%9F%E6%88%90Mipmap/" class="title">学习一个vulkan(29)-生成Mipmap</a></p>
+                            <p class="item-date"><time datetime="2018-11-30T01:11:41.000Z" itemprop="datePublished">2018-11-30</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/learn/">learn</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"live2d-widget-model-koharu"},"display":{"position":"right","width":150,"height":180},"mobile":{"show":true},"log":false});</script></body>
+</html>
