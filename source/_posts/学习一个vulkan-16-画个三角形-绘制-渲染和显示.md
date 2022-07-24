@@ -2,7 +2,7 @@
 title: 学习一个vulkan(16)-画个三角形(绘制)-渲染和显示
 date: 2018-11-15 14:42:59
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

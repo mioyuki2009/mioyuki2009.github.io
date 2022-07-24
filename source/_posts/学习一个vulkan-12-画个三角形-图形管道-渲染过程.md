@@ -2,7 +2,7 @@
 title: 学习一个vulkan(12)-画个三角形(图形管道)-渲染过程
 date: 2018-11-10 09:30:19
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

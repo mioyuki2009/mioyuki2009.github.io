@@ -2,7 +2,7 @@
 title: 学习一个vulkan(20)-顶点缓冲区-临时缓冲区
 date: 2018-11-20 09:05:14
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

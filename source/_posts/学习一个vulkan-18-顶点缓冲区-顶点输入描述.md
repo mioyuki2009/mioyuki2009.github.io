@@ -2,7 +2,7 @@
 title: 学习一个vulkan(18)-顶点缓冲区-顶点输入描述
 date: 2018-11-17 09:50:52
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

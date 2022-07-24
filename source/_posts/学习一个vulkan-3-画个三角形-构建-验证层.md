@@ -2,7 +2,7 @@
 title: 学习一个vulkan(3)-画个三角形(构建)-验证层
 date: 2018-10-31 15:04:41
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

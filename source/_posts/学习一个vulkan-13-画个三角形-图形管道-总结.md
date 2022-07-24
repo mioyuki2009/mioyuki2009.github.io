@@ -2,7 +2,7 @@
 title: 学习一个vulkan(13)-画个三角形(图形管道)-总结
 date: 2018-11-12 09:18:29
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

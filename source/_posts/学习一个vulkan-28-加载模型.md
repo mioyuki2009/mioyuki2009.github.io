@@ -2,7 +2,7 @@
 title: 学习一个vulkan(28)-加载模型
 date: 2018-11-29 09:05:55
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

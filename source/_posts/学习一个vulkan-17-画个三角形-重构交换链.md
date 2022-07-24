@@ -2,7 +2,7 @@
 title: 学习一个vulkan(17)-画个三角形-重构交换链
 date: 2018-11-16 09:45:47
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

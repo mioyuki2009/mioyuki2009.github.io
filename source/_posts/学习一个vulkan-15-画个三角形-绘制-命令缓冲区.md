@@ -2,7 +2,7 @@
 title: 学习一个vulkan(15)-画个三角形(绘制)-命令缓冲区
 date: 2018-11-14 09:26:01
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

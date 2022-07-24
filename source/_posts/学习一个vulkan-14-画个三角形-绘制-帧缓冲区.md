@@ -2,7 +2,7 @@
 title: 学习一个vulkan(14)-画个三角形(绘制)-帧缓冲区
 date: 2018-11-13 09:14:50
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

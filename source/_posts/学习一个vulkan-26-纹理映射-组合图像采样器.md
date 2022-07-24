@@ -2,7 +2,7 @@
 title: 学习一个vulkan(26)-纹理映射-组合图像采样器
 date: 2018-11-27 09:03:17
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

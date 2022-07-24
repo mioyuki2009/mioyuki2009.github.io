@@ -2,7 +2,7 @@
 title: 学习一个vulkan(29)-生成Mipmap
 date: 2018-11-30 09:11:41
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

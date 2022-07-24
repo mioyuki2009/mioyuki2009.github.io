@@ -2,7 +2,7 @@
 title: 学习一个vulkan(2)-画个三角形(构建)-实例
 date: 2018-10-30 15:08:16
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

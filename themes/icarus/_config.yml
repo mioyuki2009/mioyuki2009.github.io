@@ -16,7 +16,7 @@ customize:
     profile:
         enabled: true # Whether to show profile bar
         fixed: true
-        avatar: css/images/goniko.jpg
+        avatar: css/images/lain.jpg
         gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
         author: mioyuki2009
         author_title: salt fish
@@ -85,7 +85,19 @@ plugins:
     google_analytics: # enter the tracking ID for your Google Analytics
     google_site_verification: # enter Google site verification code
     baidu_analytics: # enter Baidu Analytics hash key
-    mathjax: false # options: true, false
+    mathjax: true # options: true, false
+
+math:
+  # Default (true) will load mathjax / katex script on demand.
+  # That is it only render those page which has `mathjax: true` in Front-matter.
+  # If you set it to false, it will load mathjax / katex srcipt EVERY PAGE.
+  per_page: true
+
+  # hexo-renderer-pandoc (or hexo-renderer-kramed) required for full MathJax support.
+  mathjax:
+    enable: true
+    # See: https://mhchem.github.io/MathJax-mhchem/
+    mhchem: false
 
 cursor: 
     on: true

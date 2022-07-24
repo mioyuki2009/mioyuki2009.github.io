@@ -2,7 +2,7 @@
 title: 学习一个vulkan(11)-画个三角形(图形管道)-固定功能
 date: 2018-11-09 09:22:18
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

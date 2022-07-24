@@ -2,7 +2,7 @@
 title: 学习一个vulkan(22)-统一缓冲区-描述符布局和缓冲区
 date: 2018-11-22 09:18:53
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

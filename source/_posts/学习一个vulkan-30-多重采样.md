@@ -2,7 +2,7 @@
 title: 学习一个vulkan(30)-多重采样
 date: 2018-12-01 09:48:21
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

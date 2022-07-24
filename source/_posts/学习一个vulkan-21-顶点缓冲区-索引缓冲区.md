@@ -2,7 +2,7 @@
 title: 学习一个vulkan(21)-顶点缓冲区-索引缓冲区
 date: 2018-11-21 09:20:41
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

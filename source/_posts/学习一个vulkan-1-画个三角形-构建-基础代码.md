@@ -2,7 +2,7 @@
 title: 学习一个vulkan(1)-画个三角形(构建)-基础代码
 date: 2018-10-29 16:17:34
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 学习一个vlkan，基本就是照着教程敲了。

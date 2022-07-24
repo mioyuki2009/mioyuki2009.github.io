@@ -2,7 +2,7 @@
 title: 学习一个vulkan(19)-顶点缓冲区-创建顶点缓冲区
 date: 2018-11-19 09:56:22
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

@@ -2,7 +2,7 @@
 title: 学习一个vulkan(8)-画个三角形(显示)-图像视图
 date: 2018-11-06 09:11:35
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

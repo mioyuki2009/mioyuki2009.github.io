@@ -2,7 +2,7 @@
 title: 学习一个vulkan(10)-画个三角形(图形管道)-着色器模块
 date: 2018-11-08 09:38:21
 tags: vulkan
-categories: learn
+categories: computer graphic
 thumbnail: /images/cat.jpg
 ---
 继续上一次的

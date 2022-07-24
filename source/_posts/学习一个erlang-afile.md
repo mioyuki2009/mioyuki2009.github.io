@@ -2,7 +2,7 @@
 title: 学习一个erlang-afile
 date: 2018-11-03 15:25:12
 tags: erlang
-categories: learn
+categories: language
 thumbnail: /images/frog.jpg
 ---
 学习一个erlang，参考《Erlang程序设计》-Joe Armstrong
