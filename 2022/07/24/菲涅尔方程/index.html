@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>菲涅尔方程 | waterpool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="首先是一个简单的标准模型：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="菲涅尔方程">
+<meta property="og:url" content="http://mioswaterpool.xyz/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/index.html">
+<meta property="og:site_name" content="waterpool">
+<meta property="og:description" content="首先是一个简单的标准模型：">
+<meta property="og:locale">
+<meta property="og:image" content="http://mioswaterpool.xyz/images/morisa.jpg">
+<meta property="article:published_time" content="2022-07-24T08:03:30.000Z">
+<meta property="article:modified_time" content="2022-07-24T10:27:09.913Z">
+<meta property="article:author" content="mioyuki2009">
+<meta property="article:tag" content="小学数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://mioswaterpool.xyz/images/morisa.jpg">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<script type="text/javascript" src="/js/clicklove.js"></script>
+<body>
+	
+		<style>
+			body{
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+			a {
+				cursor: url(/zzimages/normal.cur), auto;
+			}
+		</style>
+	
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">waterpool</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/lain.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Entradas',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categorias',
+            TAGS: 'Etiquetas',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/lain.jpg" />
+            <h2 id="name">mioyuki2009</h2>
+            <h3 id="title">salt fish</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>WuHan, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mioyuki2009">SEGUIR</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                36
+                <span>Entradas</span>
+            </div>
+            <div class="article-info-block">
+                5
+                <span>Etiquetas</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/mioyuki2009" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-菲涅尔方程" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            菲涅尔方程
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/">
+            <time datetime="2022-07-24T08:03:30.000Z" itemprop="datePublished">2022-07-24</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/computer-graphic/">computer graphic</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6/" rel="tag">小学数学</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>首先是一个简单的标准模型：</p>
+<span id="more"></span>
+<p><img src="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/Fresnel1.png"></p>
+<p><em>I为入射光，T为折射光，R为反射光，$n_{1}$和$n_{1}$分别为两种介质的折射率</em><br>显然我们有：<br>$\theta_{i} &#x3D; \theta_{r}\tag 1$<br>根据<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Snell%27s_law">Snell’s law</a>也有：<br>$n_{1}sin\theta_{i} &#x3D; n_{2}sin\theta_{t}\tag 2$</p>
+<p><strong>菲涅耳方程给出了反射波电场与入射波电场的比值。</strong><br>简单来说，就是反射光所占入射光的比例。</p>
+<p>一个简单的反射折射模型如下所示：<br><img src="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/reflect.png"></p>
+<p>可以看到23%的反射光和77%的折射光最终汇聚之后最终被人眼看到。计算方式如下<br>$color &#x3D; 0.77 * color_{refracted_ray} + 0.23 * color_{reflected_ray}$</p>
+<p>这里0.77和0.23两个常量的计算就需要使用菲涅尔方程来计算。根据菲涅尔公式有：<br>$R_{s} &#x3D; |\frac{n_{1}cos\theta_{i} - n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}{n_{1}cos\theta_{i} + n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}|^2\tag 3$<br>$R_{p} &#x3D; |\frac{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} - n_{2}cos\theta_{i}}{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} + n_{2}cos\theta_{i}}|^2\tag 4$</p>
+<p>根据式(2)有：<br>$\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} &#x3D; \sqrt{1-sin^2\theta_{t}} &#x3D; \sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}$</p>
+<p>将上式带入式(3)和式(4)有：<br>$R_{s} &#x3D; |\frac{n_{1}cos\theta_{i} - n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}{n_{1}cos\theta_{i} + n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}|^2 &#x3D; |\frac{n_{1}cos\theta_{i} - n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}{n_{1}cos\theta_{i} + n_{2}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2}}|^2\tag 5$<br>$R_{p} &#x3D; |\frac{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} - n_{2}cos\theta_{i}}{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} + n_{2}cos\theta_{i}}|^2 &#x3D; |\frac{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} - n_{2}cos\theta_{i}}{n_{1}\sqrt{1-(\frac{n_{1}}{n_{2}}sin\theta_{i})^2} + n_{2}cos\theta_{i}}|^2\tag 6$</p>
+<p>现在只考虑无偏振的自然光，即$R_{s}$和$R_{p}$偏振中的功率相等，有：<br>$R_{eff} &#x3D; \frac{1}{2}(R_{s}+R_{p})$</p>
+<p>显然可以看出，菲涅尔方程的值是和入射角$\theta_{i}$唯一相关的（折射率为相关材质的常量）。</p>
+<p>下图是一个由空气射入玻璃的菲涅尔方程和入射角之间的关系：<br><img src="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/Fresnel_power.png"></p>
+<p>可以看出来，当入射角为0度，即入射光垂直于表面时，基本不反射，而当入射角为90度时，反射比例接近百分之百，这解释了为什么离透明物体（玻璃，湖水等）很近时，基本看不到反射效果，只能看到玻璃后的东西，或者水里的鱼啥的。</p>
+<p>但是使用上面的方程过于繁琐和复杂，Schlick提出了一种近似的方法，即<br>$R(\theta) &#x3D; R_{0} + (1 - R_{0})(1 - cos\theta)^5$<br>其中$R_{0}$为入射角为0时的值。即：<br>$R_{0} &#x3D; (\frac{n_{1} - n_{2}}{n_{1} + n_{2}})^2$</p>
+<p>同时有：<br>$cos\theta &#x3D; \vec{v} \cdot \vec{n}$<br>其中$\vec{v}$和$\vec{n}$为视线方向和平面法向量。</p>
+<p>最后即变成我们熟悉的公式：<br>$R(\theta) &#x3D; R_{0} + (1 - R_{0})(1 - \vec{v} \cdot \vec{n})^5$</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://mioswaterpool.xyz/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/" data-id="cl5z6eypr003dgoux8dy5g2ms" class="article-share-link"><i class="fas fa-share"></i>Compartir</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Más viejo</strong>
+            <div class="article-nav-title">学习一个操作系统-3</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">Recientes</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/morisa.jpg)" alt="菲涅尔方程" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/computer-graphic/">computer graphic</a></p>
+                            <p class="item-title"><a href="/2022/07/24/%E8%8F%B2%E6%B6%85%E5%B0%94%E6%96%B9%E7%A8%8B/" class="title">菲涅尔方程</a></p>
+                            <p class="item-date"><time datetime="2022-07-24T08:03:30.000Z" itemprop="datePublished">2022-07-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-3" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/05/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-3/" class="title">学习一个操作系统-3</a></p>
+                            <p class="item-date"><time datetime="2018-12-05T06:53:39.000Z" itemprop="datePublished">2018-12-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-2" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/04/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-2/" class="title">学习一个操作系统-2</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T01:10:11.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/sad.jpg)" alt="学习一个操作系统-1" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/os/">os</a></p>
+                            <p class="item-title"><a href="/2018/12/03/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-1/" class="title">学习一个操作系统-1</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T01:19:01.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/cat.jpg)" alt="学习一个vulkan(30)-多重采样" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/computer-graphic/">computer graphic</a></p>
+                            <p class="item-title"><a href="/2018/12/01/%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%AAvulkan-30-%E5%A4%9A%E9%87%8D%E9%87%87%E6%A0%B7/" class="title">学习一个vulkan(30)-多重采样</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T01:48:21.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">Categorias</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/computer-graphic/">computer graphic</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/language/">language</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/os/">os</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">translate</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">Archivos</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">27</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">Etiquetas</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/erlang/" rel="tag">erlang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lisp/" rel="tag">lisp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vulkan/" rel="tag">vulkan</a><span class="tag-list-count">30</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6/" rel="tag">小学数学</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">Nube de etiquetas</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/erlang/" style="font-size: 10px;">erlang</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/lisp/" style="font-size: 10px;">lisp</a> <a href="/tags/vulkan/" style="font-size: 20px;">vulkan</a> <a href="/tags/%E5%B0%8F%E5%AD%A6%E6%95%B0%E5%AD%A6/" style="font-size: 10px;">小学数学</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 mioyuki2009<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a target="_blank" rel="noopener" href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML.js"></script>
+
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"scale":1.2,"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"react":{"opacity":0.9},"mobile":{"show":true},"log":false});</script></body>
+</html>
